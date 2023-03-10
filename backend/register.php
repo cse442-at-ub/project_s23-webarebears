@@ -76,4 +76,8 @@
             <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
             <span class="help-block"><?php echo $password_err; ?></span>
         </div>
+        <input type="submit" value="Register" name="submit" class="register-button"/>
+
+
+
         <div
