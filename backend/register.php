@@ -15,7 +15,7 @@
         if (empty(trim($_POST["username"]))) {
             $username_err = "Please enter a username.";
         } else {
-            $sql = "SELECT id FROM users WHERE username = ?";
+            $sql = "SELECT id FROM 'User Accounts' WHERE username = ?";
             if ($stmt = mysqli_prepare($link, $sql)) {
                 mysqli_stmt_bind_param($stmt, "s", $param_username);
                 $param_username = trim($_POST["username"]);
