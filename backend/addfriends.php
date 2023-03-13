@@ -8,18 +8,18 @@
 <body>
 
 <header>
-		<nav>
-			<a href="home.html">Home</a>
-			<a href="tasksAndBalances.html">Tasks and Balances</a>
-			<a href="messages.html">Messages</a>
-		</nav>
-	</header>
-    
+	<nav>
+		<a href="home.html">Home</a>
+		<a href="tasksAndBalances.html">Tasks and Balances</a>
+		<a href="messages.html">Messages</a>
+	</nav>
+</header>
+
 <?php
     require('server.php');
     session_start();
     // Check if user is logged in
-        
+
     if (!isset($_SESSION['username'])) {
         header("Location: login.php");
         exit();
@@ -51,17 +51,18 @@
     // If add friend button is clicked, add user to current user's friends list
     if (isset($_POST['add_friend'])) {
         $friend_username = mysqli_real_escape_string($db_connection, $_POST['friend_username']);
-        $username = $_SESSION['username'];
+        $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
         $query = "INSERT INTO `Friends` (username, friend_username) VALUES ('$username', '$friend_username')";
         mysqli_query($db_connection, $query);
         echo "<p>" . $friend_username . " has been added as a friend.</p>";
     }
-    ?>
-    <form class="form" method="post">
+?>
+
+<form class="form" method="post">
     <h1 class="login-title">Add Friends</h1>
     <input type="text" class="login-input" name="search" placeholder="Search for friends"/>
     <input type="submit" value="Search" name="submit" class="login-button"/>
-    </form>
-    
-    </body>
-    </html> 
+</form>
+
+</body>
+</html>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Register</title>
+    <link rel="stylesheet" href="styles/register_style.css"/>
 </head>
 <body>
 <?php
@@ -79,6 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
     <form class="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <img id="logo" src="images/temp-logo.png" alt="Logo">
         <h2>Register</h2>
         <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
             <label>Username</label>
