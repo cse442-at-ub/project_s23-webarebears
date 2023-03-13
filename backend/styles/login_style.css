@@ -65,7 +65,8 @@ button{
 
 #registration_link{
     text-align: center;
-    color: white;
+    color: #dadadae5;
+    font-size: small;
 }
 
 #login_button{
@@ -75,4 +76,9 @@ button{
 
 #user_concern{
     color:#7C82BA;
+    font-size: small;
+}
+
+a:link{
+    color: #4D5DFA;
 }

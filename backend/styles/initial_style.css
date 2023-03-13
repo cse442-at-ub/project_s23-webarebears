@@ -1,6 +1,5 @@
 #logo{
-    height: 300px;
-    width: 400px;
+    width: 300px;
     display: block; 
     margin-top: 200px;
     margin-left: auto;
@@ -11,4 +10,36 @@
 body{
     background: #181A20;
     font-family: 'Nunito';
+}
+
+#submit_button{
+    align-items: center;
+    color: white;
+    background-color: #4D5DFA;
+}
+
+.form{
+    text-align: center;
+    border-radius: 5px;
+    width: 550px;
+    margin: 20px auto;
+    padding: 20px;
+    /* height: 600px; */
+}
+
+input{
+    height: 43px;
+    width: 304px;
+    background-color: #EDEFFF;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-size: 14px;
+    text-align: center;
+    box-shadow: 2px 2px #5626C4;
+}
+
+#slogan{
+    text-align: center;
+    color: #dadadae5;
+    font-size: small;
 }
