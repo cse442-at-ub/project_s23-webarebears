@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Register</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/register_style.css">
 </head>
 <body>
     <?php
@@ -64,20 +64,19 @@
         mysqli_close($link);
     }
     ?>
-    <form class="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <h2>Register</h2>
+    <form class="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>
+        <img id="logo" src="images/temp-logo.png" alt="Logo">
+        <h2 id="register-title">REGISTER</h2>
         <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-            <label>Username</label>
-            <input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
+            <input type="text" name="username" class="form-control" value="<?php echo $username; ?>" placeholder="Username" autofocus="true">
             <span class="help-block"><?php echo $username_err; ?></span>
         </div>
         <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
-            <label>Password</label>
-            <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
+            <input type="password" placeholder="Password" name="password" class="form-control" value="<?php echo $password; ?>">
             <span class="help-block"><?php echo $password_err; ?></span>
         </div>
         <input type="submit" value="Register" name="submit" class="register-button"/>
-
-
-
+        <p id="user_concern">Your personal details are safe with us</p>
+        <p id="user_concern">Read our Privacy Policy and Terms and Conditions</p>
+        
         <div

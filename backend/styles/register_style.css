@@ -1,0 +1,53 @@
+#logo{
+    height: 100px;
+    width: 100px;
+    display: block; 
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+    align-items: center;
+}
+body{
+    background: #181A20;
+    font-family: 'Nunito';
+}
+.register-title{
+    color:white;
+    text-align: center;
+    font-size: 25px;
+}
+.form{
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    width: 550px;
+    margin: 20px auto;
+    padding: 20px;
+    /* height: 600px; */
+}
+.form-group{
+    text-align: center;
+}
+
+.register-button{
+    color: white;
+    background-color: #4D5DFA;
+}
+
+input{
+    height: 43px;
+    width: 304px;
+    background-color: #EDEFFF;
+    border-radius: 20px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    border: 1px solid #EDEFFF;
+    text-align: center;
+}
+
+#user_concern{
+    color:#7C82BA;
+}

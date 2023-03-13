@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8"/>
     <title>Login</title>
-    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="styles/login_style.css"/>
 </head>
+
 <body>
 <?php
     require('server.php');
@@ -33,11 +34,15 @@
     } else {
 ?>
     <form class="form" method="post" name="login">
-        <h1 class="login-title">Login</h1>
+        <img id="logo" src="images/temp-logo.png" alt="Logo">
+        <h1 class="login-title">LOGIN WITH YOUR</h1>
+        <h1 class="login-title">USERNAME</h1>
         <input type="text" class="login-input" name="username" placeholder="Username" autofocus="true"/>
         <input type="password" class="login-input" name="password" placeholder="Password"/>
-        <input type="submit" value="Login" name="submit" class="login-button"/>
-        <p class="link"><a href="register.php">New Registration</a></p>
+        <input id="login_button" type="submit" value="Login" name="submit" class="login-button"/>
+        <p id="registration_link" class="link">New User? <a href="register.php">Click here to Register</a></p>
+        <p id="user_concern">Your personal details are safe with us</p>
+        <p id="user_concern">Read our Privacy Policy and Terms and Conditions</p>
   </form>
 <?php
     }

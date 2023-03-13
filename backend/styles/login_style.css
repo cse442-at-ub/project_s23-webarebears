@@ -1,0 +1,78 @@
+body{
+    background: #181A20;
+    font-family: 'Nunito';
+}
+
+.login_page{
+    padding-top: 200px;
+    height: 20px;
+    width: 20;
+    object-fit: cover;
+    
+}
+#logo{
+    height: 100px;
+    width: 100px;
+    display: block; 
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+    align-items: center;
+}
+
+input{
+    height: 43px;
+    width: 304px;
+    background-color: #EDEFFF;
+    border-radius: 20px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    border: 1px solid #EDEFFF;
+    text-align: center;
+}
+
+button{
+    height: 43px;
+    width: 304px;
+    background-color: #4D5DFA;
+    color:#EDEFFF;
+    border-radius: 20px;
+    border: 1px solid #4D5DFA;
+}
+
+.login-title{
+    color:white;
+    text-align: center;
+    font-size: 25px;
+}
+
+.form{
+    text-align: center;
+    border-radius: 5px;
+    width: 550px;
+    margin: 20px auto;
+    padding: 20px;
+    /* height: 600px; */
+}
+
+.forget-password{
+    color: white;
+    text-align: center;
+}
+
+#registration_link{
+    text-align: center;
+    color: white;
+}
+
+#login_button{
+    color: white;
+    background-color: #4D5DFA;
+}
+
+#user_concern{
+    color:#7C82BA;
+}

@@ -1,0 +1,14 @@
+#logo{
+    height: 300px;
+    width: 400px;
+    display: block; 
+    margin-top: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+    align-items: center;
+}
+body{
+    background: #181A20;
+    font-family: 'Nunito';
+}
