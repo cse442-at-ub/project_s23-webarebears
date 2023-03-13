@@ -54,7 +54,7 @@
                 $param_username = $username;
                 $param_password = password_hash($password, PASSWORD_DEFAULT);
                 if (mysqli_stmt_execute($stmt)) {
-                    header("location: login.php");
+                    header("Location: https://www-student.cse.buffalo.edu/CSE442-542/2023-Spring/cse-442ac/backend/login.php");
                 } else {
                     echo "Oops! Something went wrong. Please try again later.";
                 }

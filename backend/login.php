@@ -23,7 +23,7 @@
         if ($rows == 1) {
             $_SESSION['username'] = $username;
             // Redirect to user dashboard page
-            header("Location: home.php");
+            header("Location: https://www-student.cse.buffalo.edu/CSE442-542/2023-Spring/cse-442ac/backend/home.php");
         } else {
             echo "<div class='form'>
                     <h3>Incorrect Username/password.</h3><br/>
