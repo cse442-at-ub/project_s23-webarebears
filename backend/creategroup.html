@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Create Group</title>
+	<style>
+		/* CSS styles go here */
+		header {
+			background-color: #333;
+			color: #fff;
+			padding: 10px;
+			text-align: center;
+		}
+		nav {
+			display: flex;
+		}
+		nav a {
+			color: #fff;
+			text-decoration: none;
+			padding: 10px;
+		}
+		nav a:hover {
+			background-color: #555;
+		}
+		footer {
+			background-color: #333;
+			color: #fff;
+			padding: 10px;
+			text-align: center;
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<nav>
+			<a href="home.html">Home</a>
+			<a href="tasksAndBalances.html">Tasks and Balances</a>
+			<a href="messages.html">Messages</a>
+		</nav>
+	</header>
+
+	<main>
+		<!-- Main content goes here -->
+		<h1>Add friends to group</h1>
+		<label for="groupname">Group Name:</label>
+		<input type="text" id="groupname" name="groupname">
+		<p>Friends List:</p>
+		<select multiple size="10" style="width: 300px;">
+			<option>Friend 1</option>
+			<option>Friend 2</option>
+			<option>Friend 3</option>
+			<option>Friend 4</option>
+			<option>Friend 5</option>
+		</select>
+
+
+
+		<button onclick="cancel()">Cancel</button>
+		<button onclick="create()">Create</button>
+	</main>
+
+	<footer>
+		<p></p>
+	</footer>
+
+	<script>
+		function cancel() {
+			alert("Group creation has been canceled.");
+			window.location.href = "messages.html";
+		}
+
+		function create() { 
+			var groupName = document.getElementById("groupname").value;
+			alert("Group '" + groupName + "' has been created.");
+			window.location.href = "messages.html";
+		}
+	</script>
+
+</body>
+</html>
