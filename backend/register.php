@@ -3,20 +3,25 @@
 <head>
     <meta charset="utf-8">
     <title>Register</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <?php
+<?php
     require_once "server.php";
     $username = $password = $confirm_password = "";
     $username_err = $password_err = $confirm_password_err = "";
+
+    // Check if the database connection is successful
+    if (!$db_connection) {
+        die("Database connection failed: " . mysqli_connect_error());
+        echo("Connection failed");
+    }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (empty(trim($_POST["username"]))) {
             $username_err = "Please enter a username.";
         } else {
-            $sql = "SELECT id FROM 'User Accounts' WHERE username = ?";
-            if ($stmt = mysqli_prepare($link, $sql)) {
+            $sql = "SELECT id FROM `User Accounts` WHERE username = ?";
+            if ($stmt = mysqli_prepare($db_connection, $sql)) {
                 mysqli_stmt_bind_param($stmt, "s", $param_username);
                 $param_username = trim($_POST["username"]);
                 if (mysqli_stmt_execute($stmt)) {
@@ -48,20 +53,21 @@
             }
         }
         if (empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
-            $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
-            if ($stmt = mysqli_prepare($link, $sql)) {
+            $sql = "INSERT INTO `User Accounts` (username, password) VALUES (?, ?)";
+            if ($stmt = mysqli_prepare($db_connection, $sql)) {
                 mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
                 $param_username = $username;
                 $param_password = password_hash($password, PASSWORD_DEFAULT);
                 if (mysqli_stmt_execute($stmt)) {
-                    header("Location: https://www-student.cse.buffalo.edu/CSE442-542/2023-Spring/cse-442ac/backend/login.php");
+                    header("Location: login.php");
+                    echo "I think it worked";
                 } else {
-                    echo "Oops! Something went wrong. Please try again later.";
+                    echo "Oops! Something went wrong. Please try again later...." . mysqli_error($db_connection);
                 }
                 mysqli_stmt_close($stmt);
             }
         }
-        mysqli_close($link);
+        mysqli_close($db_connection);
     }
     ?>
     <form class="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
@@ -76,8 +82,11 @@
             <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
             <span class="help-block"><?php echo $password_err; ?></span>
         </div>
-        <input type="submit" value="Register" name="submit" class="register-button"/>
-
-
-
-        <div
+        <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
+    <label>Confirm Password</label>
+    <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>">
+    <span class="help-block"><?php echo $confirm_password_err; ?></span>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Register">
+    <p>Already have an account? <a href="login.php">Login here</a>.</p>
+    </form>

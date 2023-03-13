@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8"/>
     <title>Login</title>
-    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 <?php
@@ -23,7 +22,7 @@
         if ($rows == 1) {
             $_SESSION['username'] = $username;
             // Redirect to user dashboard page
-            header("Location: https://www-student.cse.buffalo.edu/CSE442-542/2023-Spring/cse-442ac/backend/home.php");
+            header("Location: home.html");
         } else {
             echo "<div class='form'>
                     <h3>Incorrect Username/password.</h3><br/>
