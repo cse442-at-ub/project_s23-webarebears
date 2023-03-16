@@ -109,8 +109,12 @@
     <script>
 
         let currentGroupId = null;
+        let chatHistoryTimeout = null; // Add this line
 
         function openChat(groupId) {
+            if (chatHistoryTimeout) { // Add this block
+                clearTimeout(chatHistoryTimeout);
+            }
             currentGroupId = groupId;
             document.getElementById('chat-box').style.display = 'block';
             fetchChatHistory(groupId);
@@ -132,7 +136,10 @@
                 .catch(error => {
                     console.error("Error fetching chat history:", error);
                 });
+
+                chatHistoryTimeout = setTimeout(() => fetchChatHistory(groupId), 1000); // Modify this line
         }
+
 
 
         function sendMessage() {
