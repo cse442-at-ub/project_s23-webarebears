@@ -100,11 +100,22 @@
 
         function fetchChatHistory(groupId) {
             fetch(`fetchChatHistory.php?group_id=${groupId}`)
-                .then(response => response.text())
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error(`Error fetching chat history. Status: ${response.status}`);
+                    }
+                })
                 .then(chatHistoryHtml => {
+                    console.log("Fetched chat history:", chatHistoryHtml);
                     document.getElementById('chat-history').innerHTML = chatHistoryHtml;
+                })
+                .catch(error => {
+                    console.error("Error fetching chat history:", error);
                 });
         }
+
 
         function sendMessage() {
             const messageInput = document.getElementById('message-input');
@@ -121,13 +132,18 @@
                 method: 'POST',
                 body: formData
             })
-            .then(() => {
+            .then(response => response.text()) // Add this line to retrieve the response text
+            .then(responseText => { // Modify this line to process the response text
+                console.log('Response from sendMessage.php:', responseText); // Log the response text to the console
                 fetchChatHistory(currentGroupId);
                 messageInput.value = '';
             });
 
             return false;
         }
+
+
+
     </script>
 
 </body>
