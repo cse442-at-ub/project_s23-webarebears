@@ -15,7 +15,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>My Messages</title>
+    <title>My Tasks and Balances</title>
     <style>
         /* CSS styles go here */
         header {
@@ -60,9 +60,7 @@
 
     <main>
         <!-- Main content goes here -->
-        <p> Messages Page </p>
-        <button onclick="window.location.href='addfriends.php'">Add Friends</button>
-        <button onclick="window.location.href='creategroup.html'">Create Group</button>
+        <p> Tasks and Balances Page </p>
     </main>
 
     <footer>
