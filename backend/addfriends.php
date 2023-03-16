@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="styles/addfriends.css"/>
 </head>
 <body>
-
 <header>
 	<nav>
 		<a href="home.html">Home</a>
@@ -14,7 +13,6 @@
 		<a href="messages.html">Messages</a>
 	</nav>
 </header>
-
 <?php
     require('server.php');
     session_start();
@@ -52,17 +50,55 @@
     if (isset($_POST['add_friend'])) {
         $friend_username = mysqli_real_escape_string($db_connection, $_POST['friend_username']);
         $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
-        $query = "INSERT INTO `Friends` (username, friend_username) VALUES ('$username', '$friend_username')";
-        mysqli_query($db_connection, $query);
+        
+        $query1 = "INSERT INTO `Friends` (username, friend_username) VALUES ('$username', '$friend_username')";
+        mysqli_query($db_connection, $query1);
+        
+        $query2 = "INSERT INTO `Friends` (username, friend_username) VALUES ('$friend_username', '$username')";
+        mysqli_query($db_connection, $query2);
+        
         echo "<p>" . $friend_username . " has been added as a friend.</p>";
     }
-?>
 
-<form class="form" method="post">
-    <h1 class="login-title">Add Friends</h1>
-    <input type="text" class="login-input" name="search" placeholder="Search for friends"/>
-    <input type="submit" value="Search" name="submit" class="login-button"/>
-</form>
-
-</body>
-</html>
+    // If remove friend button is clicked, remove friend from current user's friends list
+    if (isset($_POST['remove_friend'])) {
+        $friend_username = mysqli_real_escape_string($db_connection, $_POST['friend_username']);
+        $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
+        
+        $query1 = "DELETE FROM `Friends` WHERE username='$username' AND friend_username='$friend_username'";
+        mysqli_query($db_connection, $query1);
+        
+        $query2 = "DELETE FROM `Friends` WHERE username='$friend_username' AND friend_username='$username'";
+        mysqli_query($db_connection, $query2);
+        
+        echo "<p>" . $friend_username . " has been removed as a friend.</p>";
+    }
+        // Query the database for the current user's friends
+        $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
+        $query = "SELECT friend_username FROM `Friends` WHERE username='$username'";
+        $result = mysqli_query($db_connection, $query);
+    
+        // Display the list of friends, with a remove friend button next to each friend
+        echo "<h1>Friends List</h1>";
+        echo "<ul class='friends-list'>";
+        while ($row = mysqli_fetch_assoc($result)) {
+            $friend_username = $row['friend_username'];
+            echo "<li>" . $friend_username . " 
+                      <form method='post' class='remove-friend-form'>
+                          <input type='hidden' name='friend_username' value='" . $friend_username . "'/>
+                          <input type='submit' name='remove_friend' value='Remove'/>
+                      </form>
+                  </li>";
+        }
+        echo "</ul>";
+    ?>
+    
+    <form class="form" method="post">
+        <h1 class="login-title">Add Friends</h1>
+        <input type="text" class="login-input" name="search" placeholder="Search for friends"/>
+        <input type="submit" value="Search" name="submit" class="login-button"/>
+    </form>
+    
+    </body>
+    </html>
+    
