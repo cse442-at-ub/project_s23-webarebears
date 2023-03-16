@@ -10,6 +10,16 @@
         header("Location: login.php");
         exit();
     }
+
+    require('server.php');
+    $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
+    $query = "SELECT user_id FROM `User Accounts` WHERE username='$username'";
+    $result = mysqli_query($db_connection, $query);
+    $user = mysqli_fetch_assoc($result);
+    $user_id = $user['user_id'];
+
+    $query = "SELECT Groups.group_id, Groups.group_name FROM `Group_Members` INNER JOIN `Groups` ON Group_Members.group_id = Groups.group_id WHERE Group_Members.user_id='$user_id'";
+    $result = mysqli_query($db_connection, $query);
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,32 +27,27 @@
     <meta charset="utf-8">
     <title>My Messages</title>
     <style>
-        /* CSS styles go here */
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
+        .chat-box {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            width: 300px;
+            height: 400px;
+            border: 1px solid black;
+            display: none;
         }
-        nav {
+
+        .chat-history {
+            height: 300px;
+            overflow-y: scroll;
+        }
+
+        .message-form {
             display: flex;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
+            justify-content: space-between;
+            align-items: center;
             padding: 10px;
-        }
-        nav a:hover {
-            background-color: #555;
-        }
-        footer {
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
+            background-color: #ccc;
         }
     </style>
 </head>
@@ -62,11 +67,68 @@
         <!-- Main content goes here -->
         <p> Messages Page </p>
         <button onclick="window.location.href='addfriends.php'">Add Friends</button>
-        <button onclick="window.location.href='creategroup.html'">Create Group</button>
+        <button onclick="window.location.href='creategroup.php'">Create Group</button>
+        
+        <h2>My Groups</h2>
+        <ul>
+        <?php
+            while ($row = mysqli_fetch_assoc($result)) {
+                $group_id = $row['group_id'];
+                $group_name = $row['group_name'];
+                echo "<li><a href='#' onclick='openChat($group_id)'>$group_name</a></li>";
+            }
+        ?>
+        </ul>
     </main>
 
-    <footer>
-        <p></p>
-    </footer>
+    <div id="chat-box" class="chat-box">
+        <div id="chat-history" class="chat-history"></div>
+        <form id="message-form" class="message-form" onsubmit="return sendMessage()">
+            <input id="message-input" type="text" name="message" placeholder="Type your message...">
+            <input type="submit" value="Send">
+        </form>
+    </div>
+
+    <script>
+        let currentGroupId = null;
+
+        function openChat(groupId) {
+            currentGroupId = groupId;
+            document.getElementById('chat-box').style.display = 'block';
+            fetchChatHistory(groupId);
+        }
+
+        function fetchChatHistory(groupId) {
+            fetch(`fetchChatHistory.php?group_id=${groupId}`)
+                .then(response => response.text())
+                .then(chatHistoryHtml => {
+                    document.getElementById('chat-history').innerHTML = chatHistoryHtml;
+                });
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+            if (message === '') {
+                return false;
+            }
+
+            const formData = new FormData();
+            formData.append('group_id', currentGroupId);
+            formData.append('message', message);
+
+            fetch('sendMessage.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(() => {
+                fetchChatHistory(currentGroupId);
+                messageInput.value = '';
+            });
+
+            return false;
+        }
+    </script>
+
 </body>
 </html>
