@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>My Home</title>
+	<title>My Website</title>
 	<style>
 		/* CSS styles go here */
         body{
@@ -94,19 +94,49 @@
 </head>
 <body id="homepage">
 	<header>
-		<nav>
-			<a href="home.html">Home</a>
-			<a href="tasksAndBalances.html">Tasks and Balances</a>
-			<a href="messages.html">Messages</a>
+		<nav class="nav-left">
+			<img href="" id="profile-pic" src="images/profile-temp.png">
+			<a href="home.html" id="home" >Home</a>
+			<a id="tasksAndBalances" href="tasksAndBalances.html">Tasks and Balances</a>
+			<a id="messages" href="messages.html">Messages</a>			
 		</nav>
+		<nav class="nav-right">
+			<input id="search-bar" type="search" placeholder="Search">
+			<button type="button" class="icon-button">
+				<span class="material-icons">notifications</span>
+				<span class="icon-button__badge">2</span>
+			</button>
+		</nav>
+		
 	</header>
 
 	<main id="grid2">
-        <recent>Recent</recent>
-        <tasks>test</tasks>		
+        <recent>
+            <u id="recent">Recent</u>
+			<div id="notification">
+				<p id="notification-text" >Junstin just gave Laurence a "Do Laundry" Task!</p>
+				<p id="notification-group">By: Group 1</p>
+			</div>
+        </recent>
+        <tasks>
+            <div id="tasks">Your Tasks: 
+				<p id="tasks-direction"> Select Tasks that you have finished!</p>
+				<div id="task-text">Clean Dishes by 2/10/23
+					<input type="radio" class="checkmark" name="assigned-task" onclick="complete">
+					<p id="set-by">Set By: Group 1</p>
+				</div>
+				
+				
+			</div>
+			
+        </tasks>		
 	</main>
 
 	<footer>
+		<!--profile pic break nav bar-->
+		<a id="profile" href="">
+			<img id="profile-pic" src="images/profile-temp.png">
+		</a>
 		<p></p>
 	</footer>
 </body>
