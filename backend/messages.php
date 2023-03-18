@@ -54,7 +54,7 @@
 <body>
     <header>
         <nav>
-            <a href="home.html">Home</a>
+            <a href="home.php">Home</a>
             <a href="tasksAndBalances.php">Tasks and Balances</a>
             <a href="messages.php">Messages</a>
             <form method="post" action="">
@@ -70,6 +70,7 @@
         <button onclick="window.location.href='creategroup.php'">Create Group</button>
         
         <h2>My Groups</h2>
+        <button id="set-task-button" onclick="openTaskForm()">Set Task</button>
         <ul>
         <?php
             while ($row = mysqli_fetch_assoc($result)) {
@@ -89,16 +90,37 @@
         </form>
     </div>
 
+    <div id="task-form" style="display: none;">
+    <h2>Set Task</h2>
+    <form id="create-task-form" onsubmit="return createTask()">
+        <label for="task-friend">Choose a friend:</label>
+        <select id="task-friend" name="friend"></select><br><br>
+        
+        <label for="task-description">Task Description:</label>
+        <textarea id="task-description" name="description" rows="4" cols="50" required></textarea><br><br>
+
+        <label for="task-due-date">Due Date:</label>
+        <input id="task-due-date" type="date" name="due_date" required><br><br>
+
+        <input type="submit" value="Create Task">
+    </form>
+    </div>
+
     <script>
+
         let currentGroupId = null;
+        let chatHistoryTimeout = null; // Add this line
 
         function openChat(groupId) {
+            if (chatHistoryTimeout) { // Add this block
+                clearTimeout(chatHistoryTimeout);
+            }
             currentGroupId = groupId;
             document.getElementById('chat-box').style.display = 'block';
             fetchChatHistory(groupId);
         }
 
-        function fetchChatHistory(groupId) {
+        function fetchChatHistory(groupId, skipTimeout) {
             fetch(`fetchChatHistory.php?group_id=${groupId}`)
                 .then(response => {
                     if (response.ok) {
@@ -114,8 +136,11 @@
                 .catch(error => {
                     console.error("Error fetching chat history:", error);
                 });
-        }
 
+            if (!skipTimeout) {
+                chatHistoryTimeout = setTimeout(() => fetchChatHistory(groupId), 5000);
+            }
+        }
 
         function sendMessage() {
             const messageInput = document.getElementById('message-input');
@@ -135,7 +160,7 @@
             .then(response => response.text()) // Add this line to retrieve the response text
             .then(responseText => { // Modify this line to process the response text
                 console.log('Response from sendMessage.php:', responseText); // Log the response text to the console
-                fetchChatHistory(currentGroupId);
+                fetchChatHistory(currentGroupId, true); // Add true as the second argument
                 messageInput.value = '';
             });
 
@@ -143,6 +168,62 @@
         }
 
 
+        function openTaskForm() {
+            if (currentGroupId === null) {
+                alert('Please select a group chat before setting a task.');
+                return;
+            }
+            document.getElementById('task-form').style.display = 'block';
+            fetchGroupMembers(currentGroupId);
+        }
+
+        function closeTaskForm() {
+            document.getElementById('task-form').style.display = 'none';
+        }
+
+        function fetchGroupMembers(groupId) {
+            fetch(`fetchGroupMembers.php?group_id=${groupId}`)
+                .then(response => response.json())
+                .then(members => {
+                    const select = document.getElementById('task-friend');
+                    select.innerHTML = '';
+                    members.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member.user_id;
+                        option.textContent = member.username;
+                        select.appendChild(option);
+                    });
+                });
+        }
+
+        function createTask() {
+            const friend = document.getElementById('task-friend').value;
+            const description = document.getElementById('task-description').value;
+            const dueDate = document.getElementById('task-due-date').value;
+
+            if (!friend || !description || !dueDate) {
+                alert('Please fill in all fields.');
+                return false;
+            }
+
+            const formData = new FormData();
+            formData.append('group_id', currentGroupId);
+            formData.append('friend', friend);
+            formData.append('description', description);
+            formData.append('due_date', dueDate);
+
+            fetch('createTask.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(responseText => {
+                console.log('Response from createTask.php:', responseText);
+                closeTaskForm();
+            });
+
+            return false;
+        }
 
     </script>
 

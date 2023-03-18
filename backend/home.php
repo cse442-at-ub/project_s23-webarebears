@@ -1,114 +1,144 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['username'])) {
+        header("Location: login.php");
+        exit();
+    }
+    require('server.php');
+
+    if (isset($_POST['logout'])) {
+        session_destroy();
+        header("Location: login.php");
+        exit();
+    }
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>My Website</title>
-	<style>
-		/* CSS styles go here */
-        body{
-            background: #181A20;
-        }
-		header {
-			color: #fff;
-			padding: 10px;
-			text-align: center;
-		}
-		nav {
-			display: flex;
-		}
-		nav a {
-			color: #fff;
-			text-decoration: none;
-			padding: 15px;
-		}
-		nav a:hover {
-			text-decoration: underline;
-		}
-		footer {
-			background-color: #333;
-			color: #fff;
-			padding: 10px;
-			text-align: center;
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-		}
+    <meta charset="utf-8">
+    <title>Home</title>
+    <style>
+        /* CSS styles go here */
+    </style>
+</head>
 
-        #homepage{
-            display: grid;
-            width: 100%;
-            height: 250px;
-            grid-template-areas:
-                "head head"
-                "main main"
-                "main main"
-                "foot foot";
-            grid-template-rows: 50px 1fr 30px;
-            grid-template-columns: 150px 1fr;
+<body id="homepage">
+    <header>
+        <nav>
+            <a href="home.php">Home</a>
+            <a href="tasksAndBalances.php">Tasks and Balances</a>
+            <a href="messages.php">Messages</a>
+            <form method="post" action="">
+                <input type="submit" name="logout" value="Logout">
+            </form>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Recent Messages</h2>
+        <div id="recent-messages">
+            <!-- Recent messages will be displayed here -->
+        </div>
+
+        <h2>My Tasks</h2>
+        <div id="my-tasks">
+            <!-- My tasks will be displayed here -->
+        </div>
+        <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>
+    </main>
+
+    <script>
+        function fetchRecentMessages() {
+            fetch('fetchRecentMessages.php')
+                .then(response => response.json())
+                .then(messages => {
+                    console.log(messages); // Add this line to inspect the content of the response
+
+                    const recentMessagesContainer = document.getElementById('recent-messages');
+                    recentMessagesContainer.innerHTML = '';
+                    messages.forEach(message => {
+                        const groupName = document.createElement('h4');
+                        groupName.textContent = message.group_name;
+                        recentMessagesContainer.appendChild(groupName);
+
+                        const messageContent = document.createElement('p');
+                        messageContent.textContent = message.message_content;
+                        recentMessagesContainer.appendChild(messageContent);
+
+                        const sender = document.createElement('p');
+                        sender.textContent = 'Sent by: ' + message.sender;
+                        recentMessagesContainer.appendChild(sender);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching recent messages:', error);
+                });
         }
 
-        #homepage > header {
-            grid-area: head;
+        function fetchMyTasks() {
+            fetch('fetchMyTasks.php')
+                .then(response => response.json())
+                .then(tasks => {
+                    const tasksContainer = document.getElementById('my-tasks');
+                    tasksContainer.innerHTML = '';
+
+                    tasks.forEach(task => {
+                        const taskItem = document.createElement('div');
+                        const checkBox = document.createElement('input');
+                        checkBox.type = 'checkbox';
+                        checkBox.setAttribute('data-task-id', task.task_id);
+                        taskItem.appendChild(checkBox);
+
+                        const description = document.createElement('span');
+                        description.textContent = task.description;
+                        taskItem.appendChild(description);
+
+                        tasksContainer.appendChild(taskItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching tasks:', error);
+                });
+        }
+
+        function completeTasks() {
+            const tasksContainer = document.getElementById('my-tasks');
+            const checkBoxes = tasksContainer.querySelectorAll('input[type=checkbox]:checked');
+            const taskIds = [];
+
+            checkBoxes.forEach(checkBox => {
+                taskIds.push(checkBox.getAttribute('data-task-id'));
+            });
+
+            if (taskIds.length === 0) {
+                alert('Please select at least one task to mark as complete.');
+                return;
             }
 
-        #homepage > nav {
-            grid-area: nav;
+            fetch('completeTasks.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ taskIds }),
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        fetchMyTasks();
+                    } else {
+                        console.error('Error completing tasks:', result.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error completing tasks:', error);
+                });
         }
 
-        #homepage > main {
-            grid-area: main;
-        }
-
-        #homepage > footer {
-            grid-area: foot;
-        }
-
-        #grid2{
-            display: grid;
-            grid-template-areas:
-            "recent recent tasks"
-            ;
-        }
-
-        #grid2 > recent {
-            grid-area: recent;
-            padding: 30px;
-            background-color: blue;
-            border-radius: 20px;
-            margin-right: 30px;
-            margin-left: 20px;
-            margin-top: 20px;
-
-        }
-
-        #grid2 > tasks {
-            margin-top: 20px;
-            grid-area: tasks;
-            padding: 30px;
-            border-radius: 20px;
-            margin-left:30px;
-            margin-right:20px;
-            background-color: #1F222A;
-        }
-
-	</style>
-</head>
-<body id="homepage">
-	<header>
-		<nav>
-			<a href="#">Home</a>
-			<a href="#">Tasks and Balances</a>
-			<a href="#">Messages</a>
-		</nav>
-	</header>
-
-	<main id="grid2">
-        <recent>Recent</recent>
-        <tasks>test</tasks>		
-	</main>
-
-	<footer>
-		<p></p>
-	</footer>
+        fetchRecentMessages();
+        fetchMyTasks();
+    </script>
 </body>
 </html>

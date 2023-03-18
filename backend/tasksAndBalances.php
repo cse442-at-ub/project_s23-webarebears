@@ -49,7 +49,7 @@
 <body>
     <header>
         <nav>
-            <a href="home.html">Home</a>
+            <a href="home.php">Home</a>
             <a href="tasksAndBalances.php">Tasks and Balances</a>
             <a href="messages.php">Messages</a>
             <form method="post" action="">
