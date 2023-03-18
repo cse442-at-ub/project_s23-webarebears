@@ -17,7 +17,7 @@ header {
 #home{
     color: white;
     font-family: sans-serif;
-    font-weight: 550;
+    font-weight: 500;
     font-size: 27px;
     text-decoration: underline;
 }
@@ -26,14 +26,14 @@ header {
     color: #B0BEC5;
     font-family: sans-serif;
     font-size: 20px;
-    font-weight: 550;
+    font-weight: 450;
 }
 
 #messages{
     color: #B0BEC5;
     font-family: sans-serif;
     font-size: 20px;
-    font-weight: 550;
+    font-weight: 450;
 }
 nav {
     display: flex-block;
@@ -129,14 +129,16 @@ footer {
     font-family: sans-serif;
     display: block;
     padding: 10px;
-    font-weight: 550;
+    font-weight: 450;
 }
 
 #tasks{
     color: white;
     font-family: sans-serif;
-    font-weight: 550;
+    font-weight: 450;
+    font-size: x-large;
     display: inline-block;
+    height: auto;
 }
 
 #tasks-direction{
@@ -144,9 +146,9 @@ footer {
     display: inline-block;
     color: white;
     font-family: sans-serif;
-    font-size: small;
+    font-size: medium;
     padding-left: 100px;
-    font-weight: 550;
+    font-weight: 450;
 }
 
 #task-text{
@@ -159,11 +161,37 @@ footer {
     padding: 15px;
 }
 
-.checkmark{
-    height: 20px;
-    width: 20px;
-    accent-color: black;
-    margin-left: 90%;
+.task {
+    color: white;
+    font-size: small;
+    background-color: #652A5F;
+    border-radius: 10px;
+    width: 90%;
+    height: 80%;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.task.selected {
+    background-color: #3F2040;
+}
+
+.complete-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.complete-button {
+    height: 30px;
+    width: 100px;
+    border: none;
+    position: absolute;
+    background-color: #652A5F;
+    border-radius: 8px;
+    display: none;
+    margin-top: 20px;
+}
+.selected .complete-button {
+    display: block;
 }
 
 
@@ -174,14 +202,8 @@ footer {
 }
 
 #notification{
-    height: 50%;
-    width: 90%;
-    border-radius: 15px;
-    background-color: #242042;
-    padding: 20px;
-    margin: auto;
-    display: block;
-    font-weight: 400;
+    background-color: #181A20;
+    padding: 10px;
 }
 
 #search-bar{
@@ -194,8 +216,17 @@ footer {
 
 #notification-text{
     color: white;
-    text-align: center;
+    text-align: left;
     font-family: sans-serif;
+    height: 50%;
+    width: 90%;
+    border-radius: 15px;
+    background-color: #242042;
+    padding: 20px;
+    margin: auto;
+    display: block;
+    font-weight: 400;
+    margin-bottom: 15px;
 }
 
 #notification-group{
@@ -242,5 +273,5 @@ footer {
 
   ::placeholder{
     color: #333;
-    font-weight: 550;
+    font-weight: 500;
   }
