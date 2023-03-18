@@ -3,111 +3,53 @@
 <head>
 	<meta charset="utf-8">
 	<title>My Website</title>
-	<style>
-		/* CSS styles go here */
-        body{
-            background: #181A20;
-        }
-		header {
-			color: #fff;
-			padding: 10px;
-			text-align: center;
-		}
-		nav {
-			display: flex;
-		}
-		nav a {
-			color: #fff;
-			text-decoration: none;
-			padding: 15px;
-		}
-		nav a:hover {
-			text-decoration: underline;
-		}
-		footer {
-			background-color: #333;
-			color: #fff;
-			padding: 10px;
-			text-align: center;
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-		}
-
-        #homepage{
-            display: grid;
-            width: 100%;
-            height: 250px;
-            grid-template-areas:
-                "head head"
-                "main main"
-                "main main"
-                "foot foot";
-            grid-template-rows: 50px 1fr 30px;
-            grid-template-columns: 150px 1fr;
-        }
-
-        #homepage > header {
-            grid-area: head;
-            }
-
-        #homepage > nav {
-            grid-area: nav;
-        }
-
-        #homepage > main {
-            grid-area: main;
-        }
-
-        #homepage > footer {
-            grid-area: foot;
-        }
-
-        #grid2{
-            display: grid;
-            grid-template-areas:
-            "recent recent tasks"
-            ;
-        }
-
-        #grid2 > recent {
-            grid-area: recent;
-            padding: 30px;
-            background-color: blue;
-            border-radius: 20px;
-            margin-right: 30px;
-            margin-left: 20px;
-            margin-top: 20px;
-
-        }
-
-        #grid2 > tasks {
-            margin-top: 20px;
-            grid-area: tasks;
-            padding: 30px;
-            border-radius: 20px;
-            margin-left:30px;
-            margin-right:20px;
-            background-color: #1F222A;
-        }
-
-	</style>
+    <link rel="stylesheet" href="styles/home_style.css"/>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body id="homepage">
 	<header>
-		<nav>
-			<a href="#">Home</a>
-			<a href="#">Tasks and Balances</a>
-			<a href="#">Messages</a>
+		<nav class="nav-left">
+			<img href="" id="profile-pic" src="images/profile-temp.png">
+			<a href="home.html" id="home" >Home</a>
+			<a id="tasksAndBalances" href="tasksAndBalances.html">Tasks and Balances</a>
+			<a id="messages" href="messages.html">Messages</a>			
 		</nav>
+		<nav class="nav-right">
+			<input id="search-bar" type="search" placeholder="Search">
+			<button type="button" class="icon-button">
+				<span class="material-icons">notifications</span>
+				<span class="icon-button__badge">2</span>
+			</button>
+		</nav>
+		
 	</header>
 
 	<main id="grid2">
-        <recent>Recent</recent>
-        <tasks>test</tasks>		
+        <recent>
+            <u id="recent">Recent</u>
+			<div id="notification">
+				<p id="notification-text" >Junstin just gave Laurence a "Do Laundry" Task!</p>
+				<p id="notification-group">By: Group 1</p>
+			</div>
+        </recent>
+        <tasks>
+            <div id="tasks">Your Tasks: 
+				<p id="tasks-direction"> Select Tasks that you have finished!</p>
+				<div id="task-text">Clean Dishes by 2/10/23
+					<input type="radio" class="checkmark" name="assigned-task">
+					<p id="set-by">Set By: Group 1</p>
+				</div>
+				
+			</div>
+			
+        </tasks>		
 	</main>
 
 	<footer>
+		<!--profile pic break nav bar-->
+		<a id="profile" href="">
+			<img id="profile-pic" src="images/profile-temp.png">
+		</a>
 		<p></p>
 	</footer>
 </body>
