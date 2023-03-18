@@ -1,11 +1,28 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['username'])) {
+        header("Location: login.php");
+        exit();
+    }
+    require('server.php');
+
+    if (isset($_POST['logout'])) {
+        session_destroy();
+        header("Location: login.php");
+        exit();
+    }
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>My Website</title>
+    <meta charset="utf-8">
+    <title>Home</title>
     <link rel="stylesheet" href="styles/home_style.css"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+
 <body id="homepage">
 	<header>
 		<nav class="nav-left">
@@ -81,12 +98,96 @@
         </tasks>		
 	</main>
 
-	<footer>
-		<!--profile pic break nav bar-->
-		<a id="profile" href="">
-			<img id="profile-pic" src="images/profile-temp.png">
-		</a>
-		<p></p>
-	</footer>
+    <script>
+        function fetchRecentMessages() {
+            fetch('fetchRecentMessages.php')
+                .then(response => response.json())
+                .then(messages => {
+                    console.log(messages); // Add this line to inspect the content of the response
+
+                    const recentMessagesContainer = document.getElementById('recent');
+                    recentMessagesContainer.innerHTML = '';
+                    messages.forEach(message => {
+                        const groupName = document.createElement('h4');
+                        groupName.textContent = message.group_name;
+                        recentMessagesContainer.appendChild(groupName);
+
+                        const messageContent = document.createElement('p');
+                        messageContent.textContent = message.message_content;
+                        recentMessagesContainer.appendChild(messageContent);
+
+                        const sender = document.createElement('p');
+                        sender.textContent = 'Sent by: ' + message.sender;
+                        recentMessagesContainer.appendChild(sender);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching recent messages:', error);
+                });
+        }
+
+        function fetchMyTasks() {
+            fetch('fetchMyTasks.php')
+                .then(response => response.json())
+                .then(tasks => {
+                    const tasksContainer = document.getElementById('tasks');
+                    tasksContainer.innerHTML = '';
+
+                    tasks.forEach(task => {
+                        const taskItem = document.createElement('div');
+                        const checkBox = document.createElement('input');
+                        checkBox.type = 'checkbox';
+                        checkBox.setAttribute('data-task-id', task.task_id);
+                        taskItem.appendChild(checkBox);
+
+                        const description = document.createElement('span');
+                        description.textContent = task.description;
+                        taskItem.appendChild(description);
+
+                        tasksContainer.appendChild(taskItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching tasks:', error);
+                });
+        }
+
+        function completeTasks() {
+            const tasksContainer = document.getElementById('tasks');
+            const checkBoxes = tasksContainer.querySelectorAll('input[type=checkbox]:checked');
+            const taskIds = [];
+
+            checkBoxes.forEach(checkBox => {
+                taskIds.push(checkBox.getAttribute('data-task-id'));
+            });
+
+            if (taskIds.length === 0) {
+                alert('Please select at least one task to mark as complete.');
+                return;
+            }
+
+            fetch('completeTasks.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ taskIds }),
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        fetchMyTasks();
+                    } else {
+                        console.error('Error completing tasks:', result.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error completing tasks:', error);
+                });
+        }
+
+        fetchRecentMessages();
+        fetchMyTasks();
+    </script>
 </body>
 </html>
