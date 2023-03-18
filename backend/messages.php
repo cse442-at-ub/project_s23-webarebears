@@ -54,7 +54,7 @@
 <body>
     <header>
         <nav>
-            <a href="home.html">Home</a>
+            <a href="home.php">Home</a>
             <a href="tasksAndBalances.php">Tasks and Balances</a>
             <a href="messages.php">Messages</a>
             <form method="post" action="">
@@ -120,7 +120,7 @@
             fetchChatHistory(groupId);
         }
 
-        function fetchChatHistory(groupId) {
+        function fetchChatHistory(groupId, skipTimeout) {
             fetch(`fetchChatHistory.php?group_id=${groupId}`)
                 .then(response => {
                     if (response.ok) {
@@ -137,10 +137,10 @@
                     console.error("Error fetching chat history:", error);
                 });
 
-                chatHistoryTimeout = setTimeout(() => fetchChatHistory(groupId), 1000); // Modify this line
+            if (!skipTimeout) {
+                chatHistoryTimeout = setTimeout(() => fetchChatHistory(groupId), 5000);
+            }
         }
-
-
 
         function sendMessage() {
             const messageInput = document.getElementById('message-input');
@@ -160,12 +160,13 @@
             .then(response => response.text()) // Add this line to retrieve the response text
             .then(responseText => { // Modify this line to process the response text
                 console.log('Response from sendMessage.php:', responseText); // Log the response text to the console
-                fetchChatHistory(currentGroupId);
+                fetchChatHistory(currentGroupId, true); // Add true as the second argument
                 messageInput.value = '';
             });
 
             return false;
         }
+
 
         function openTaskForm() {
             if (currentGroupId === null) {
