@@ -10,7 +10,7 @@
         session_destroy();
         header("Location: login.php");
         exit();
-    }
+    } 
 ?>
 
 
@@ -45,52 +45,13 @@
 
 	<main id="grid2">
         <recent>
-            <u id="recent">Recent</u>
-			<div id="notification">
-				<?php
-					$notifications = array("Junstin just gave Laurence a 'Do Laundry' Task!", "Notification2", "Notification3");
-					foreach ($notifications as $notifcation) {
-						echo '<div id="notification-text">' . $notifcation . '</div>';
-					}
-				?>
-			</div>
+            <div id="recent">Recent</div>
+			
         </recent>
         <tasks>
             <div id="tasks">Your Tasks: 
 				<p id="tasks-direction"> Select Tasks that you have finished!</p>
-				<?php
-					$tasks = array("Task 1", "Task 2", "Task 3", "Task4", "Task5");
-					foreach ($tasks as $task) {
-						echo '<div class="task">' . $task . '</div>';
-					}
-				?>
-				<div class=complete-container>
-					<button class="complete-button">Complete</button>
-				</div>
-				<script>
-					let tasks = document.querySelectorAll('.task');
-					let completeButton = document.querySelector('.complete-button');
-
-					tasks.forEach(task => {
-						task.addEventListener('click', () => {
-							task.classList.toggle('selected');
-							let selectedTasks = document.querySelectorAll('.selected');
-							if (selectedTasks.length > 0) {
-								completeButton.style.display = 'block';
-							} else {
-								completeButton.style.display = 'none';
-							}
-						});
-					});
-
-					completeButton.addEventListener('click', () => {
-						let selectedTasks = document.querySelectorAll('.selected');
-						selectedTasks.forEach(task => {
-							task.remove();
-						});
-						completeButton.style.display = 'none';
-					});
-				</script>
+				
 				</div>
 				
 			</div>
