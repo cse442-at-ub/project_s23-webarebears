@@ -30,8 +30,8 @@
 				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
 			</a>
 			<a href="home.php" id="home" >Home</a>
-			<a id="tasksAndBalances" href="tasksAndBalances.html">Tasks and Balances</a>
-			<a id="messages" href="messages.html">Messages</a>			
+			<a id="tasksAndBalances" href="tasksAndBalances.php">Tasks and Balances</a>
+			<a id="messages" href="messages.php">Messages</a>			
 		</nav>
 		<nav class="nav-right">
 			<input id="search-bar" type="search" placeholder="Search">
@@ -39,24 +39,29 @@
 				<span class="material-icons">notifications</span>
 				<span class="icon-button__badge">2</span>
 			</button>
+            <form method="post" action="">
+                <input type="submit" name="logout" value="Logout">
+            </form>
 		</nav>
 		
 	</header>
 
 	<main id="grid2">
         <recent>
+            <h2 style="color: white;">Recent</h2>
             <div id="recent">Recent</div>
 			
         </recent>
         <tasks>
+            <h1 style="color: white;">Your Tasks:</h1>
+            <p style="color: white;"> Select Tasks that you have finished!</p>
             <div id="tasks">Your Tasks: 
 				<p id="tasks-direction"> Select Tasks that you have finished!</p>
-				
 				</div>
-				
 			</div>
-			
-        </tasks>		
+            <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>		
+        </tasks>
+       
 	</main>
 
     <script>
