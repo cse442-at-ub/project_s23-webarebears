@@ -9,8 +9,10 @@
 <body id="homepage">
 	<header>
 		<nav class="nav-left">
-			<img href="" id="profile-pic" src="images/profile-temp.png">
-			<a href="home.html" id="home" >Home</a>
+			<a href="profile.php">
+				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
+			</a>
+			<a href="home.php" id="home" >Home</a>
 			<a id="tasksAndBalances" href="tasksAndBalances.html">Tasks and Balances</a>
 			<a id="messages" href="messages.html">Messages</a>			
 		</nav>
