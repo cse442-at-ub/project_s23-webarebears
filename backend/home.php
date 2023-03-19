@@ -39,7 +39,7 @@
 				<span class="material-icons">notifications</span>
 				<span class="icon-button__badge">2</span>
 			</button>
-            <form method="post" action="">
+            <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
             </form>
 		</nav>
@@ -59,6 +59,7 @@
 				<p id="tasks-direction"> Select Tasks that you have finished!</p>
 				</div>
 			</div>
+            <p></p>
             <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>		
         </tasks>
        
@@ -73,19 +74,25 @@
 
                     const recentMessagesContainer = document.getElementById('recent');
                     recentMessagesContainer.innerHTML = '';
+
                     messages.forEach(message => {
-                        const groupName = document.createElement('h4');
-                        groupName.textContent = message.group_name;
-                        recentMessagesContainer.appendChild(groupName);
+                    const recentMessage = document.createElement('div');
+                    recentMessage.classList.add('recent-message');
+                    recentMessagesContainer.appendChild(recentMessage);
 
-                        const messageContent = document.createElement('p');
-                        messageContent.textContent = message.message_content;
-                        recentMessagesContainer.appendChild(messageContent);
+                    const groupName = document.createElement('h4');
+                    groupName.textContent = 'Group: ' + message.group_name;
+                    recentMessage.appendChild(groupName);
 
-                        const sender = document.createElement('p');
-                        sender.textContent = 'Sent by: ' + message.sender;
-                        recentMessagesContainer.appendChild(sender);
-                    });
+                    const messageContent = document.createElement('p');
+                    messageContent.textContent = message.message_content;
+                    recentMessage.appendChild(messageContent);
+
+                    const sender = document.createElement('p');
+                    sender.textContent = 'Sent by: ' + message.sender;
+                    recentMessage.appendChild(sender);
+                });
+
                 })
                 .catch(error => {
                     console.error('Error fetching recent messages:', error);
@@ -101,22 +108,28 @@
 
                     tasks.forEach(task => {
                         const taskItem = document.createElement('div');
+                        taskItem.classList.add('task'); // Add this line to apply the task class
+                        tasksContainer.appendChild(taskItem);
+
+                        const taskTitle = document.createElement('h4');
+                        taskTitle.textContent = task.description;
+                        taskItem.appendChild(taskTitle);
+
                         const checkBox = document.createElement('input');
                         checkBox.type = 'checkbox';
                         checkBox.setAttribute('data-task-id', task.task_id);
                         taskItem.appendChild(checkBox);
 
                         const description = document.createElement('span');
-                        description.textContent = task.description;
+                        description.textContent = ' - Due: ' + task.due_date; // Assuming there's a due_date property in the task object
                         taskItem.appendChild(description);
-
-                        tasksContainer.appendChild(taskItem);
                     });
                 })
                 .catch(error => {
                     console.error('Error fetching tasks:', error);
                 });
         }
+
 
         function completeTasks() {
             const tasksContainer = document.getElementById('tasks');

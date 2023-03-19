@@ -15,7 +15,7 @@
     $user_id = $user['user_id'];
 
     $query = "
-        SELECT task_id, description
+        SELECT task_id, description, due_date
         FROM Tasks
         WHERE assigned_to = '$user_id' AND status = 'pending'
         ORDER BY due_date ASC
