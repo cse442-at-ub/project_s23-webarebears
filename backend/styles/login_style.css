@@ -65,7 +65,7 @@ button{
 
 #registration_link{
     text-align: center;
-    color: #dadadae5;
+    color: #7C82BA;
     font-size: small;
 }
 
@@ -79,6 +79,12 @@ button{
     font-size: small;
 }
 
-a:link{
-    color: #4D5DFA;
+a:-webkit-any-link {
+    color: #dadadae5;
+    cursor: pointer;
+    text-decoration: underline;
 }
+
+
+
+
