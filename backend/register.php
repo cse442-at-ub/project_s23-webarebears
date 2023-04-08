@@ -81,22 +81,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
     <form class="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <img id="logo" src="images/temp-logo.png" alt="Logo">
-        <h2>Register</h2>
+        <h2 id="register-title">REGISTER</h2>
         <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-            <label>Username</label>
-            <input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
+            <input type="text" name="username" class="form-control" value="<?php echo $username; ?>" placeholder = "Username">
             <span class="help-block"><?php echo $username_err; ?></span>
         </div>
         <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
-            <label>Password</label>
-            <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
+            <input type="password" name="password" class="form-control" value="<?php echo $password; ?>" placeholder = "Password">
             <span class="help-block"><?php echo $password_err; ?></span>
         </div>
         <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
-    <label>Confirm Password</label>
-    <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>">
+
+    <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>" placeholder = "Confirm Password">
     <span class="help-block"><?php echo $confirm_password_err; ?></span>
     </div>
-    <input type="submit" class="btn btn-primary" value="Register">
-    <p>Already have an account? <a href="login.php">Login here</a>.</p>
+    <input type="submit" class="register-button" value="Register">
+    <p id="login_link">Already have an account? <a href="login.php">Login here</a>.</p>
+    <p id="user_concern">Your personal details are safe with us</p>
+    <p id="user_concern">Read our Privacy Policy and Terms and Conditions</p>
     </form>

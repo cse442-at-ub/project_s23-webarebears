@@ -52,3 +52,9 @@ input{
     color:#7C82BA;
     font-size: small;
 }
+
+#login_link{
+    text-align: center;
+    color: #dadadae5;
+    font-size: small;
+}

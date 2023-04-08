@@ -33,13 +33,17 @@
         }
     } else {
 ?>
+<body>
     <form class="form" method="post" name="login">
         <img id="logo" src="images/temp-logo.png" alt="Logo">
-        <h1 class="login-title">Login With Your Username</h1>
+        <h1 class="login-title">LOGIN WITH YOUR</h1>
+        <h1 class="login-title">USERNAME</h1>
         <input type="text" class="login-input" name="username" placeholder="Username" autofocus="true"/>
         <input type="password" class="login-input" name="password" placeholder="Password"/>
-        <input type="submit" value="Login" name="submit" class="login-button"/>
-        <p class="link"><a href="register.php">New Registration</a></p>
+        <input id="login_button" type="submit" value="Login" name="submit" class="login-button"/>
+        <p id="registration_link" class="link">New User? <a href="register.php">Click here to Register</a></p>
+        <p id="user_concern">Your personal details are safe with us</p>
+        <p id="user_concern">Read our Privacy Policy and Terms and Conditions</p>
   </form>
 <?php
     }
