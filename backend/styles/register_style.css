@@ -55,6 +55,13 @@ input{
 
 #login_link{
     text-align: center;
-    color: #dadadae5;
+    color: #7C82BA;
     font-size: small;
 }
+
+a:-webkit-any-link {
+    color: #dadadae5;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
