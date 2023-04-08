@@ -15,10 +15,11 @@ body{
 #submit_button{
     align-items: center;
     color: white;
+    border-color: #4D5DFA;
     background-color: #4D5DFA;
 }
 
-.form{
+.page{
     text-align: center;
     border-radius: 5px;
     width: 550px;
@@ -27,7 +28,7 @@ body{
     /* height: 600px; */
 }
 
-input{
+button{
     height: 43px;
     width: 304px;
     background-color: #EDEFFF;
@@ -36,6 +37,7 @@ input{
     font-size: 14px;
     text-align: center;
     box-shadow: 2px 2px #5626C4;
+    font-family: 'Russo One';font-size: 20px;
 }
 
 #slogan{
