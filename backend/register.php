@@ -64,7 +64,7 @@
         mysqli_close($link);
     }
     ?>
-    <form class="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>
+    <form class="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <img id="logo" src="images/temp-logo.png" alt="Logo">
         <h2 id="register-title">REGISTER</h2>
         <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
