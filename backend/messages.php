@@ -40,7 +40,6 @@
                 <a id="messages" href="messages.php">Messages</a>			
             </nav>
             <nav class="nav-right">
-                <input id="search-bar" type="search" placeholder="Search">
                 <button type="button" class="icon-button">
                     <span class="material-icons">notifications</span>
                     <span class="icon-button__badge">2</span>
@@ -54,28 +53,33 @@
     <div class="main-wrapper">
     <main>
         <!-- Main content goes here -->
-        <p> Messages Page </p>
-        <button onclick="window.location.href='addfriends.php'">Add Friends</button>
-        <button onclick="window.location.href='creategroup.php'">Create Group</button>
-        
-        <h2>My Groups</h2>
-        <ul>
-        <?php
-            while ($row = mysqli_fetch_assoc($result)) {
-                $group_id = $row['group_id'];
-                $group_name = $row['group_name'];
-                echo "<li><a href='#' onclick='openChat($group_id)'>$group_name</a></li>";
-            }
-        ?>
-        </ul>
-        <button id="set-task-button" onclick="openTaskForm()">Set Task</button>
+        <div id="options">
+            <button id="addFriends" onclick="window.location.href='addfriends.php'" >Add Friends</button>
+            <button id="createGroups" onclick="window.location.href='creategroup.php'" >Create Group</button>
+        </div>
+
+        <h id="myGroup-text">My Groups:</h>
+        <myGroup>
+            <?php
+                $iteration = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $group_id = $row['group_id'];
+                    $group_name = $row['group_name'];
+                    $color_class = $iteration % 2 == 0 ? 'even' : 'odd'; // Check if the iteration number is odd or even
+                    echo "<p><button id='myGroup' class='$color_class' onclick='openChat($group_id)'>$group_name</button></p>";
+                    $iteration++;
+                }
+            ?>
+        </myGroup>
     
     <div class = "container">
+        <button id="set-task-button" onclick="openTaskForm()">Set Task</button>
+        <button id="divide-bills-button"> Divide Bills</button>
         <div id="chat-box" class="chat-box">
             <div id="chat-history" class="chat-history"></div>
             <form id="message-form" class="message-form" onsubmit="return sendMessage()">
                 <input id="message-input" type="text" name="message" placeholder="Type your message...">
-                <input type="submit" value="Send">
+                <input id="message-send-btn" type="submit" value="Send">
             </form>
         </div>
     </div>
@@ -85,13 +89,13 @@
         <label for="task-friend">Choose a friend:</label>
         <select id="task-friend" name="friend"></select><br><br>
         
-        <label for="task-description">Task Description:</label>
+        <label for="task-description" id="task-description-text">Task Description:</label>
         <textarea id="task-description" name="description" rows="4" cols="50" required></textarea><br><br>
 
-        <label for="task-due-date">Due Date:</label>
+        <label for="task-due-date" id="due-data-text">Due Date:</label>
         <input id="task-due-date" type="date" name="due_date" required><br><br>
 
-        <input type="submit" value="Create Task">
+        <input type="submit" value="Create Task" id="create-task">
     </form>
     </div>
     </main>
@@ -109,6 +113,8 @@
             currentGroupId = groupId;
             document.getElementById('chat-box').style.display = 'block';
             fetchChatHistory(groupId);
+            document.getElementById('set-task-button').style.display = 'block';
+            document.getElementById('divide-bills-button').style.display = 'block';
         }
 
         function fetchChatHistory(groupId, skipTimeout) {
@@ -215,7 +221,7 @@
 
             return false;
         }
-
+        
     </script>
 
 </body>

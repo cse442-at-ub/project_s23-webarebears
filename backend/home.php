@@ -34,7 +34,6 @@
 			<a id="messages" href="messages.php">Messages</a>			
 		</nav>
 		<nav class="nav-right">
-			<input id="search-bar" type="search" placeholder="Search">
 			<button type="button" class="icon-button">
 				<span class="material-icons">notifications</span>
 				<span class="icon-button__badge">2</span>
@@ -43,7 +42,6 @@
                 <input type="submit" name="logout" value="Logout">
             </form>
 		</nav>
-		
 	</header>
 
 	<main id="grid2">
