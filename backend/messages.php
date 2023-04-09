@@ -96,6 +96,8 @@
         <input id="task-due-date" type="date" name="due_date" required><br><br>
 
         <input type="submit" value="Create Task" id="create-task">
+
+        <button id="task-cancel" onclick="closeTaskForm()">Cancel</button>
     </form>
     </div>
     </main>
