@@ -3,46 +3,64 @@
 <head>
     <meta charset="utf-8">
     <title>Create Group</title>
+    <link rel="stylesheet" href="styles/creategroup_style.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <header>
-    <nav>
-        <a href="home.php">Home</a>
-        <a href="tasksAndBalances.php">Tasks and Balances</a>
-        <a href="messages.php">Messages</a>
-    </nav>
+		<nav class="nav-left">
+			<a href="profile.php">
+				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
+			</a>
+			<a href="home.php" id="home" >Home</a>
+			<a id="tasksAndBalances" href="tasksAndBalances.php">Tasks and Balances</a>
+			<a id="messages" href="messages.php">Messages</a>			
+		</nav>
+		<nav class="nav-right">
+            <input id="search-bar" type="search" placeholder="Search">
+			<button type="button" class="icon-button">
+				<span class="material-icons">notifications</span>
+				<span class="icon-button__badge">2</span>
+			</button>
+            <form method="post" action="" id='log-out-button'>
+                <input type="submit" name="logout" value="Logout">
+            </form>
+		</nav>
 </header>
 
 <main>
-    <h1>Add friends to group</h1>
-    <form method="post" onsubmit="return validateForm()">
-        <label for="groupname">Group Name:</label>
-        <input type="text" id="groupname" name="groupname">
-        <p>Friends List:</p>
-        <select multiple size="10" style="width: 300px;" name="selected_friends[]" multiple>
-            <?php
-            require('server.php');
-            session_start();
+    <div class="container">
+        <h2>Create a Group</h2>
+        <form method="post" onsubmit="return validateForm()">
+            <label for="groupname">Group Name:</label>
+            <input type="text" id="groupname" name="groupname">
+            <p>Members:</p>
 
-            if (!isset($_SESSION['username'])) {
-                header("Location: login.php");
-                exit();
-            }
+            <select multiple size="6" style="width: 300px;" name="selected_friends[]" multiple>
+                <?php
+                require('server.php');
+                session_start();
 
-            $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
-            $query = "SELECT friend_username FROM `Friends` WHERE username='$username'";
-            $result = mysqli_query($db_connection, $query);
+                if (!isset($_SESSION['username'])) {
+                    header("Location: login.php");
+                    exit();
+                }
 
-            while ($row = mysqli_fetch_assoc($result)) {
-                $friend_username = $row['friend_username'];
-                echo "<option value='" . $friend_username . "'>" . $friend_username . "</option>";
-            }
-            ?>
-        </select>
+                $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
+                $query = "SELECT friend_username FROM `Friends` WHERE username='$username'";
+                $result = mysqli_query($db_connection, $query);
 
-        <input type="submit" name="create_group" value="Create"/>
-        <input type="button" value="Cancel" onclick="cancel()"/>
-    </form>
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $friend_username = $row['friend_username'];
+                    echo "<option value='" . $friend_username . "'>" . $friend_username . "</option>";
+                }
+                ?>
+            </select>
+            <div>Hold down the Ctrl (windows) or Command (Mac) button to select multiple members.</div>
+            <button id="create-btn" type="submit" name="create_group" value="Create">Create</button>
+            <button id="cancel-btn" type="button" value="Cancel" onclick="cancel()">Cancel</button>
+        </form>
+    </div>
 </main>
 
 <footer>

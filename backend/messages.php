@@ -40,6 +40,7 @@
                 <a id="messages" href="messages.php">Messages</a>			
             </nav>
             <nav class="nav-right">
+                <input id="search-bar" type="search" placeholder="Search">
                 <button type="button" class="icon-button">
                     <span class="material-icons">notifications</span>
                     <span class="icon-button__badge">2</span>
@@ -65,8 +66,7 @@
                 while ($row = mysqli_fetch_assoc($result)) {
                     $group_id = $row['group_id'];
                     $group_name = $row['group_name'];
-                    $color_class = $iteration % 2 == 0 ? 'even' : 'odd'; // Check if the iteration number is odd or even
-                    echo "<p><button id='myGroup' class='$color_class' onclick='openChat($group_id)'>$group_name</button></p>";
+                    echo "<p><button id='myGroup' onclick='openChat($group_id)'>$group_name</button></p>";
                     $iteration++;
                 }
             ?>

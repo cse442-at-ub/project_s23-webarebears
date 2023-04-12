@@ -4,14 +4,28 @@
     <meta charset="utf-8"/>
     <title>Add Friends</title>
     <link rel="stylesheet" href="styles/addfriends.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <header>
-	<nav>
-		<a href="home.html">Home</a>
-		<a href="tasksAndBalances.html">Tasks and Balances</a>
-		<a href="messages.html">Messages</a>
-	</nav>
+		<nav class="nav-left">
+			<a href="profile.php">
+				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
+			</a>
+			<a href="home.php" id="home" >Home</a>
+			<a id="tasksAndBalances" href="tasksAndBalances.php">Tasks and Balances</a>
+			<a id="messages" href="messages.php">Messages</a>			
+		</nav>
+		<nav class="nav-right">
+            <input id="search-bar" type="search" placeholder="Search">
+			<button type="button" class="icon-button">
+				<span class="material-icons">notifications</span>
+				<span class="icon-button__badge">2</span>
+			</button>
+            <form method="post" action="" id='log-out-button'>
+                <input type="submit" name="logout" value="Logout">
+            </form>
+		</nav>
 </header>
 <?php
     require('server.php');
@@ -34,11 +48,12 @@
             $user = mysqli_fetch_assoc($result);
             echo "<div class='search-result'>
                     <img src='" . $user['profile_picture'] . "'/>
+                    <h3> Search Result: </h3>
                     <h2>" . $user['name'] . "</h2>
                     <p>" . $user['username'] . "</p>
                     <form method='post'>
                         <input type='hidden' name='friend_username' value='" . $user['username'] . "'/>
-                        <input type='submit' name='add_friend' value='Add Friend'/>
+                        <button type='submit' name='add_friend' value='Add Friend'/>Add Friend</button>
                     </form>
                 </div>";
         } else {
@@ -79,26 +94,36 @@
         $result = mysqli_query($db_connection, $query);
     
         // Display the list of friends, with a remove friend button next to each friend
-        echo "<h1>Friends List</h1>";
+        echo "<div class=friends_list>";
+        echo "<h3>Friends List</h3>";
         echo "<ul class='friends-list'>";
         while ($row = mysqli_fetch_assoc($result)) {
             $friend_username = $row['friend_username'];
-            echo "<li>" . $friend_username . " 
+            echo "<div>" . $friend_username . " 
                       <form method='post' class='remove-friend-form'>
-                          <input type='hidden' name='friend_username' value='" . $friend_username . "'/>
-                          <input type='submit' name='remove_friend' value='Remove'/>
+                          <input type='hidden' name='friend_username' value='" . $friend_username . "'>
+                          <button type='submit' name='remove_friend' value='Remove'/>Remove</button>
                       </form>
-                  </li>";
+                  </div>";
         }
         echo "</ul>";
+        echo "</div>"
     ?>
     
     <form class="form" method="post">
-        <h1 class="login-title">Add Friends</h1>
-        <input type="text" class="login-input" name="search" placeholder="Search for friends"/>
-        <input type="submit" value="Search" name="submit" class="login-button"/>
+        <h3 class="login-title">Search Friends</h3>
+        <input type="text" class="login-input" name="search" placeholder="Search for friends" id="search-friend"/>
+        <input type="submit" value="Search" name="submit" id="submit-btn"/>
     </form>
     
+    <button id="cancel-btn" type="button" value="Cancel" onclick="cancel()">Cancel</button>
+
+    <script>
+        function cancel() {
+        window.location.href = "messages.php";
+    }
+    </script>
+
     </body>
     </html>
     
