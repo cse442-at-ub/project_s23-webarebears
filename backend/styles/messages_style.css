@@ -13,6 +13,7 @@ header {
     border: 3px solid gray;
 }
 
+
 #home{
     color: #B0BEC5;
     font-family: sans-serif;
@@ -79,9 +80,22 @@ nav a:hover {
 }
 
 .nav-left a:hover {
-    background-color: #555;
     color: white;
 }
+
+#search-bar{
+    border-radius: 30px;
+    width: 300px;
+    height: 40px;
+    padding: 9px 4px 9px 40px;
+    background: #97A3AB url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 13px center;
+}
+
+#search-bar::placeholder{
+    color: #333;
+    font-weight: 500;
+}
+
 footer {
     background-color: #333;
     color: #fff;
@@ -91,30 +105,71 @@ footer {
     bottom: 0;
     width: 100%;
 }
-#search-bar {
-    margin-right: 1rem;
-}
+
 
 .icon-button {
+    margin-left: 50px;
+    margin-right: 50px;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: #333333;
+    background: #97A3AB;
     border: none;
-    background: none;
-    color: #fff;
-    font-size: 1.5rem;
-    margin-right: 1rem;
-}
-
-.icon-button__badge {
+    outline: none;
+    border-radius: 50%;
+  }
+  
+  .icon-button:hover {
+    cursor: pointer;
+  }
+  
+  .icon-button:active {
+    background: #cccccc;
+  }
+  
+  .icon-button__badge {
     position: absolute;
     top: -10px;
     right: -10px;
-    background-color: #ff0000;
-    color: #fff;
-    font-size: 0.75rem;
-    padding: 0.25rem;
+    width: 25px;
+    height: 25px;
+    background: #652A5F;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 50%;
+  }
+
+  #log-out-button {
+    display: inline-block;
+    margin-left: 10px;
 }
 
+#log-out-button input[type="submit"] {
+    font-family: sans-serif;
+    font-weight: 500px;
+    background-color: #652A5F;
+    border: none;
+    color: white;
+    padding: 5px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 7px;
+    margin-right: 30px
+}
+
+#log-out-button input[type="submit"]:hover {
+    background-color: #c42d1f;
+}
 main {
     padding: 2rem;
 }
@@ -129,7 +184,7 @@ button {
 }
 
 button:hover {
-    background-color: #6a6a6a;
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
 }
 
 header {
@@ -142,6 +197,64 @@ header {
     padding-top: 4rem;
 }
 
+#myGroup-text{
+    color: white;
+    font-family: sans-serif;
+    font-size: 20px;
+}
+
+#options{
+    margin-left: 50px;
+    padding-top: 30px;
+    margin-bottom: 20px;
+}
+
+#addFriends{
+    margin-right: 200px;
+    background-color: transparent;
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: 500px;
+}
+
+#addFriends:hover{
+    text-decoration: underline;
+}
+
+#createGroups{
+    background-color: transparent;
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: 500px;
+}
+
+#createGroups:hover{
+    text-decoration: underline;
+}
+
+#myGroup{
+    width: 600px;
+    height: 80px;
+    grid-area: myGroup;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+    border-radius: 20px;
+    margin-right: 30px;
+    margin-left: 10px;
+    margin-top: 10px;
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: 500px;
+    background-color: #652A5F;
+}
+
+#myGroup:focus{
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    font-weight: bolder;
+}
+
+
 .container {
     padding-top: 4rem;
 }
@@ -149,27 +262,70 @@ header {
 .chat-box {
     position: fixed;
     right: 20px;
-    bottom: 400px;
-    width: 300px;
-    height: 400px;
-    border: 1px solid black;
+    bottom: 100px;
+    width: 450px;
+    height: 500px;
     display: none;
-    background-color: #333;
+    background-color: #242042;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     z-index: 10;
+    border-radius: 20px;
+    margin-right: 50px;
 }
 .chat-history {
-    height: 300px;
+    height: 400px;
     overflow-y: scroll;
     padding: 1rem;
 }
 
 .message-form {
+    position: fixed;
+    bottom: 100px;
+    width: 430px;
+    height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #ccc;
+    background-color: #242042;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+#message-input{
+    padding-left: 20px;
+    margin-left: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    height: 30px;
+    width: 390px;
+    outline: none;
+    border: none;
+    
+}
+
+#message-input::placeholder{
+    color: #B0BEC5;
+
+}
+
+#message-send-btn{
+    background-color: white;
+    margin-right: 20px;
+    padding-right: 20px;
+    border: none;
+    outline: none;
+    height: 32px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+#message-send-btn:hover{
+    cursor: pointer;
+}
+
+#message-send-btn:active{
+    background-color: #dddddd;
 }
 
 ul {
@@ -181,10 +337,114 @@ li {
     margin-bottom: 0.5rem;
 }
 
-#task-form {
+#set-task-button{
     display: none;
+    height: 40px;
+    position: fixed;
+    right: 300px;
+    bottom: 650px;
+    border-radius: 20px;
+    width: 200px;
+    background-color: #242042;
+}
+
+#divide-bills-button{
+    display: none;
+    height: 40px;
+    position: fixed;
+    right: 60px;
+    bottom: 650px;
+    border-radius: 20px;
+    width: 200px;
+    background-color: #242042;
+}
+
+#task-form {
+    /*display: none;*/
+    position: fixed;
+    right: 20px;
+    bottom: 100px;
+    width: 450px;
+    height: 500px;
+    background-color: #242042;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    border-radius: 20px;
+    margin-right: 50px;
+    text-indent: 20px;
+}
+
+#task-cancel{
+    display: inline-block;
+    width: 100px;
+    height: 42px;
+    background-color: transparent;
+    position: fixed;
+    right: 80px;
+    bottom: 130px;
+    border-radius: 15px;
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: 500px;
+}
+
+#task-cancel:hover{
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0)
 }
 
 label, h2, p {
     color: white;
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: 500px;
+
+}
+
+#task-description-text{
+    margin-left: 15px;
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: 500px;
+}
+
+#task-description{
+    padding-left: 5px;
+    margin-left: 15px;
+    margin-right: 20px;
+    border-radius: 5px;
+    height: 100px;
+    margin-bottom: 30px;
+}
+
+#due-data-text{
+    margin-left: 15px;
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: 500px;
+}
+#task-due-date{
+    margin-left: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+#create-task{
+    position: absolute;
+    margin-left: 40%;
+    align-items: center;
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    background-color: #652A5F;
+    color: white;
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: 500px;
+}
+
+#create-task:hover{
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    cursor: pointer;
 }
