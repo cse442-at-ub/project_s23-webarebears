@@ -26,84 +26,81 @@
 <head>
     <meta charset="utf-8">
     <title>My Messages</title>
-    <style>
-        .chat-box {
-            position: fixed;
-            right: 20px;
-            top: 20px;
-            width: 300px;
-            height: 400px;
-            border: 1px solid black;
-            display: none;
-        }
-
-        .chat-history {
-            height: 300px;
-            overflow-y: scroll;
-        }
-
-        .message-form {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #ccc;
-        }
-    </style>
+    <link rel="stylesheet" href="styles/messages_style.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <header>
-        <nav>
-            <a href="home.php">Home</a>
-            <a href="tasksAndBalances.php">Tasks and Balances</a>
-            <a href="messages.php">Messages</a>
-            <form method="post" action="">
-                <input type="submit" name="logout" value="Logout">
-            </form>
-        </nav>
+        <nav class="nav-left">
+        <a href="profile.php">
+				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
+			</a>
+                <a href="home.php" id="home" >Home</a>
+                <a id="tasksAndBalances" href="balances.php">Balances</a>
+                <a id="messages" href="messages.php">Messages</a>			
+            </nav>
+            <nav class="nav-right">
+                <input id="search-bar" type="search" placeholder="Search">
+                <button type="button" class="icon-button">
+                    <span class="material-icons">notifications</span>
+                    <span class="icon-button__badge">2</span>
+                </button>
+                <form method="post" action="" id='log-out-button'>
+                    <input type="submit" name="logout" value="Logout">
+                </form>
+            </nav>
     </header>
 
+    <div class="main-wrapper">
     <main>
         <!-- Main content goes here -->
-        <p> Messages Page </p>
-        <button onclick="window.location.href='addfriends.php'">Add Friends</button>
-        <button onclick="window.location.href='creategroup.php'">Create Group</button>
-        
-        <h2>My Groups</h2>
+        <div id="options">
+            <button id="addFriends" onclick="window.location.href='addfriends.php'" >Add Friends</button>
+            <button id="createGroups" onclick="window.location.href='creategroup.php'" >Create Group</button>
+        </div>
+
+        <h id="myGroup-text">My Groups:</h>
+        <myGroup>
+            <?php
+                $iteration = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $group_id = $row['group_id'];
+                    $group_name = $row['group_name'];
+                    echo "<p><button id='myGroup' onclick='openChat($group_id)'>$group_name</button></p>";
+                    $iteration++;
+                }
+            ?>
+        </myGroup>
+    
+    <div class = "container">
         <button id="set-task-button" onclick="openTaskForm()">Set Task</button>
-        <ul>
-        <?php
-            while ($row = mysqli_fetch_assoc($result)) {
-                $group_id = $row['group_id'];
-                $group_name = $row['group_name'];
-                echo "<li><a href='#' onclick='openChat($group_id)'>$group_name</a></li>";
-            }
-        ?>
-        </ul>
-    </main>
-
-    <div id="chat-box" class="chat-box">
-        <div id="chat-history" class="chat-history"></div>
-        <form id="message-form" class="message-form" onsubmit="return sendMessage()">
-            <input id="message-input" type="text" name="message" placeholder="Type your message...">
-            <input type="submit" value="Send">
-        </form>
+        <button id="divide-bills-button"> Divide Bills</button>
+        <div id="chat-box" class="chat-box">
+            <div id="chat-history" class="chat-history"></div>
+            <form id="message-form" class="message-form" onsubmit="return sendMessage()">
+                <input id="message-input" type="text" name="message" placeholder="Type your message...">
+                <input id="message-send-btn" type="submit" value="Send">
+            </form>
+        </div>
     </div>
-
     <div id="task-form" style="display: none;">
     <h2>Set Task</h2>
     <form id="create-task-form" onsubmit="return createTask()">
         <label for="task-friend">Choose a friend:</label>
         <select id="task-friend" name="friend"></select><br><br>
         
-        <label for="task-description">Task Description:</label>
+        <label for="task-description" id="task-description-text">Task Description:</label>
         <textarea id="task-description" name="description" rows="4" cols="50" required></textarea><br><br>
 
-        <label for="task-due-date">Due Date:</label>
+        <label for="task-due-date" id="due-data-text">Due Date:</label>
         <input id="task-due-date" type="date" name="due_date" required><br><br>
 
-        <input type="submit" value="Create Task">
+        <input type="submit" value="Create Task" id="create-task">
+
+        <button id="task-cancel" onclick="closeTaskForm()">Cancel</button>
     </form>
+    </div>
+    </main>
     </div>
 
     <script>
@@ -118,6 +115,8 @@
             currentGroupId = groupId;
             document.getElementById('chat-box').style.display = 'block';
             fetchChatHistory(groupId);
+            document.getElementById('set-task-button').style.display = 'block';
+            document.getElementById('divide-bills-button').style.display = 'block';
         }
 
         function fetchChatHistory(groupId, skipTimeout) {
@@ -224,7 +223,7 @@
 
             return false;
         }
-
+        
     </script>
 
 </body>

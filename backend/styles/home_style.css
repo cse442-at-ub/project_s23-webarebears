@@ -79,7 +79,6 @@ nav a:hover {
 }
 
 .nav-left a:hover {
-    background-color: #555;
     color: white;
 }
 footer {
@@ -135,19 +134,20 @@ footer {
     border-radius: 20px;
     margin-right: 30px;
     margin-left: 20px;
-    margin-top: 100px;
+    margin-top: 10px;
 
 }
 
 #grid2 > tasks {
-    margin-top: 20px;
     grid-area: tasks;
     padding: 30px;
     border-radius: 20px;
     margin-left: 90px;
     margin-right: 100px;
-    margin-top: 100px;
+    margin-top: 50px;
     background-color: #1F222A;
+    font-family: sans-serif;
+    font-size: 15px;
 }
 
 #recent{
@@ -161,8 +161,8 @@ footer {
 #tasks{
     color: white;
     font-family: sans-serif;
-    font-weight: 450;
-    font-size: x-large;
+    font-weight: 300;
+    font-size: larger;
     display: inline-block;
     height: auto;
 }
@@ -175,6 +175,7 @@ footer {
     font-size: medium;
     padding-left: 100px;
     font-weight: 450;
+    font-size: 30px
 }
 
 #task-text{
@@ -206,19 +207,19 @@ footer {
     justify-content: center;
     align-items: center;
 }
-.complete-button {
+#complete-tasks-btn {
     height: 30px;
     width: 100px;
     border: none;
-    position: absolute;
-    background-color: #652A5F;
     border-radius: 8px;
-    display: none;
-    margin-top: 20px;
+    margin-left: 30%;
 }
-.selected .complete-button {
-    display: block;
+
+#complete-tasks-btn:hover{
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    cursor: pointer;
 }
+
 
 
 #set-by{
@@ -232,35 +233,6 @@ footer {
     padding: 10px;
 }
 
-#search-bar{
-    border-radius: 30px;
-    width: 300px;
-    height: 40px;
-    padding: 9px 4px 9px 40px;
-    background: #97A3AB url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 13px center;
-}
-
-#log-out-button {
-    display: inline-block;
-    margin-left: 10px;
-}
-
-#log-out-button input[type="submit"] {
-    background-color: #f44336;
-    border: none;
-    color: white;
-    padding: 5px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-}
-
-#log-out-button input[type="submit"]:hover {
-    background-color: #c42d1f;
-}
 #notification-text{
     color: white;
     text-align: left;
@@ -282,11 +254,14 @@ footer {
     text-decoration: underline;
     font-family: sans-serif;
 }
+
 .icon-button {
     margin-left: 50px;
-    margin-right: 100px;
-    float: right;
+    margin-right: 50px;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 40px;
     height: 40px;
     color: #333333;
@@ -297,6 +272,7 @@ footer {
   }
   
   .icon-button:hover {
+    background-color: #555;
     cursor: pointer;
   }
   
@@ -318,12 +294,46 @@ footer {
     border-radius: 50%;
   }
 
-  ::placeholder{
+  #log-out-button {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+#log-out-button input[type="submit"] {
+    font-family: sans-serif;
+    font-weight: 500px;
+    background-color: #652A5F;
+    border: none;
+    color: white;
+    padding: 5px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 7px;
+    margin-right: 30px
+}
+
+#log-out-button input[type="submit"]:hover {
+    background-color: #c42d1f;
+}
+
+#search-bar{
+    border-radius: 30px;
+    width: 300px;
+    height: 40px;
+    padding: 9px 4px 9px 40px;
+    background: #97A3AB url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 13px center;
+}
+
+#search-bar::placeholder{
     color: #333;
     font-weight: 500;
-  }
+}
 
-  .container {
+.container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -345,7 +355,7 @@ footer {
 .recent-message h4 {
     margin-top: 0;
     font-weight: 450;
-    font-size: 20px;
+    font-size: 17px;
 }
 
 .recent-message p {
@@ -372,12 +382,13 @@ footer {
 
 .task h4 {
     margin-top: 0;
-    font-weight: 450;
+    font-weight: 300;
     font-size: 20px;
 }
 
 .task p {
     margin-top: 10px;
+    font-size: 10px;
     font-weight: 400;
 }
 

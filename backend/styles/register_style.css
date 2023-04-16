@@ -10,7 +10,7 @@
 }
 body{
     background: #181A20;
-    font-family: 'Nunito';
+    font-family: sans-serif;
 }
 .register-title{
     color:white;
@@ -44,11 +44,28 @@ input{
     margin-top: 8px;
     font-size: 14px;
     font-weight: 300;
-    border: 1px solid #EDEFFF;
+    border: none;
     text-align: center;
+}
+
+.register-button:hover{
+    cursor: pointer;
 }
 
 #user_concern{
     color:#7C82BA;
     font-size: small;
 }
+
+#login_link{
+    text-align: center;
+    color: #7C82BA;
+    font-size: small;
+}
+
+a:-webkit-any-link {
+    color: #dadadae5;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
