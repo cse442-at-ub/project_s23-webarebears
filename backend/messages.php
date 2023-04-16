@@ -49,6 +49,8 @@
                     <input type="submit" name="logout" value="Logout">
                 </form>
             </nav>
+
+
     </header>
 
     <div class="main-wrapper">
@@ -99,6 +101,24 @@
 
         <button id="task-cancel" onclick="closeTaskForm()">Cancel</button>
     </form>
+    </div>
+
+        <div id="divide-bill-form" style="display: none;">
+        <h2>Divide Bill</h2>
+        <form id="create-divide-bill-form" onsubmit="return divideBill()">
+            <label for="bill-amount">Bill Amount:</label>
+            <input id="bill-amount" type="number" name="amount" step="0.01" required><br><br>
+
+            <label for="bill-description">Description:</label>
+            <input id="bill-description" type="text" name="description" required><br><br>
+
+            <label for="bill-friends">Choose friends:</label>
+            <select id="bill-friends" name="friends" multiple></select><br><br>
+
+            <input type="submit" value="Divide Bill" id="divide-bill">
+
+            <button id="bill-cancel" onclick="closeDivideBillForm()">Cancel</button>
+        </form>
     </div>
     </main>
     </div>
@@ -223,6 +243,67 @@
 
             return false;
         }
+
+        function openDivideBillForm() {
+        if (currentGroupId === null) {
+            alert('Please select a group chat before dividing a bill.');
+            return;
+        }
+        document.getElementById('divide-bill-form').style.display = 'block';
+        fetchGroupMembers(currentGroupId, 'bill-friends');
+    }
+
+    function closeDivideBillForm() {
+        document.getElementById('divide-bill-form').style.display = 'none';
+    }
+
+    function divideBill() {
+        const amount = document.getElementById('bill-amount').value;
+        const description = document.getElementById('bill-description').value;
+        const friendsSelect = document.getElementById('bill-friends');
+        const friends = Array.from(friendsSelect.selectedOptions).map(option => option.value);
+
+        if (!amount || !description || friends.length === 0) {
+            alert('Please fill in all fields and select at least one friend.');
+            return false;
+        }
+
+        const formData = new FormData();
+        formData.append('group_id', currentGroupId);
+        formData.append('amount', amount);
+        formData.append('description', description);
+        formData.append('friends', JSON.stringify(friends));
+
+        fetch('divideBill.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(responseText => {
+            console.log('Response from divideBill.php:', responseText);
+            closeDivideBillForm();
+        });
+
+        return false;
+    }
+
+    function fetchGroupMembers(groupId, selectId = 'task-friend') {
+        fetch(`fetchGroupMembers.php?group_id=${groupId}`)
+            .then(response => response.json())
+            .then(members => {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '';
+                members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.user_id;
+                    option.textContent = member.username;
+                    select.appendChild(option);
+                });
+            });
+    }
+
+    document.getElementById('divide-bills-button').addEventListener('click', openDivideBillForm);
+
         
     </script>
 
