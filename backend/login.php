@@ -15,22 +15,57 @@
         $username = mysqli_real_escape_string($db_connection, $username);
         $password = stripslashes($_REQUEST['password']);
         $password = mysqli_real_escape_string($db_connection, $password);
-        // Check user exists in the database
-        $query = "SELECT * FROM `User Accounts` WHERE username='$username' AND password='$password'";
+        
+        // Prepare a SELECT statement to check user exists in the database
+        $query = "SELECT * FROM `User Accounts` WHERE username=?";
 
-        $result = mysqli_query($db_connection, $query) or die(mysqli_error($db_connection));
-        $rows = mysqli_num_rows($result);
-        if ($rows == 1) {
-            $_SESSION['username'] = $username;
-            // Redirect to user dashboard page
-            header("Location: home.php");
-            exit();
-        } else {
-            echo "<div class='form'>
-                    <h3>Incorrect Username/password.</h3><br/>
-                    <p class='link'>Click here to <a href='login.php'>Login</a> again.</p>
-                    </div>";
+        if ($stmt = mysqli_prepare($db_connection, $query)) {
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt, "s", $username);
+            
+            // Execute the prepared statement
+            mysqli_stmt_execute($stmt);
+            
+            // Store the result
+            mysqli_stmt_store_result($stmt);
+            
+            // Check if the username exists
+            if (mysqli_stmt_num_rows($stmt) == 1) {
+                // Bind result variables
+                mysqli_stmt_bind_result($stmt, $id, $username, $stored_password);
+                
+                // Fetch the result
+                mysqli_stmt_fetch($stmt);
+                
+                // Verify the password
+                if (password_verify($password, $stored_password)) {
+                    // Password is correct, start a new session
+                    session_start();
+                    
+                    // Store data in session variables
+                    $_SESSION['username'] = $username;
+                    
+                    // Redirect to user dashboard page
+                    header("Location: home.php");
+                    exit();
+                } else {
+                    // Password is not valid, display a generic error message
+                    echo "<div class='form'>
+                            <h3>Incorrect Username/password.</h3><br/>
+                            <p class='link'>Click here to <a href='login.php'>Login</a> again.</p>
+                          </div>";
+                }
+            } else {
+                // No account found with the given username
+                echo "<div class='form'>
+                        <h3>Incorrect Username/password.</h3><br/>
+                        <p class='link'>Click here to <a href='login.php'>Login</a> again.</p>
+                      </div>";
+            }
         }
+        // Close statement
+        mysqli_stmt_close($stmt);
+        
     } else {
 ?>
 <body>
