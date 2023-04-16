@@ -33,6 +33,7 @@
         }
     } else {
 ?>
+<body>
     <form class="form" method="post" name="login">
         <img id="logo" src="images/temp-logo.png" alt="Logo">
         <h1 class="login-title">LOGIN WITH YOUR</h1>

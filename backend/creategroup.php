@@ -13,7 +13,7 @@
 				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
 			</a>
 			<a href="home.php" id="home" >Home</a>
-			<a id="tasksAndBalances" href="tasksAndBalances.php">Tasks and Balances</a>
+			<a id="tasksAndBalances" href="balances.php">Balances</a>
 			<a id="messages" href="messages.php">Messages</a>			
 		</nav>
 		<nav class="nav-right">
