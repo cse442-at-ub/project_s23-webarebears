@@ -30,11 +30,11 @@
 				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
 			</a>
 			<a href="home.php" id="home" >Home</a>
-			<a id="tasksAndBalances" href="tasksAndBalances.php">Tasks and Balances</a>
+			<a id="tasksAndBalances" href="balances.php">Balances</a>
 			<a id="messages" href="messages.php">Messages</a>			
 		</nav>
 		<nav class="nav-right">
-			<input id="search-bar" type="search" placeholder="Search">
+            <input id="search-bar" type="search" placeholder="Search">
 			<button type="button" class="icon-button">
 				<span class="material-icons">notifications</span>
 				<span class="icon-button__badge">2</span>
@@ -48,12 +48,12 @@
 
 	<main id="grid2">
         <recent>
-            <h2 style="color: white;">Recent</h2>
+            <u style="color: white; font-family: sans-serif; font-weight: 450; font-size: larger; margin-left: 20px">Recent</u>
             <div id="recent">Recent</div>
 			
         </recent>
         <tasks>
-            <h1 style="color: white;">Your Tasks:</h1>
+            <h3 style="color: white; font-size: larger; font-weight: 400;">Your Tasks:</h3>
             <p style="color: white;"> Select Tasks that you have finished!</p>
             <div id="tasks">Your Tasks: 
 				<p id="tasks-direction"> Select Tasks that you have finished!</p>
