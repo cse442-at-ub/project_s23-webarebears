@@ -41,7 +41,6 @@
 				$username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
 				$query = "SELECT friend_username FROM `Friends` WHERE username='$username'";
 				$result = mysqli_query($db_connection, $query);
-
 				$num_friends = mysqli_num_rows($result);
 
 				echo . $num_friends .;
@@ -62,8 +61,8 @@
           </div>
           
         <div class="button-container">
-            <button class="profile-button edit-button" style="background-color: #343645;">Edit Profile</button>
-            <button class="profile-button settings-button" style="background-color: #343645;">Settings</button>
+            <button onclick="location.href='edit_profile.php'" class="profile-button edit-button" style="background-color: #343645;">Edit Profile</button>
+            <button onclick="location.href='settings.php'" class="profile-button settings-button" style="background-color: #343645;">Settings</button>
         </div>
 
         <div class="list-container">
