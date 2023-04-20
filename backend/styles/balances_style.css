@@ -177,16 +177,23 @@ main{
     margin-top: 100px;
     font-family: sans-serif;
     display: flex;
-    padding: 100px;
+    padding: 50px;
 }
+
+main div{
+    height: auto ;
+    flex-grow: 1; 
+}
+
+/**********************DEPT OWED TO YOU*******************************/
 .debt_owed_to_you{
     padding: 50px;
     color: white;
     background-color: #1F222A;
     border-radius: 20px;
     width: 40%;
-    height: auto;
     display: block;
+    min-height: 300px;
 }
 
 .debt_owed_to_you label{
@@ -206,15 +213,46 @@ main{
     color: #B0BEC5;
 }
 
-.debt_you_owe{
+#debt_owed_to_you_group{
+    background-color: #442A65;
+    height: 50px;
+    border-radius: 20px;
+    border: none;
+    width: 150px;
+    height: 150px;
+    padding-bottom: 100px;
+    color: white;
+    padding-top: 25px;
+    font-size: medium;
+}
+
+#debt_owed_to_you_group:hover{
+    cursor: pointer;
+}
+
+#debtor button{
+    background-color: #652A5F;
+    height: 70px;
+    width: 200px;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: medium;
     float: right;
+}
+
+#debtor button:hover{
+    cursor: pointer;
+}
+/**********************DEPT YOU OWE*******************************/
+.debt_you_owe{
+
     padding: 50px;
     color: white;
     background-color: #1F222A;
     border-radius: 20px;
     width: 40%;
-    height: auto;
-    margin-left: 100px;
+    margin-left: 50px;
 }
 
 .debt_you_owe label{
@@ -233,3 +271,130 @@ main{
     font-weight: bold;
     color: #B0BEC5;
 }
+
+/****************************************YOUR TASK**************************************/
+
+.your_task{
+    padding: 50px;
+    color: white;
+    background-color: #1F222A;
+    border-radius: 20px;
+    width: 40%;
+    max-width: 300px;
+    margin-left: 50px;
+    overflow: auto;
+}
+
+.task {
+    background-color: #652A5F;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 15px;
+    width: 80%;
+    color: white;
+    font-family: sans-serif;
+    position: relative;
+    overflow: auto;
+}
+
+.task h4 {
+    margin-top: 0;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.task p {
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 400;
+}
+
+/********************CHECKBOX****************/
+[type=checkbox] {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 1.5rem;
+    height: 1.5rem;
+    vertical-align: middle;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    outline: 0;
+    flex-grow: 0;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    cursor: pointer;
+  }
+  
+  
+  /* Pseudo element for check styling */
+  [type=checkbox]::before {
+    content: "";
+    color: transparent;
+    display: block;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    border: 0;
+    background-color: transparent;
+    background-size: contain;
+    box-shadow: inset 0 0 0 1px #CCD3D8;
+  }
+
+  /* Checked */
+
+[type=checkbox]:checked {
+    background-color: black;
+    border: 7px solid #ddd;
+  }
+  
+  [type=checkbox]:checked::before {
+    background-size: 0;
+    box-shadow: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+  }
+  
+  /* Disabled */
+  
+  [type=checkbox]:disabled {
+    background-color: #CCD3D8;
+    opacity: 0.84;
+    cursor: not-allowed;
+  }
+/* IE */
+
+[type=checkbox]::-ms-check {
+    content: "";
+    color: transparent;
+    display: block;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    border: 0;
+    background-color: transparent;
+    background-size: contain;
+    box-shadow: inset 0 0 0 1px #CCD3D8;
+  }
+  
+  [type=checkbox]:checked::-ms-check {
+    box-shadow: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+  }  
+
+  /********************************CHECKBOX****************************************/
+
+  #complete-tasks-btn{
+    margin-left: 35%;
+    margin-top: 30px;
+    height: 30px;
+    width: 100px;
+    border: none;
+    border-radius: 8px;
+}
+
+#complete-tasks-btn:hover{
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    cursor: pointer;
+}
+

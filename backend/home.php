@@ -52,16 +52,14 @@
             <div id="recent">Recent</div>
 			
         </recent>
-        <tasks>
+        <div class="your_task">
             <h3 style="color: white; font-size: larger; font-weight: 400;">Your Tasks:</h3>
             <p style="color: white;"> Select Tasks that you have finished!</p>
             <div id="tasks">Your Tasks: 
 				<p id="tasks-direction"> Select Tasks that you have finished!</p>
-				</div>
 			</div>
-            <p></p>
-            <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>		
-        </tasks>
+            <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>
+        </div>
        
 	</main>
 

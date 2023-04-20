@@ -21,6 +21,7 @@
     <title>Home</title>
     <link rel="stylesheet" href="styles/balances_style.css"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
 </head>
 
 <body id="homepage">
@@ -50,6 +51,12 @@
             <label for="total_owed">Debt Owed To You </label>
             <label id="total_owed">$40</label>
             <p>From Groups</p>
+            <button id="debt_owed_to_you_group" onclick="showDept()">
+                Group 1 <br><br><br><br> $30
+            </button>
+            <div id="debtor" style="display:none;">
+                <button> Junstin  &emsp; $30 <br>Click to Remove</button>
+            </div>
         </div>
 
         <div class="debt_you_owe">
@@ -57,5 +64,96 @@
             <label id="total_dept">$60</label>
             <p>To Groups</p>
         </div>
+        <div class="your_task">
+            <h3 style="color: white; font-size: larger; font-weight: 400;">Your Tasks:</h3>
+            <p style="color: white;"> Select Tasks that you have finished!</p>
+            <div id="tasks">Your Tasks: 
+				<p id="tasks-direction"> Select Tasks that you have finished!</p>
+			</div>
+            <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>
+        </div>
+    </main> 
+
+    <script>
+        function fetchMyTasks() {
+            fetch('fetchMyTasks.php')
+                .then(response => response.json())
+                .then(tasks => {
+                    const tasksContainer = document.getElementById('tasks');
+                    tasksContainer.innerHTML = '';
+
+                    tasks.forEach(task => {
+                        const taskItem = document.createElement('div');
+                        taskItem.classList.add('task'); // Add this line to apply the task class
+                        tasksContainer.appendChild(taskItem);
+
+                        const taskTitle = document.createElement('h4');
+                        taskTitle.textContent = task.description;
+                        taskItem.appendChild(taskTitle);
+
+                        const checkBox = document.createElement('input');
+                        checkBox.type = 'checkbox';
+                        checkBox.setAttribute('data-task-id', task.task_id);
+                        taskItem.appendChild(checkBox);
+
+                        const description = document.createElement('span');
+                        description.textContent = ' - Due: ' + task.due_date; // Assuming there's a due_date property in the task object
+                        taskItem.appendChild(description);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching tasks:', error);
+                });
+        }
+
+
+        function completeTasks() {
+            const tasksContainer = document.getElementById('tasks');
+            const checkBoxes = tasksContainer.querySelectorAll('input[type=checkbox]:checked');
+            const taskIds = [];
+
+            checkBoxes.forEach(checkBox => {
+                taskIds.push(checkBox.getAttribute('data-task-id'));
+            });
+
+            if (taskIds.length === 0) {
+                alert('Please select at least one task to mark as complete.');
+                return;
+            }
+
+            fetch('completeTasks.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ taskIds }),
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        fetchMyTasks();
+                    } else {
+                        console.error('Error completing tasks:', result.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error completing tasks:', error);
+                });
+        }
+
+        function showDept(){
+            // get the div element that contains the buttons
+        var buttonsDiv = document.getElementById("debtor");
+
+        // set the display style of the div to "block"
+        buttonsDiv.style.display = "block";
+
+        var groupDiv = document.getElementById("debt_owed_to_you_group");
+        groupDiv.style.display = "none";
+        }
+                
+        fetchMyTasks()
+</script>
+
 </body>
 </html>
