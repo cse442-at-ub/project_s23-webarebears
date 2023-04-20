@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 
 if (!isset($_SESSION['username'])) {
@@ -23,9 +26,9 @@ $amount_per_friend = $amount / count($friends);
 
 foreach ($friends as $friend_id) {
     $friend_id = intval($friend_id);
-    $query = "INSERT INTO `Users_Debts` (group_id, assigned_to, description, amount, due_date, status) VALUES ('$group_id', '$friend_id', '$description', '$amount_per_friend', '$due_date', 'pending')";
+    $query = "INSERT INTO `Users_Debts` (group_id, assigner, assigned_to, description, amount, due_date, status) VALUES ('$group_id', '$sender_id', '$friend_id', '$description', '$amount_per_friend', '$due_date', 'pending')";
     if (!mysqli_query($db_connection, $query)) {
-        echo "Error: Unable to insert data into Users_Debts table.";
+        echo "Error: Unable to insert data into User_Debts table. Error details: " . mysqli_error($db_connection);
         exit();
     }
 }
