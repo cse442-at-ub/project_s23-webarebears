@@ -52,7 +52,7 @@
         <br>
         <input type="submit" name="submit" value="Save Changes" onclick="return confirm('Are you sure you want to update your username and/or password?');">
 
-            <a href="profile.php" class="back-button">Back to Profile</a>
+        <a href="profile.php" class="back-button">Back to Profile</a>
 
     <style>
         .back-button {
