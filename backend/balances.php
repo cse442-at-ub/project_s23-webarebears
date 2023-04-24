@@ -10,7 +10,34 @@
         session_destroy();
         header("Location: login.php");
         exit();
-    } 
+    }
+
+    $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
+    $query = "SELECT user_id FROM `User Accounts` WHERE username='$username'";
+    $result = mysqli_query($db_connection, $query);
+    $user = mysqli_fetch_assoc($result);
+    $user_id = $user['user_id'];
+
+    // Fetch groups where the user has assigned debts
+    $query = "SELECT DISTINCT group_id FROM `Users_Debts` WHERE assigner='$user_id'";
+    $assigned_groups_result = mysqli_query($db_connection, $query);
+
+    // Calculate total amount owed to the user
+    $query_total_owed = "SELECT SUM(amount) as total_owed FROM `Users_Debts` WHERE assigner='$user_id' AND status='pending'";
+    $result_total_owed = mysqli_query($db_connection, $query_total_owed);
+    $total_owed = mysqli_fetch_assoc($result_total_owed)['total_owed'];
+    $total_owed = $total_owed ? $total_owed : 0;
+
+    // Fetch groups where the user owes debts
+    $query_owed_groups = "SELECT DISTINCT group_id FROM `Users_Debts` WHERE assigned_to='$user_id'";
+    $owed_groups_result = mysqli_query($db_connection, $query_owed_groups);
+
+    // Calculate total amount the user owes
+    $query_total_dept = "SELECT SUM(amount) as total_dept FROM `Users_Debts` WHERE assigned_to='$user_id' AND status='pending'";
+    $result_total_dept = mysqli_query($db_connection, $query_total_dept);
+    $total_dept = mysqli_fetch_assoc($result_total_dept)['total_dept'];
+    $total_dept = $total_dept ? $total_dept : 0;
+
 ?>
 
 
@@ -25,6 +52,58 @@
 </head>
 
 <body id="homepage">
+
+<!-- Add JavaScript to handle clicking on a group and marking a debt as complete -->
+<script>
+    function showDebts(groupId) {
+        let debtsContainer = document.getElementById('debts-container-' + groupId);
+        debtsContainer.style.display = debtsContainer.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function markDebtAsComplete(debtId, amount) {
+        const response = await fetch('mark_debt_complete.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'debt_id=' + debtId
+        });
+
+        const result = await response.text();
+        if (result === 'success') {
+            document.getElementById('debt-' + debtId).style.display = 'none';
+
+            // Update the total amount owed to the user
+            let totalOwedLabel = document.getElementById('total_owed');
+            let currentTotalOwed = parseFloat(totalOwedLabel.textContent.substring(1));
+            let updatedTotalOwed = currentTotalOwed - amount;
+            totalOwedLabel.textContent = '$' + updatedTotalOwed.toFixed(2);
+        } else {
+            alert('Failed to mark debt as complete: ' + result);
+        }
+    }
+
+    async function markDebtAsCompleteYouOwe(debtId, amount) {
+        const response = await fetch('mark_debt_complete.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'debt_id=' + debtId
+        });
+
+        const result = await response.text();
+        if (result === 'success') {
+            document.getElementById('debt_you_owe-' + debtId).style.display = 'none';
+
+            // Update the total amount the user owes
+            let totalDeptLabel = document.getElementById('total_dept');
+            let currentTotalDept = parseFloat(totalDeptLabel.textContent.substring(1));
+            let updatedTotalDept = currentTotalDept - amount;
+            totalDeptLabel.textContent = '$' + updatedTotalDept.toFixed(2);
+        } else {
+            alert('Failed to mark debt as complete: ' + result);
+        }
+    }
+</script>
+
+
 	<header>
 		<nav class="nav-left">
 			<a href="profile.php">
@@ -48,112 +127,82 @@
 
     <main>
         <div class="debt_owed_to_you">
-            <label for="total_owed">Debt Owed To You </label>
-            <label id="total_owed">$40</label>
-            <p>From Groups</p>
-            <button id="debt_owed_to_you_group" onclick="showDept()">
-                Group 1 <br><br><br><br> $30
-            </button>
-            <div id="debtor" style="display:none;">
-                <button> Junstin  &emsp; $30 <br>Click to Remove</button>
+                <label for="total_owed">Debt Owed To You </label>
+                <label id="total_owed">$<?= htmlspecialchars($total_owed) ?></label>
+                <p>From Groups</p>
+                <?php while ($row = mysqli_fetch_assoc($assigned_groups_result)) {
+                    $group_id = $row['group_id'];
+                    $query = "SELECT group_name FROM `Groups` WHERE group_id='$group_id'";
+                    $group_result = mysqli_query($db_connection, $query);
+                    $group = mysqli_fetch_assoc($group_result);
+                    $group_name = $group['group_name'];
+
+                    $query = "SELECT * FROM `Users_Debts` WHERE assigner='$user_id' AND group_id='$group_id' AND status='pending'";
+                    $debts_result = mysqli_query($db_connection, $query);
+                ?>
+                    <div class="group">
+                        <p class="group-name" onclick="showDebts(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p>
+                        <div id="debts-container-<?= $group_id ?>" class="debts-container" style="display:none;">
+                            <?php while ($debt = mysqli_fetch_assoc($debts_result)) {
+                                $debt_id = $debt['debt_id'];
+                                $assigned_to = $debt['assigned_to'];
+                                $description = $debt['description'];
+                                $amount = $debt['amount'];
+    
+                                $query = "SELECT username FROM `User Accounts` WHERE user_id='$assigned_to'";
+                                $assigned_user_result = mysqli_query($db_connection, $query);
+                                $assigned_user = mysqli_fetch_assoc($assigned_user_result);
+                                $assigned_username = $assigned_user['username'];
+                            ?>
+                                <div id="debt-<?= $debt_id ?>" class="debt">
+                                    <span><?= htmlspecialchars($assigned_username) ?> owes <?= htmlspecialchars($description) ?>: $<?= htmlspecialchars($amount) ?></span>
+                                    <button onclick="markDebtAsComplete(<?= $debt_id ?>, <?= $amount ?>)">Mark as complete</button>
+
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
-        </div>
 
-        <div class="debt_you_owe">
-            <label for="total_dept">Dept you Owe </label>
-            <label id="total_dept">$60</label>
-            <p>To Groups</p>
-        </div>
-        <div class="your_task">
-            <h3 style="color: white; font-size: larger; font-weight: 400;">Your Tasks:</h3>
-            <p style="color: white;"> Select Tasks that you have finished!</p>
-            <div id="tasks">Your Tasks: 
-				<p id="tasks-direction"> Select Tasks that you have finished!</p>
-			</div>
-            <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>
-        </div>
-    </main> 
+            <div class="debt_you_owe">
+                <label for="total_dept">Debt you Owe </label>
+                <label id="total_dept">$<?= htmlspecialchars($total_dept) ?></label>
+                <p>To Groups</p>
+                <?php while ($row = mysqli_fetch_assoc($owed_groups_result)) {
+                    $group_id = $row['group_id'];
+                    $query = "SELECT group_name FROM `Groups` WHERE group_id='$group_id'";
+                    $group_result = mysqli_query($db_connection, $query);
+                    $group = mysqli_fetch_assoc($group_result);
+                    $group_name = $group['group_name'];
 
-    <script>
-        function fetchMyTasks() {
-            fetch('fetchMyTasks.php')
-                .then(response => response.json())
-                .then(tasks => {
-                    const tasksContainer = document.getElementById('tasks');
-                    tasksContainer.innerHTML = '';
+                    $query = "SELECT * FROM `Users_Debts` WHERE assigned_to='$user_id' AND group_id='$group_id' AND status='pending'";
+                    $debts_result = mysqli_query($db_connection, $query);
+                ?>
+                    <div class="group">
+                        <p class="group-name" onclick="showDebts(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p>
+                        <div id="debts-container-<?= $group_id ?>" class="debts-container" style="display:none;">
+                            <?php while ($debt = mysqli_fetch_assoc($debts_result)) {
+                                $debt_id = $debt['debt_id'];
+                                $assigner = $debt['assigner'];
+                                $description = $debt['description'];
+                                $amount = $debt['amount'];
 
-                    tasks.forEach(task => {
-                        const taskItem = document.createElement('div');
-                        taskItem.classList.add('task'); // Add this line to apply the task class
-                        tasksContainer.appendChild(taskItem);
+                                $query = "SELECT username FROM User Accounts WHERE user_id='$assigner'";
+                                $assigner_user_result = mysqli_query($db_connection, $query);
+                                $assigner_user = mysqli_fetch_assoc($assigner_user_result);
+                                $assigner_username = $assigner_user['username'];
+                                ?>
+                            <div id="debt_you_owe-<?= $debt_id ?>" class="debt">
+                            <span><?= htmlspecialchars($assigner_username) ?> says you owe <?= htmlspecialchars($description) ?>: $<?= htmlspecialchars($amount) ?></span>
+                            <button onclick="markDebtAsCompleteYouOwe(<?= $debt_id ?>, <?= $amount ?>)">Mark as complete</button>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+            <?php } ?>
 
-                        const taskTitle = document.createElement('h4');
-                        taskTitle.textContent = task.description;
-                        taskItem.appendChild(taskTitle);
-
-                        const checkBox = document.createElement('input');
-                        checkBox.type = 'checkbox';
-                        checkBox.setAttribute('data-task-id', task.task_id);
-                        taskItem.appendChild(checkBox);
-
-                        const description = document.createElement('span');
-                        description.textContent = ' - Due: ' + task.due_date; // Assuming there's a due_date property in the task object
-                        taskItem.appendChild(description);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching tasks:', error);
-                });
-        }
-
-
-        function completeTasks() {
-            const tasksContainer = document.getElementById('tasks');
-            const checkBoxes = tasksContainer.querySelectorAll('input[type=checkbox]:checked');
-            const taskIds = [];
-
-            checkBoxes.forEach(checkBox => {
-                taskIds.push(checkBox.getAttribute('data-task-id'));
-            });
-
-            if (taskIds.length === 0) {
-                alert('Please select at least one task to mark as complete.');
-                return;
-            }
-
-            fetch('completeTasks.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ taskIds }),
-            })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        fetchMyTasks();
-                    } else {
-                        console.error('Error completing tasks:', result.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error completing tasks:', error);
-                });
-        }
-
-        function showDept(){
-            // get the div element that contains the buttons
-        var buttonsDiv = document.getElementById("debtor");
-
-        // set the display style of the div to "block"
-        buttonsDiv.style.display = "block";
-
-        var groupDiv = document.getElementById("debt_owed_to_you_group");
-        groupDiv.style.display = "none";
-        }
-                
-        fetchMyTasks()
-</script>
+</div>
 
 </body>
 </html>
