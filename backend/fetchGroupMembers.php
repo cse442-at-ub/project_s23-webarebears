@@ -1,5 +1,6 @@
 <?php
 header("Content-Type: application/json");
+session_start();
 
 require('server.php');
 
@@ -14,11 +15,15 @@ $query = "SELECT `User Accounts`.user_id, `User Accounts`.username FROM Group_Me
 $result = mysqli_query($db_connection, $query);
 
 $members = [];
+$current_user_id = $_SESSION['user_id']; // Retrieve the current user's ID from the session
+
 while ($row = mysqli_fetch_assoc($result)) {
-    $members[] = [
-        'user_id' => $row['user_id'],
-        'username' => $row['username'],
-    ];
+    if ($row['user_id'] != $current_user_id) { // Check if the user_id in the fetched row is not equal to the current user's ID
+        $members[] = [
+            'user_id' => $row['user_id'],
+            'username' => $row['username'],
+        ];
+    }
 }
 
 echo json_encode($members);
