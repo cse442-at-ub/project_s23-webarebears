@@ -17,6 +17,8 @@
     $result = mysqli_query($db_connection, $query);
     $user = mysqli_fetch_assoc($result);
     $user_id = $user['user_id'];
+    $_SESSION['user_id'] = $user_id;
+
 
     $query = "SELECT Groups.group_id, Groups.group_name FROM `Group_Members` INNER JOIN `Groups` ON Group_Members.group_id = Groups.group_id WHERE Group_Members.user_id='$user_id'";
     $result = mysqli_query($db_connection, $query);
@@ -68,15 +70,15 @@
                 while ($row = mysqli_fetch_assoc($result)) {
                     $group_id = $row['group_id'];
                     $group_name = $row['group_name'];
-                    echo "<p><button id='myGroup' onclick='openChat($group_id)'>$group_name</button></p>";
+                    echo "<p><button id='myGroup' onclick='openChat($group_id); closeTaskForm(); closeDivideBillsForm()'>$group_name</button></p>";
                     $iteration++;
                 }
             ?>
         </myGroup>
     
     <div class = "container">
-        <button id="set-task-button" onclick="openTaskForm()">Set Task</button>
-        <button id="divide-bills-button" onclick="openDivideBillsForm()">Divide Bills</button>
+        <button id="set-task-button" onclick="openTaskForm(); closeDivideBillsForm()">Set Task</button>
+        <button id="divide-bills-button" onclick="openDivideBillsForm(); closeTaskForm()">Divide Bills</button>
         <div id="chat-box" class="chat-box">
             <div id="chat-history" class="chat-history"></div>
             <form id="message-form" class="message-form" onsubmit="return sendMessage()">

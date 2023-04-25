@@ -19,7 +19,7 @@
     $user_id = $user['user_id'];
 
     // Fetch groups where the user has assigned debts
-    $query = "SELECT DISTINCT group_id FROM `Users_Debts` WHERE assigner='$user_id'";
+    $query = "SELECT DISTINCT group_id FROM `Users_Debts` WHERE assigner='$user_id' AND status='pending'";
     $assigned_groups_result = mysqli_query($db_connection, $query);
 
     // Calculate total amount owed to the user
@@ -29,7 +29,7 @@
     $total_owed = $total_owed ? $total_owed : 0;
 
     // Fetch groups where the user owes debts
-    $query_owed_groups = "SELECT DISTINCT group_id FROM `Users_Debts` WHERE assigned_to='$user_id'";
+    $query_owed_groups = "SELECT DISTINCT group_id FROM `Users_Debts` WHERE assigned_to='$user_id' AND status='pending'";
     $owed_groups_result = mysqli_query($db_connection, $query_owed_groups);
 
     // Calculate total amount the user owes
@@ -54,8 +54,13 @@
 
 <!-- Add JavaScript to handle clicking on a group and marking a debt as complete -->
 <script>
-    function showDebts(groupId) {
-        let debtsContainer = document.getElementById('debts-container-' + groupId);
+    function showDebtsOwedToYou(groupId) {
+        let debtsContainer = document.getElementById('debts-owed-container-' + groupId);
+        debtsContainer.style.display = debtsContainer.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showDebtsYouOwe(groupId) {
+        let debtsContainer = document.getElementById('debts-you-owe-container-' + groupId);
         debtsContainer.style.display = debtsContainer.style.display === 'none' ? 'block' : 'none';
     }
 
@@ -138,10 +143,11 @@
 
                     $query = "SELECT * FROM `Users_Debts` WHERE assigner='$user_id' AND group_id='$group_id' AND status='pending'";
                     $debts_result = mysqli_query($db_connection, $query);
+                    if (mysqli_num_rows($debts_result) > 0) {
                 ?>
                     <div class="group">
-                        <p class="group-name" onclick="showDebts(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p>
-                        <div id="debts-container-<?= $group_id ?>" class="debts-container" style="display:none;">
+                    <p class="group-name" onclick="showDebtsOwedToYou(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p>
+                        <div id="debts-owed-container-<?= $group_id ?>" class="debts-container" style="display:none;">
                             <?php while ($debt = mysqli_fetch_assoc($debts_result)) {
                                 $debt_id = $debt['debt_id'];
                                 $assigned_to = $debt['assigned_to'];
@@ -154,18 +160,18 @@
                                 $assigned_username = $assigned_user['username'];
                             ?>
                                 <div id="debt-<?= $debt_id ?>" class="debt">
-                                    <span><?= htmlspecialchars($assigned_username) ?> owes <?= htmlspecialchars($description) ?>: $<?= htmlspecialchars($amount) ?></span>
+                                    <span><?= htmlspecialchars($assigned_username) ?> owes you for <?= htmlspecialchars($description) ?>: $<?= htmlspecialchars($amount) ?></span>
                                     <button onclick="markDebtAsComplete(<?= $debt_id ?>, <?= $amount ?>)">Mark as complete</button>
 
                                 </div>
-                            <?php } ?>
+                            <?php } }?>
                         </div>
                     </div>
                 <?php } ?>
             </div>
 
             <div class="debt_you_owe">
-                <label for="total_dept">Debt you Owe </label>
+                <label for="total_dept">Debt You Owe </label>
                 <label id="total_dept">$<?= htmlspecialchars($total_dept) ?></label>
                 <p>To Groups</p>
                 <?php while ($row = mysqli_fetch_assoc($owed_groups_result)) {
@@ -177,17 +183,18 @@
 
                     $query = "SELECT * FROM `Users_Debts` WHERE assigned_to='$user_id' AND group_id='$group_id' AND status='pending'";
                     $debts_result = mysqli_query($db_connection, $query);
+                    if (mysqli_num_rows($debts_result) > 0) {
                 ?>
                     <div class="group">
-                        <p class="group-name" onclick="showDebts(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p>
-                        <div id="debts-container-<?= $group_id ?>" class="debts-container" style="display:none;">
+                        <p class="group-name" onclick="showDebtsYouOwe(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p>
+                        <div id="debts-you-owe-container-<?= $group_id ?>" class="debts-container" style="display:none;">
                             <?php while ($debt = mysqli_fetch_assoc($debts_result)) {
                                 $debt_id = $debt['debt_id'];
                                 $assigner = $debt['assigner'];
                                 $description = $debt['description'];
                                 $amount = $debt['amount'];
 
-                                $query = "SELECT username FROM User Accounts WHERE user_id='$assigner'";
+                                $query = "SELECT username FROM `User Accounts` WHERE user_id='$assigner'";
                                 $assigner_user_result = mysqli_query($db_connection, $query);
                                 $assigner_user = mysqli_fetch_assoc($assigner_user_result);
                                 $assigner_username = $assigner_user['username'];
@@ -196,7 +203,7 @@
                             <span><?= htmlspecialchars($assigner_username) ?> says you owe <?= htmlspecialchars($description) ?>: $<?= htmlspecialchars($amount) ?></span>
                             <button onclick="markDebtAsCompleteYouOwe(<?= $debt_id ?>, <?= $amount ?>)">Mark as complete</button>
                         </div>
-                    <?php } ?>
+                    <?php } } ?>
                 </div>
             </div>
             <?php } ?>
