@@ -31,11 +31,12 @@
     require('server.php');
     session_start();
     // Check if user is logged in
-
-    if (!isset($_SESSION['username'])) {
+    if (!isset($_SESSION['user_id'])) {
         header("Location: login.php");
         exit();
     }
+
+    $current_user_id = $_SESSION['user_id'];
 
     // If form is submitted, search for user
     if (isset($_POST['submit'])) {
@@ -43,17 +44,17 @@
         $query = "SELECT * FROM `User Accounts` WHERE username='$search_term'";
         $result = mysqli_query($db_connection, $query);
 
-        // If user found, display user's information and add friend button
+        // If user found, display user's information and send friend request button
         if (mysqli_num_rows($result) > 0) {
             $user = mysqli_fetch_assoc($result);
             echo "<div class='search-result'>
-                    <img src='" . $user['profile_picture'] . "'/>
+
                     <h3> Search Result: </h3>
-                    <h2>" . $user['name'] . "</h2>
+
                     <p>" . $user['username'] . "</p>
                     <form method='post'>
-                        <input type='hidden' name='friend_username' value='" . $user['username'] . "'/>
-                        <button type='submit' name='add_friend' value='Add Friend'/>Add Friend</button>
+                        <input type='hidden' name='receiver_id' value='" . $user['user_id'] . "'/>
+                        <button type='submit' name='send_request' value='Send Request'/>Send Friend Request</button>
                     </form>
                 </div>";
         } else {
@@ -61,69 +62,94 @@
         }
     }
 
-    // If add friend button is clicked, add user to current user's friends list
-    if (isset($_POST['add_friend'])) {
-        $friend_username = mysqli_real_escape_string($db_connection, $_POST['friend_username']);
-        $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
-        
-        $query1 = "INSERT INTO `Friends` (username, friend_username) VALUES ('$username', '$friend_username')";
-        mysqli_query($db_connection, $query1);
-        
-        $query2 = "INSERT INTO `Friends` (username, friend_username) VALUES ('$friend_username', '$username')";
-        mysqli_query($db_connection, $query2);
-        
-        echo "<p>" . $friend_username . " has been added as a friend.</p>";
+    // If send friend request button is clicked, add request to Friend_Requests table
+    if (isset($_POST['send_request'])) {
+        $receiver_id = mysqli_real_escape_string($db_connection, $_POST['receiver_id']);
+
+        $query = "INSERT INTO `Friend_Requests` (sender_id, receiver_id, status) VALUES ('$current_user_id', '$receiver_id', 'pending')";
+        mysqli_query($db_connection, $query);
+
+        echo "<p>Friend request sent.</p>";
     }
 
-    // If remove friend button is clicked, remove friend from current user's friends list
-    if (isset($_POST['remove_friend'])) {
-        $friend_username = mysqli_real_escape_string($db_connection, $_POST['friend_username']);
-        $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
-        
-        $query1 = "DELETE FROM `Friends` WHERE username='$username' AND friend_username='$friend_username'";
-        mysqli_query($db_connection, $query1);
-        
-        $query2 = "DELETE FROM `Friends` WHERE username='$friend_username' AND friend_username='$username'";
-        mysqli_query($db_connection, $query2);
-        
-        echo "<p>" . $friend_username . " has been removed as a friend.</p>";
-    }
-        // Query the database for the current user's friends
-        $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
-        $query = "SELECT friend_username FROM `Friends` WHERE username='$username'";
-        $result = mysqli_query($db_connection, $query);
-    
-        // Display the list of friends, with a remove friend button next to each friend
-        echo "<div class=friends_list>";
-        echo "<h3>Friends List</h3>";
-        echo "<ul class='friends-list'>";
-        while ($row = mysqli_fetch_assoc($result)) {
-            $friend_username = $row['friend_username'];
-            echo "<div>" . $friend_username . " 
-                      <form method='post' class='remove-friend-form'>
-                          <input type='hidden' name='friend_username' value='" . $friend_username . "'>
-                          <button type='submit' name='remove_friend' value='Remove'/>Remove</button>
-                      </form>
-                  </div>";
-        }
-        echo "</ul>";
-        echo "</div>"
-    ?>
-    
-    <form class="form" method="post">
-        <h3 class="login-title">Search Friends</h3>
-        <input type="text" class="login-input" name="search" placeholder="Search for friends" id="search-friend"/>
-        <input type="submit" value="Search" name="submit" id="submit-btn"/>
-    </form>
-    
-    <button id="cancel-btn" type="button" value="Cancel" onclick="cancel()">Cancel</button>
+    // If accept friend request button is clicked, update Friend_Requests table and insert records in Friends table
+    if (isset($_POST['accept_request'])) {
+        $sender_id = mysqli_real_escape_string($db_connection, $_POST['sender_id']);
 
-    <script>
-        function cancel() {
+        // Update Friend_Requests table
+        $query1 = "UPDATE `Friend_Requests` SET status='accepted' WHERE sender_id='$sender_id' AND receiver_id='$current_user_id'";
+        mysqli_query($db_connection, $query1);
+
+        // Add records to Friends table
+        $query2 = "INSERT INTO `friends` (user_id, friend_user_id) VALUES ('$current_user_id', '$sender_id')";
+        mysqli_query($db_connection, $query2);
+
+        $query3 = "INSERT INTO `friends` (user_id, friend_user_id) VALUES ('$sender_id', '$current_user_id')";
+        mysqli_query($db_connection, $query3);
+
+        echo "<p>Friend request accepted.</p>";
+    }
+    // If decline friend request button is clicked, update Friend_Requests table
+    if (isset($_POST['decline_request'])) {
+        $sender_id = mysqli_real_escape_string($db_connection, $_POST['sender_id']);
+
+        $query = "UPDATE `Friend_Requests` SET status='declined' WHERE sender_id='$sender_id' AND receiver_id='$current_user_id'";
+        mysqli_query($db_connection, $query);
+
+        echo "<p>Friend request declined.</p>";
+    }
+
+    // Display the list of friend requests
+    echo "<div class='friend-requests'>";
+    echo "<h3>Friend Requests</h3>";
+    $query = "SELECT `User Accounts`.user_id, `User Accounts`.username FROM `Friend_Requests` INNER JOIN `User Accounts` ON `Friend_Requests`.sender_id = `User Accounts`.user_id WHERE `Friend_Requests`.receiver_id = '$current_user_id' AND `Friend_Requests`.status = 'pending'";
+    $result = mysqli_query($db_connection, $query);
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $sender_id = $row['user_id'];
+        $sender_username = $row['username'];
+        echo "<div>" . $sender_username . "
+                  <form method='post' class='accept-request-form'>
+                      <input type='hidden' name='sender_id' value='" . $sender_id . "'>
+                      <button type='submit' name='accept_request' value='Accept'/>Accept</button>
+                  </form>
+                  <form method='post' class='decline-request-form'>
+                      <input type='hidden' name='sender_id' value='" . $sender_id . "'>
+                      <button type='submit' name='decline_request' value='Decline'/>Decline</button>
+                  </form>
+              </div>";
+    }
+    echo "</div>";
+
+    // Display the list of friends
+    echo "<div class='friends_list'>";
+    echo "<h3>Friends List</h3>";
+    $query = "SELECT `User Accounts`.user_id, `User Accounts`.username FROM `friends` INNER JOIN `User Accounts` ON `friends`.friend_user_id = `User Accounts`.user_id WHERE `friends`.user_id = '$current_user_id'";
+    $result = mysqli_query($db_connection, $query);
+
+    echo "<ul class='friends-list'>";
+    while ($row = mysqli_fetch_assoc($result)) {
+        $friend_user_id = $row['user_id'];
+        $friend_username = $row['username'];
+        echo "<li>" . $friend_username . "</li>";
+    }
+    echo "</ul>";
+    echo "</div>";
+?>
+    
+<form class="form" method="post">
+    <h3 class="login-title">Search Friends</h3>
+    <input type="text" class="login-input" name="search" placeholder="Search for friends" id="search-friend"/>
+    <input type="submit" value="Search" name="submit" id="submit-btn"/>
+</form>
+    
+<button id="cancel-btn" type="button" value="Cancel" onclick="cancel()">Cancel</button>
+
+<script>
+    function cancel() {
         window.location.href = "messages.php";
     }
-    </script>
+</script>
 
-    </body>
-    </html>
-    
+</body>
+</html>

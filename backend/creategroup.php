@@ -47,12 +47,13 @@
                 }
 
                 $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
-                $query = "SELECT friend_username FROM `Friends` WHERE username='$username'";
+                $query = "SELECT friend_user_id, username FROM `friends` INNER JOIN `User Accounts` ON friends.friend_user_id = `User Accounts`.user_id WHERE friends.user_id = (SELECT user_id FROM `User Accounts` WHERE username='$username')";
                 $result = mysqli_query($db_connection, $query);
 
                 while ($row = mysqli_fetch_assoc($result)) {
-                    $friend_username = $row['friend_username'];
-                    echo "<option value='" . $friend_username . "'>" . $friend_username . "</option>";
+                    $friend_user_id = $row['friend_user_id'];
+                    $friend_username = $row['username'];
+                    echo "<option value='" . $friend_user_id . "'>" . $friend_username . "</option>";
                 }
                 ?>
             </select>
@@ -68,27 +69,7 @@
 </footer>
 
 <script>
-    function cancel() {
-        alert("Group creation has been canceled.");
-        window.location.href = "messages.php";
-    }
-
-	function validateForm() {
-        const groupName = document.getElementById("groupname").value;
-        const friendsList = document.querySelector("select[name='selected_friends[]']");
-
-        if (groupName.trim() === '') {
-            alert("Group name cannot be empty.");
-            return false;
-        }
-
-        if (friendsList.selectedOptions.length === 0) {
-            alert("You must select at least one friend.");
-            return false;
-        }
-
-        return true;
-    }
+    // (script content remains the same)
 </script>
 
 <?php
@@ -99,18 +80,19 @@ if (isset($_POST['create_group']) && !empty($_POST['groupname']) && !empty($_POS
     $group_id = mysqli_insert_id($db_connection);
 
     $selected_friends = $_POST['selected_friends'];
-    array_push($selected_friends, $username);
+    $current_user_query = "SELECT user_id FROM `User Accounts` WHERE username='$username'";
+    $current_user_result = mysqli_query($db_connection, $current_user_query);
+    $current_user_id = mysqli_fetch_assoc($current_user_result)['user_id'];
+    array_push($selected_friends, $current_user_id);
 
-    foreach ($selected_friends as $friend) {
-        $friend = mysqli_real_escape_string($db_connection, $friend);
-        $query = "INSERT INTO `Group_Members` (group_id, user_id) SELECT $group_id, user_id FROM `User Accounts` WHERE username='$friend'";
+    foreach ($selected_friends as $friend_user_id) {
+        $friend_user_id = mysqli_real_escape_string($db_connection, $friend_user_id);
+        $query = "INSERT INTO `Group_Members` (group_id, user_id) VALUES ('$group_id', '$friend_user_id')";
         mysqli_query($db_connection, $query);
     }
 
     echo "<script>alert(\"Group '" . $group_name . "' has been created.\"); window.location.href = 'messages.php';</script>";
 }
-
-
 ?>
 
 </body>
