@@ -49,6 +49,8 @@
                     <input type="submit" name="logout" value="Logout">
                 </form>
             </nav>
+
+
     </header>
 
     <div class="main-wrapper">
@@ -74,7 +76,7 @@
     
     <div class = "container">
         <button id="set-task-button" onclick="openTaskForm()">Set Task</button>
-        <button id="divide-bills-button"> Divide Bills</button>
+        <button id="divide-bills-button" onclick="openDivideBillsForm()">Divide Bills</button>
         <div id="chat-box" class="chat-box">
             <div id="chat-history" class="chat-history"></div>
             <form id="message-form" class="message-form" onsubmit="return sendMessage()">
@@ -83,6 +85,7 @@
             </form>
         </div>
     </div>
+
     <div id="task-form" style="display: none;">
     <h2>Set Task</h2>
     <form id="create-task-form" onsubmit="return createTask()">
@@ -100,6 +103,28 @@
         <button id="task-cancel" onclick="closeTaskForm()">Cancel</button>
     </form>
     </div>
+
+    <div id="divide-bills-form" style="display: none;">
+        <h2>Divide Bills</h2>
+        <form id="create-bill-form" onsubmit="return divideBill()">
+            <label for="bill-friend">Choose friends:</label>
+            <select id="bill-friend" name="friends[]" multiple></select><br><br>
+            
+            <label for="bill-description" id="bill-description-text">Bill Description:</label>
+            <textarea id="bill-description" name="description" rows="4" cols="50" required></textarea><br><br>
+
+            <label for="bill-amount" id="bill-amount-text">Total Amount:</label>
+            <input id="bill-amount" type="number" name="amount" step="0.01" min="0.01" required><br><br>
+
+            <label for="bill-due-date" id="due-data-text">Due Date:</label>
+            <input id="bill-due-date" type="date" name="due_date" required><br><br>
+
+            <input type="submit" value="Divide Bill" id="divide-bill">
+
+            <button id="bill-cancel" onclick="closeDivideBillsForm()">Cancel</button>
+        </form>
+    </div>
+
     </main>
     </div>
 
@@ -223,7 +248,67 @@
 
             return false;
         }
-        
+
+
+    function fetchGroupMembers(groupId, selectId = 'task-friend') {
+        fetch(`fetchGroupMembers.php?group_id=${groupId}`)
+            .then(response => response.json())
+            .then(members => {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '';
+                members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.user_id;
+                    option.textContent = member.username;
+                    select.appendChild(option);
+                });
+            });
+    }
+
+    function openDivideBillsForm() {
+            if (currentGroupId === null) {
+                alert('Please select a group chat before dividing a bill.');
+                return;
+            }
+            document.getElementById('divide-bills-form').style.display = 'block';
+            fetchGroupMembers(currentGroupId, 'bill-friend');
+        }
+
+        function closeDivideBillsForm() {
+            document.getElementById('divide-bills-form').style.display = 'none';
+        }
+
+        function divideBill() {
+            const friends = Array.from(document.getElementById('bill-friend').selectedOptions).map(option => option.value);
+            const description = document.getElementById('bill-description').value;
+            const amount = document.getElementById('bill-amount').value;
+            const dueDate = document.getElementById('bill-due-date').value;
+
+            if (friends.length === 0 || !description || !amount || !dueDate) {
+                alert('Please fill in all fields.');
+                return false;
+            }
+
+            const formData = new FormData();
+            formData.append('group_id', currentGroupId);
+            formData.append('friends', JSON.stringify(friends));
+            formData.append('description', description);
+            formData.append('amount', amount);
+            formData.append('due_date', dueDate);
+
+            fetch('divideBill.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(responseText => {
+                console.log('Response from divideBill.php:', responseText);
+                closeDivideBillsForm();
+            });        
+        return false;
+    }
+
+
     </script>
 
 </body>

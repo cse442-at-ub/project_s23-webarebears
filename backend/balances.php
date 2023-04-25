@@ -55,9 +55,26 @@
 
 <!-- Add JavaScript to handle clicking on a group and marking a debt as complete -->
 <script>
-    function showDebts(groupId) {
-        let debtsContainer = document.getElementById('debts-container-' + groupId);
+    function showDebts(groupId, group_name) {
+        let debtsContainer = document.getElementById('debts-container');
         debtsContainer.style.display = debtsContainer.style.display === 'none' ? 'block' : 'none';
+         // get the div element that contains the buttons
+        var buttonsDiv = document.getElementById("group-name");
+
+        // set the display style of the div to "block"
+        buttonsDiv.style.display = "none";
+
+        document.getElementById("from_groups").innerHTML = ("From Group: " + group_name);
+    }
+
+    function backBTN(groupId){
+        var buttonsDiv = document.getElementById("group-name");
+        buttonsDiv.style.display = "block";
+        
+        let debtsContainer = document.getElementById('debts-container');
+        debtsContainer.style.display = debtsContainer.style.display === 'none' ? 'block' : 'none';
+
+        document.getElementById("from_groups").innerHTML = "From Groups";
     }
 
     async function markDebtAsComplete(debtId, amount) {
@@ -101,6 +118,7 @@
             alert('Failed to mark debt as complete: ' + result);
         }
     }
+
 </script>
 
 
@@ -129,7 +147,7 @@
         <div class="debt_owed_to_you">
                 <label for="total_owed">Debt Owed To You </label>
                 <label id="total_owed">$<?= htmlspecialchars($total_owed) ?></label>
-                <p>From Groups</p>
+                <p id="from_groups">From Groups</p>
                 <?php while ($row = mysqli_fetch_assoc($assigned_groups_result)) {
                     $group_id = $row['group_id'];
                     $query = "SELECT group_name FROM `Groups` WHERE group_id='$group_id'";
@@ -141,8 +159,8 @@
                     $debts_result = mysqli_query($db_connection, $query);
                 ?>
                     <div class="group">
-                        <p class="group-name" onclick="showDebts(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p>
-                        <div id="debts-container-<?= $group_id ?>" class="debts-container" style="display:none;">
+                        <p id="group-name" onclick="showDebts(<?= $group_id ?>, '<?= htmlspecialchars($group_name) ?>')"><?= htmlspecialchars($group_name) ?></p>
+                        <div id="debts-container" style="display:none;">
                             <?php while ($debt = mysqli_fetch_assoc($debts_result)) {
                                 $debt_id = $debt['debt_id'];
                                 $assigned_to = $debt['assigned_to'];
@@ -155,11 +173,11 @@
                                 $assigned_username = $assigned_user['username'];
                             ?>
                                 <div id="debt-<?= $debt_id ?>" class="debt">
-                                    <span><?= htmlspecialchars($assigned_username) ?> owes <?= htmlspecialchars($description) ?>: $<?= htmlspecialchars($amount) ?></span>
-                                    <button onclick="markDebtAsComplete(<?= $debt_id ?>, <?= $amount ?>)">Mark as complete</button>
-
+                                    <p onclick="markDebtAsComplete(<?= $debt_id ?>, <?= $amount ?>)" id = debt><?= htmlspecialchars($assigned_username) ?> owes <?= htmlspecialchars($description) ?>: $<?= htmlspecialchars($amount) ?>
+                                    <br><br>Mark as complete</p>
                                 </div>
                             <?php } ?>
+                            <button id="back-btn" onClick="backBTN(<?= $group_id ?>)">&#8249</button>
                         </div>
                     </div>
                 <?php } ?>

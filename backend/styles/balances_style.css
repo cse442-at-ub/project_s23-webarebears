@@ -193,7 +193,6 @@ main div{
     border-radius: 20px;
     width: 40%;
     display: block;
-    min-height: 300px;
 }
 
 .debt_owed_to_you label{
@@ -213,35 +212,49 @@ main div{
     color: #B0BEC5;
 }
 
-#debt_owed_to_you_group{
+#group-name{
     background-color: #442A65;
-    height: 50px;
     border-radius: 20px;
     border: none;
-    width: 150px;
-    height: 150px;
-    padding-bottom: 100px;
+    width: auto;
+    height: auto;
+    padding-bottom: 30px;
     color: white;
     padding-top: 25px;
     font-size: medium;
+    display: block;
 }
 
-#debt_owed_to_you_group:hover{
+#group-name:hover{
     cursor: pointer;
 }
 
-#debtor button{
+#debt{
+    padding: 10px;
     background-color: #652A5F;
-    height: 70px;
-    width: 200px;
+    width: auto;
+    height: auto;
     color: white;
     border: none;
     border-radius: 15px;
     font-size: medium;
+}
+
+#debt:hover{
+    cursor: pointer;
+}
+
+#back-btn{
+    background: transparent;
+    color: white;
+    width: 50px;
+    height: 50px;
+    font-size: 70px;
+    border: none;
     float: right;
 }
 
-#debtor button:hover{
+#back-btn:hover{
     cursor: pointer;
 }
 /**********************DEPT YOU OWE*******************************/

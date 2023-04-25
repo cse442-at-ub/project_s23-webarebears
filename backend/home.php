@@ -96,40 +96,6 @@
                     console.error('Error fetching recent messages:', error);
                 });
         }
-        
-        const searchBar = document.getElementById('search-bar');
-        const searchResultsContainer = document.createElement('div');
-        searchResultsContainer.classList.add('search-results');
-        searchBar.insertAdjacentElement('afterend', searchResultsContainer);
-
-        searchBar.addEventListener('input', (event) => {
-            const query = event.target.value;
-
-            if (query.trim() === '') {
-                searchResultsContainer.innerHTML = '';
-                return;
-            }
-
-            fetch(`search.php?q=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error('Error searching:', data.error);
-                        return;
-                    }
-
-                    searchResultsContainer.innerHTML = '';
-
-                    data.results.forEach(result => {
-                        const resultItem = document.createElement('div');
-                        resultItem.textContent = `${result.type}: ${result.result}`;
-                        searchResultsContainer.appendChild(resultItem);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error searching:', error);
-                });
-        });
 
         function fetchMyTasks() {
             fetch('fetchMyTasks.php')
