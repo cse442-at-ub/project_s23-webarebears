@@ -212,50 +212,78 @@ main div{
     color: #B0BEC5;
 }
 
-#group-name{
+
+.group-name {
+    margin-top: 20px;
     background-color: #442A65;
     border-radius: 20px;
     border: none;
     width: auto;
     height: auto;
     padding-bottom: 30px;
-    color: white;
     padding-top: 25px;
-    font-size: medium;
+    font-size: large;
     display: block;
-}
-
-#group-name:hover{
+    text-align: center;
+    color: white;
+  }
+  
+.group-name:hover {
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
     cursor: pointer;
 }
 
-#debt{
-    padding: 10px;
+
+
+.debt button{
+    float: right;
+    border: none;
+    height: 30px;
+    border-radius: 5px;
+}
+
+.debt button:hover{
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    cursor: pointer;
+}
+
+
+.debt{
+    font-weight: 520;
+    padding: 20px;
     background-color: #652A5F;
     width: auto;
     height: auto;
     color: white;
     border: none;
-    border-radius: 15px;
     font-size: medium;
+    border-radius: 15px;
 }
 
-#debt:hover{
+.debt:hover{
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
     cursor: pointer;
 }
-
+  
+.debt p2{
+    margin-left: 30px;
+    font-size: small;
+    color: #B0BEC5;
+}
 #back-btn{
-    background: transparent;
-    color: white;
-    width: 50px;
-    height: 50px;
-    font-size: 70px;
-    border: none;
+    font-size: xx-large;
     float: right;
 }
 
 #back-btn:hover{
     cursor: pointer;
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+}
+
+#amount{
+    margin-top: 5px;
+    font-size: x-large;
+    vertical-align: middle;
 }
 /**********************DEPT YOU OWE*******************************/
 .debt_you_owe{

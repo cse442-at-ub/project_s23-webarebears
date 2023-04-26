@@ -87,7 +87,7 @@
                     recentMessage.appendChild(messageContent);
 
                     const sender = document.createElement('p');
-                    sender.textContent = 'Sent by: ' + message.sender;
+                    sender.innerHTML = 'Sent by: <u>' + message.sender + '</u>';
                     recentMessage.appendChild(sender);
                 });
 

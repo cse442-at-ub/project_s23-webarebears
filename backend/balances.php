@@ -47,7 +47,7 @@
     <meta charset="utf-8">
     <title>Home</title>
     <link rel="stylesheet" href="styles/balances_style.css"/>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
 </head>
 
@@ -55,17 +55,58 @@
 
 <!-- Add JavaScript to handle clicking on a group and marking a debt as complete -->
 <script>
-    function showDebtsOwedToYou(groupId) {
-        let debtsContainer = document.getElementById('debts-owed-container-' + groupId);
-        debtsContainer.style.display = debtsContainer.style.display === 'none' ? 'block' : 'none';
-    }
+function hideDebtsOwedToYou() {
+    let debtContainers = document.querySelectorAll('.debts-container');
+    console.log(debtContainers); // Debugging line
 
-    function showDebtsYouOwe(groupId) {
-        let debtsContainer = document.getElementById('debts-you-owe-container-' + groupId);
-        debtsContainer.style.display = debtsContainer.style.display === 'none' ? 'block' : 'none';
+    debtContainers.forEach(function(container) {
+        container.style.display = 'none';
+    });
 
-        document.getElementById("from_groups").innerHTML = "From Groups";
+    let groupNames = document.querySelectorAll('.group-name');
+    console.log(groupNames); // Debugging line
+
+    groupNames.forEach(function(name) {
+        name.style.display = 'block';
+    });
+
+    let backButton = document.getElementById('back-btn');
+    backButton.style.display = 'none';
+    //backButton.removeEventListener('click', hideDebtsOwedToYou);
+
+    document.getElementById('from_groups').innerHTML = "From Groups";
+}
+
+function showDebtsOwedToYou(groupId, group_name) {
+    // Hide all other debt containers and show only the clicked one
+    let debtContainers = document.querySelectorAll('.debts-container');
+    debtContainers.forEach(function(container) {
+        if (container.id !== 'debts-owed-container-' + groupId) {
+            container.style.display = 'none';
+        } else {
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        }
+    });
+
+    document.getElementById('from_groups').innerHTML = "<strong>" + group_name + "</strong>";
+
+    // Hide all other group names
+  let groupNames = document.querySelectorAll('.group-name');
+groupNames.forEach(function(name) {
+    if (name.id !== 'group-name-' + groupId) {
+        name.style.display = 'none';
+    } else {
+        name.style.display = 'none';
     }
+});
+
+
+    // Show back button and add event listener
+    let backButton = document.getElementById('back-btn');
+    backButton.style.display = 'block';
+    //backButton.removeEventListener('click', hideDebtsOwedToYou);
+    //backButton.addEventListener('click', hideDebtsOwedToYou);
+}
 
     async function markDebtAsComplete(debtId, amount) {
         const response = await fetch('mark_debt_complete.php', {
@@ -112,26 +153,26 @@
 </script>
 
 
-	<header>
-		<nav class="nav-left">
-			<a href="profile.php">
-				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
-			</a>
-			<a href="home.php" id="home" >Home</a>
-			<a id="tasksAndBalances" href="balances.php">Balances</a>
-			<a id="messages" href="messages.php">Messages</a>			
-		</nav>
-		<nav class="nav-right">
+    <header>
+        <nav class="nav-left">
+            <a href="profile.php">
+                <img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
+            </a>
+            <a href="home.php" id="home" >Home</a>
+            <a id="tasksAndBalances" href="balances.php">Balances</a>
+            <a id="messages" href="messages.php">Messages</a>           
+        </nav>
+        <nav class="nav-right">
             <input id="search-bar" type="search" placeholder="Search">
-			<button type="button" class="icon-button">
-				<span class="material-icons">notifications</span>
-				<span class="icon-button__badge">2</span>
-			</button>
+            <button type="button" class="icon-button">
+                <span class="material-icons">notifications</span>
+                <span class="icon-button__badge">2</span>
+            </button>
             <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
             </form>
-		</nav>
-	</header>
+        </nav>
+    </header>
 
     <main>
         <div class="debt_owed_to_you">
@@ -150,27 +191,30 @@
                     if (mysqli_num_rows($debts_result) > 0) {
                 ?>
                     <div class="group">
-                    <p class="group-name" onclick="showDebtsOwedToYou(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p>
+                        <p1 id="group-name-<?= $group_id ?>" class="group-name" onclick="showDebtsOwedToYou(<?= $group_id ?>, '<?= htmlspecialchars($group_name) ?>')"><?= htmlspecialchars($group_name) ?></p1>
                         <div id="debts-owed-container-<?= $group_id ?>" class="debts-container" style="display:none;">
                             <?php while ($debt = mysqli_fetch_assoc($debts_result)) {
                                 $debt_id = $debt['debt_id'];
                                 $assigned_to = $debt['assigned_to'];
                                 $description = $debt['description'];
                                 $amount = $debt['amount'];
-    
+
                                 $query = "SELECT username FROM `User Accounts` WHERE user_id='$assigned_to'";
                                 $assigned_user_result = mysqli_query($db_connection, $query);
                                 $assigned_user = mysqli_fetch_assoc($assigned_user_result);
                                 $assigned_username = $assigned_user['username'];
                             ?>
                                 <div id="debt-<?= $debt_id ?>" class="debt">
-                                    <span><?= htmlspecialchars($assigned_username) ?> owes you for <?= htmlspecialchars($description) ?>: $<?= htmlspecialchars($amount) ?></span>
-                                    <button onclick="markDebtAsComplete(<?= $debt_id ?>, <?= $amount ?>)">Mark as complete</button>
-
+                                <p1 onclick="markDebtAsComplete(<?= $debt_id ?>, <?= $amount ?>)"><?= htmlspecialchars($assigned_username) ?> owes you for <?= htmlspecialchars($description) ?>
+                                    <span style="float: right;" id="amount">$<?= htmlspecialchars($amount) ?></span>
+                                    <br><p2>Click to remove</p2>
+                                </p1>
                                 </div>
                             <?php } }?>
+                            <p id="back-btn" onClick="hideDebtsOwedToYou()">&#9001</p>
                         </div>
                     </div>
+
                 <?php } ?>
             </div>
 
@@ -213,6 +257,19 @@
             <?php } ?>
 
 </div>
+
+<script>
+    const groupButtons = document.querySelectorAll('.group-name');
+
+    groupButtons.forEach(function(groupButton) {
+        groupButton.addEventListener('click', function() {
+            groupButton.classList.toggle('clicked');
+        });
+    });
+
+
+</script>
+
 
 </body>
 </html>
