@@ -181,15 +181,14 @@ function showDebtsOwedToYou(groupId, group_name) {
 
 
     <header>
-        <nav class="nav-left">
+         <nav class="nav-bar">
             <a href="profile.php">
-                <img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
-            </a>
+				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
+			</a>
             <a href="home.php" id="home" >Home</a>
-            <a id="tasksAndBalances" href="balances.php">Balances</a>
-            <a id="messages" href="messages.php">Messages</a>           
-        </nav>
-        <nav class="nav-right">
+            <a id="tasksAndBalances" href="Balances.php">Balances</a>
+            <a id="messages" href="messages.php">Messages</a>			
+
             <input id="search-bar" type="search" placeholder="Search">
             <button type="button" class="icon-button">
                 <span class="material-icons">notifications</span>
@@ -296,6 +295,37 @@ function showDebtsOwedToYou(groupId, group_name) {
     });
 
 
+
+    const navbar = document.querySelector('.nav-bar');
+    const searchbar = document.querySelector('#search-bar');
+    const notifications = document.querySelector('.icon-button');
+    const logoutButton = document.querySelector('#log-out-button');
+
+    let lastScrollTop = 0;
+
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (scrollTop > lastScrollTop) {
+            navbar.style.top = '-70px';
+        } else {
+            navbar.style.top = '0';
+        }
+        lastScrollTop = scrollTop;
+    });
+
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 50) {
+            searchbar.style.visibility = 'hidden';
+            notifications.style.visibility = 'hidden';
+            navbar.style.visibility = "hidden";
+            logoutButton.style.visibility = "hidden";
+        } else {
+            searchbar.style.visibility = 'visible';
+            notifications.style.visibility = 'visible';
+            navbar.style.visibility = 'visible';
+            logoutButton.style.visibility = "visible";
+        }
+    });
 </script>
 
 

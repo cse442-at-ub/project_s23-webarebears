@@ -69,7 +69,27 @@
 </footer>
 
 <script>
-    // (script content remains the same)
+    function cancel() {
+        alert("Group creation has been canceled.");
+        window.location.href = "messages.php";
+    }
+
+	function validateForm() {
+        const groupName = document.getElementById("groupname").value;
+        const friendsList = document.querySelector("select[name='selected_friends[]']");
+
+        if (groupName.trim() === '') {
+            alert("Group name cannot be empty.");
+            return false;
+        }
+
+        if (friendsList.selectedOptions.length === 0) {
+            alert("You must select at least one friend.");
+            return false;
+        }
+
+        return true;
+    }
 </script>
 
 <?php
