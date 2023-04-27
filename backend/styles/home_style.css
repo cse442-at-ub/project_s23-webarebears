@@ -146,6 +146,8 @@ footer {
     display: block;
     padding: 10px;
     font-weight: 450;
+    max-width: 600px;
+    min-width: 500px;
 }
 
 
@@ -289,6 +291,8 @@ footer {
 }
 
 .recent-message {
+    overflow: scroll; /* create scroll bar if content overflows */
+    word-wrap: break-word; /* break long words into multiple lines */
     background-color: #242042;
     border-radius: 15px;
     padding: 20px;
@@ -318,17 +322,20 @@ footer {
 
 
 .your_task{
+    overflow: scroll; /* create scroll bar if content overflows */
+    word-wrap: break-word; /* break long words into multiple lines */
     font-family: sans-serif;
     padding: 50px;
     color: white;
     background-color: #1F222A;
     border-radius: 20px;
-    width: 60%;
+
     height: auto;
     overflow: scroll;
     margin-left: 100px;
-    margin-right: 20px;
-    
+    margin-right: 100px;
+    max-width: 600px;
+    min-width: 400px;
 }
 
 .task {

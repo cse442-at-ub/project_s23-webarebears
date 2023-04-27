@@ -183,6 +183,7 @@ main{
 main div{
     height: auto ;
     flex-grow: 1; 
+    align-self: flex-start;
 }
 
 /**********************DEPT OWED TO YOU*******************************/
@@ -193,6 +194,7 @@ main div{
     border-radius: 20px;
     width: 40%;
     display: block;
+    align-self: flex-start;
 }
 
 .debt_owed_to_you label{
@@ -213,7 +215,7 @@ main div{
 }
 
 
-.group-name {
+.group-name1 {
     margin-top: 20px;
     background-color: #442A65;
     border-radius: 20px;
@@ -228,11 +230,30 @@ main div{
     color: white;
   }
   
-.group-name:hover {
+.group-name1:hover {
     background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
     cursor: pointer;
 }
 
+.group-name2 {
+    margin-top: 20px;
+    background-color: #442A65;
+    border-radius: 20px;
+    border: none;
+    width: auto;
+    height: auto;
+    padding-bottom: 30px;
+    padding-top: 25px;
+    font-size: large;
+    display: block;
+    text-align: center;
+    color: white;
+  }
+  
+.group-name2:hover {
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    cursor: pointer;
+}
 
 
 .debt button{
@@ -258,6 +279,7 @@ main div{
     border: none;
     font-size: medium;
     border-radius: 15px;
+    margin-bottom: 10px;
 }
 
 .debt:hover{
@@ -270,16 +292,27 @@ main div{
     font-size: small;
     color: #B0BEC5;
 }
-#back-btn{
+#back-btn1{
     font-size: xx-large;
     float: right;
+    display: none;
 }
 
-#back-btn:hover{
+#back-btn1:hover{
     cursor: pointer;
     background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
 }
 
+#back-btn2{
+    font-size: xx-large;
+    float: right;
+    display: none;
+}
+
+#back-btn2:hover{
+    cursor: pointer;
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+}
 #amount{
     margin-top: 5px;
     font-size: x-large;
@@ -287,7 +320,7 @@ main div{
 }
 /**********************DEPT YOU OWE*******************************/
 .debt_you_owe{
-
+    align-self: flex-start;
     padding: 50px;
     color: white;
     background-color: #1F222A;

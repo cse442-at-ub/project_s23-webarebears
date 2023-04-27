@@ -56,57 +56,84 @@
 <!-- Add JavaScript to handle clicking on a group and marking a debt as complete -->
 <script>
 function hideDebtsOwedToYou() {
-    let debtContainers = document.querySelectorAll('.debts-container');
+    let debtContainers = document.querySelectorAll('.debts-container1');
     console.log(debtContainers); // Debugging line
 
     debtContainers.forEach(function(container) {
         container.style.display = 'none';
     });
 
-    let groupNames = document.querySelectorAll('.group-name');
+    let groupNames = document.querySelectorAll('.group-name1');
     console.log(groupNames); // Debugging line
 
     groupNames.forEach(function(name) {
         name.style.display = 'block';
     });
 
-    let backButton = document.getElementById('back-btn');
+    let backButton = document.getElementById('back-btn1');
     backButton.style.display = 'none';
     //backButton.removeEventListener('click', hideDebtsOwedToYou);
 
     document.getElementById('from_groups').innerHTML = "From Groups";
 }
 
-function showDebtsOwedToYou(groupId, group_name) {
-    // Hide all other debt containers and show only the clicked one
-    let debtContainers = document.querySelectorAll('.debts-container');
+function hideDebtYouOwe() {
+    let debtContainers = document.querySelectorAll('.debts-container2');
+    console.log(debtContainers); // Debugging line
+
     debtContainers.forEach(function(container) {
-        if (container.id !== 'debts-owed-container-' + groupId) {
-            container.style.display = 'none';
+        container.style.display = 'none';
+    });
+
+    let groupNames = document.querySelectorAll('.group-name2');
+    console.log(groupNames); // Debugging line
+
+    groupNames.forEach(function(name) {
+        name.style.display = 'block';
+    });
+
+    let backButton = document.getElementById('back-btn2');
+    backButton.style.display = 'none';
+    //backButton.removeEventListener('click', hideDebtsYouOwe);
+
+    document.getElementById('to_groups').innerHTML = "To Groups";
+}
+
+function showDebtsOwedToYou(groupId, group_name) {
+    let debtsContainer = document.getElementById('debts-owed-container-' + groupId);
+        debtsContainer.style.display = debtsContainer.style.display === 'none' ? 'block' : 'none';
+        
+        let groupNames = document.querySelectorAll('.group-name1');
+    groupNames.forEach(function(name) {
+        if (name.id !== 'group-name-' + groupId) {
+            name.style.display = 'none';
         } else {
-            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+            name.style.display = 'none';
         }
     });
 
-    document.getElementById('from_groups').innerHTML = "<strong>" + group_name + "</strong>";
-
-    // Hide all other group names
-  let groupNames = document.querySelectorAll('.group-name');
-groupNames.forEach(function(name) {
-    if (name.id !== 'group-name-' + groupId) {
-        name.style.display = 'none';
-    } else {
-        name.style.display = 'none';
+        let backButton = document.getElementById('back-btn1');
+        backButton.style.display = 'block';
     }
-});
 
+    function showDebtsYouOwe(groupId) {
+        let debtsContainer = document.getElementById('debts-you-owe-container-' + groupId);
+        debtsContainer.style.display = debtsContainer.style.display === 'none' ? 'block' : 'none';
+        
+        let groupNames = document.querySelectorAll('.group-name2');
+    groupNames.forEach(function(name) {
+        if (name.id !== 'group-name-' + groupId) {
+            name.style.display = 'none';
+        } else {
+            name.style.display = 'none';
+        }
+    });
 
-    // Show back button and add event listener
-    let backButton = document.getElementById('back-btn');
-    backButton.style.display = 'block';
-    //backButton.removeEventListener('click', hideDebtsOwedToYou);
-    //backButton.addEventListener('click', hideDebtsOwedToYou);
-}
+        let backButton = document.getElementById('back-btn2');
+        backButton.style.display = 'block';
+    }
+
+    
 
     async function markDebtAsComplete(debtId, amount) {
         const response = await fetch('mark_debt_complete.php', {
@@ -191,8 +218,8 @@ groupNames.forEach(function(name) {
                     if (mysqli_num_rows($debts_result) > 0) {
                 ?>
                     <div class="group">
-                        <p1 id="group-name-<?= $group_id ?>" class="group-name" onclick="showDebtsOwedToYou(<?= $group_id ?>, '<?= htmlspecialchars($group_name) ?>')"><?= htmlspecialchars($group_name) ?></p1>
-                        <div id="debts-owed-container-<?= $group_id ?>" class="debts-container" style="display:none;">
+                        <p1 id="group-name-<?= $group_id ?>" class="group-name1" onclick="showDebtsOwedToYou(<?= $group_id ?>, '<?= htmlspecialchars($group_name) ?>')"><?= htmlspecialchars($group_name) ?></p1>
+                        <div id="debts-owed-container-<?= $group_id ?>" class="debts-container1" style="display:none;">
                             <?php while ($debt = mysqli_fetch_assoc($debts_result)) {
                                 $debt_id = $debt['debt_id'];
                                 $assigned_to = $debt['assigned_to'];
@@ -211,11 +238,10 @@ groupNames.forEach(function(name) {
                                 </p1>
                                 </div>
                             <?php } }?>
-                            <p id="back-btn" onClick="hideDebtsOwedToYou()">&#9001</p>
                         </div>
                     </div>
-
                 <?php } ?>
+                <p id="back-btn1" onClick="hideDebtsOwedToYou()">&#9001</p>
             </div>
 
             <div class="debt_you_owe">
@@ -234,8 +260,8 @@ groupNames.forEach(function(name) {
                     if (mysqli_num_rows($debts_result) > 0) {
                 ?>
                     <div class="group">
-                        <p class="group-name" onclick="showDebtsYouOwe(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p>
-                        <div id="debts-you-owe-container-<?= $group_id ?>" class="debts-container" style="display:none;">
+                        <p1 id="group-name" class="group-name2" onclick="showDebtsYouOwe(<?= $group_id ?>)"><?= htmlspecialchars($group_name) ?></p1>
+                        <div id="debts-you-owe-container-<?= $group_id ?>" class="debts-container2" style="display:none;">
                             <?php while ($debt = mysqli_fetch_assoc($debts_result)) {
                                 $debt_id = $debt['debt_id'];
                                 $assigner = $debt['assigner'];
@@ -248,15 +274,17 @@ groupNames.forEach(function(name) {
                                 $assigner_username = $assigner_user['username'];
                                 ?>
                             <div id="debt_you_owe-<?= $debt_id ?>" class="debt">
-                            <span><?= htmlspecialchars($assigner_username) ?> says you owe <?= htmlspecialchars($description) ?>: $<?= htmlspecialchars($amount) ?></span>
-                            <button onclick="markDebtAsCompleteYouOwe(<?= $debt_id ?>, <?= $amount ?>)">Mark as complete</button>
+                            <p1 onclick="markDebtAsComplete(<?= $debt_id ?>, <?= $amount ?>)"> You owe <?= htmlspecialchars($assigned_username) ?> for <?= htmlspecialchars($description) ?>
+                                <span style="float: right;" id="amount">$<?= htmlspecialchars($amount) ?></span>
+                                <br><p2>Click to remove</p2>
+                            </p1>
                         </div>
                     <?php } } ?>
                 </div>
             </div>
             <?php } ?>
-
-</div>
+            <p id="back-btn2" onClick="hideDebtYouOwe()">&#9001</p>
+        </div>
 
 <script>
     const groupButtons = document.querySelectorAll('.group-name');
