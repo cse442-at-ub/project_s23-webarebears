@@ -316,6 +316,7 @@ button:hover {
     background-color: #242042;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    margin-left: 25px;
 }
 
 #message-input{
@@ -372,6 +373,7 @@ li {
     border-radius: 20px;
     width: 200px;
     background-color: #242042;
+    margin-right: 65px;
 }
 
 #divide-bills-button{

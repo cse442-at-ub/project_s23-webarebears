@@ -314,35 +314,36 @@ align-items: center;
 
 
     const navbar = document.querySelector('.nav-bar');
-const searchbar = document.querySelector('#search-bar');
-const notifications = document.querySelector('.icon-button');
-const logoutButton = document.querySelector('#log-out-button');
+        const searchbar = document.querySelector('#search-bar');
+        const notifications = document.querySelector('.icon-button');
+        const logoutButton = document.querySelector('#log-out-button');
 
-let lastScrollTop = 0;
+        let lastScrollTop = 0;
 
-window.addEventListener('scroll', () => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    if (scrollTop > lastScrollTop) {
-        navbar.style.top = '-70px';
-    } else {
-        navbar.style.top = '0';
-    }
-    lastScrollTop = scrollTop;
-});
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop) {
+                navbar.style.top = '-70px';
+            } else {
+                navbar.style.top = '0';
+            }
+            lastScrollTop = scrollTop;
+        });
 
-window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 50) {
-        searchbar.style.visibility = 'hidden';
-        notifications.style.visibility = 'hidden';
-        navbar.style.visibility = "hidden";
-        logoutButton.style.visibility = "hidden";
-    } else {
-        searchbar.style.visibility = 'visible';
-        notifications.style.visibility = 'visible';
-        navbar.style.visibility = 'visible';
-        logoutButton.style.visibility = "visible";
-    }
-});
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                searchbar.style.visibility = 'hidden';
+                notifications.style.visibility = 'hidden';
+                navbar.style.visibility = "hidden";
+                logoutButton.style.visibility = "hidden";
+            } else {
+                searchbar.style.visibility = 'visible';
+                notifications.style.visibility = 'visible';
+                navbar.style.visibility = 'visible';
+                logoutButton.style.visibility = "visible";
+            }
+        });
+
 
 
 
