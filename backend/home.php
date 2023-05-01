@@ -46,6 +46,7 @@
 
 <body id="homepage">
     <header>
+
         <nav class="nav-left">
             <a href="profile.php">
                 <img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
@@ -62,28 +63,33 @@
             </button>
             <div id="notification-container" style="display: none;"></div>
 
+
             <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
             </form>
         </nav>
+
         
     </header>
+
 
     <main id="grid2">
         <recent>
             <u style="color: white; font-family: sans-serif; font-weight: 450; font-size: larger; margin-left: 20px">Recent</u>
             <div id="recent">Recent</div>
         </recent>
-        <tasks>
+        <div class="your_task">
             <h3 style="color: white; font-size: larger; font-weight: 400;">Your Tasks:</h3>
             <p style="color: white;"> Select Tasks that you have finished!</p>
             <div id="tasks">Your Tasks: 
+
                 <p id="tasks-direction"> Select Tasks that you have finished!</p>
                 </div>
             </div>
             <p></p>
             <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>      
         </tasks>
+
        
     </main>
 
@@ -164,7 +170,7 @@ document.getElementById('notification-button').addEventListener('click', () => {
                     recentMessage.appendChild(messageContent);
 
                     const sender = document.createElement('p');
-                    sender.textContent = 'Sent by: ' + message.sender;
+                    sender.innerHTML = 'Sent by: <u>' + message.sender + '</u>';
                     recentMessage.appendChild(sender);
                 });
 
@@ -173,40 +179,6 @@ document.getElementById('notification-button').addEventListener('click', () => {
                     console.error('Error fetching recent messages:', error);
                 });
         }
-        
-        const searchBar = document.getElementById('search-bar');
-        const searchResultsContainer = document.createElement('div');
-        searchResultsContainer.classList.add('search-results');
-        searchBar.insertAdjacentElement('afterend', searchResultsContainer);
-
-        searchBar.addEventListener('input', (event) => {
-            const query = event.target.value;
-
-            if (query.trim() === '') {
-                searchResultsContainer.innerHTML = '';
-                return;
-            }
-
-            fetch(`search.php?q=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error('Error searching:', data.error);
-                        return;
-                    }
-
-                    searchResultsContainer.innerHTML = '';
-
-                    data.results.forEach(result => {
-                        const resultItem = document.createElement('div');
-                        resultItem.textContent = `${result.type}: ${result.result}`;
-                        searchResultsContainer.appendChild(resultItem);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error searching:', error);
-                });
-        });
 
         function fetchMyTasks() {
             fetch('fetchMyTasks.php')
@@ -276,6 +248,37 @@ document.getElementById('notification-button').addEventListener('click', () => {
 
         fetchRecentMessages();
         fetchMyTasks();
+
+        const navbar = document.querySelector('.nav-bar');
+        const searchbar = document.querySelector('#search-bar');
+        const notifications = document.querySelector('.icon-button');
+        const logoutButton = document.querySelector('#log-out-button');
+
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop) {
+                navbar.style.top = '-70px';
+            } else {
+                navbar.style.top = '0';
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                searchbar.style.visibility = 'hidden';
+                notifications.style.visibility = 'hidden';
+                navbar.style.visibility = "hidden";
+                logoutButton.style.visibility = "hidden";
+            } else {
+                searchbar.style.visibility = 'visible';
+                notifications.style.visibility = 'visible';
+                navbar.style.visibility = 'visible';
+                logoutButton.style.visibility = "visible";
+            }
+        });
     </script>
 </body>
 </html>
