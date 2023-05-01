@@ -93,7 +93,7 @@
     if (isset($_POST['decline_request'])) {
         $sender_id = mysqli_real_escape_string($db_connection, $_POST['sender_id']);
 
-        $query = "UPDATE `Friend_Requests` SET status='declined' WHERE sender_id='$sender_id' AND receiver_id='$current_user_id'";
+        $query = "UPDATE `Friend_Requests` SET status='rejected' WHERE sender_id='$sender_id' AND receiver_id='$current_user_id'";
         mysqli_query($db_connection, $query);
 
         echo "<p>Friend request declined.</p>";
