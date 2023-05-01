@@ -16,7 +16,7 @@
 
     $query = "
         SELECT debt_id, group_id, assigned_to, description, amount, due_date, status
-        FROM User_Debts
+        FROM Users_Debts
         WHERE assigned_to = '$user_id' AND status = 'pending'
         ORDER BY due_date ASC
     ";
