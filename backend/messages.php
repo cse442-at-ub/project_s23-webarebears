@@ -51,8 +51,6 @@
                     <input type="submit" name="logout" value="Logout">
                 </form>
             </nav>
-
-
     </header>
 
     <div class="main-wrapper">
@@ -92,7 +90,8 @@
     <h2>Set Task</h2>
     <form id="create-task-form" onsubmit="return createTask()">
         <label for="task-friend">Choose a friend:</label>
-        <select id="task-friend" name="friend"></select><br><br>
+        <ul id="task-friend"></ul>
+
         
         <label for="task-description" id="task-description-text">Task Description:</label>
         <textarea id="task-description" name="description" rows="4" cols="50" required></textarea><br><br>
@@ -101,7 +100,7 @@
         <input id="task-due-date" type="date" name="due_date" required><br><br>
 
         <input type="submit" value="Create Task" id="create-task">
-
+        <br>
         <button id="task-cancel" onclick="closeTaskForm()">Cancel</button>
     </form>
     </div>
@@ -110,7 +109,7 @@
         <h2>Divide Bills</h2>
         <form id="create-bill-form" onsubmit="return divideBill()">
             <label for="bill-friend">Choose friends:</label>
-            <select id="bill-friend" name="friends[]" multiple></select><br><br>
+            <ul id="bill-friend"></ul>
             
             <label for="bill-description" id="bill-description-text">Bill Description:</label>
             <textarea id="bill-description" name="description" rows="4" cols="50" required></textarea><br><br>
@@ -122,6 +121,7 @@
             <input id="bill-due-date" type="date" name="due_date" required><br><br>
 
             <input type="submit" value="Divide Bill" id="divide-bill">
+            <br>
 
             <button id="bill-cancel" onclick="closeDivideBillsForm()">Cancel</button>
         </form>
@@ -131,7 +131,6 @@
     </div>
 
     <script>
-
         let currentGroupId = null;
         let chatHistoryTimeout = null; // Add this line
 
@@ -207,20 +206,6 @@
             document.getElementById('task-form').style.display = 'none';
         }
 
-        function fetchGroupMembers(groupId) {
-            fetch(`fetchGroupMembers.php?group_id=${groupId}`)
-                .then(response => response.json())
-                .then(members => {
-                    const select = document.getElementById('task-friend');
-                    select.innerHTML = '';
-                    members.forEach(member => {
-                        const option = document.createElement('option');
-                        option.value = member.user_id;
-                        option.textContent = member.username;
-                        select.appendChild(option);
-                    });
-                });
-        }
 
         function createTask() {
             const friend = document.getElementById('task-friend').value;
@@ -256,13 +241,26 @@
         fetch(`fetchGroupMembers.php?group_id=${groupId}`)
             .then(response => response.json())
             .then(members => {
-                const select = document.getElementById(selectId);
-                select.innerHTML = '';
+                const fList = document.getElementById(selectId);
+                fList.innerHTML = '';
+                
                 members.forEach(member => {
-                    const option = document.createElement('option');
-                    option.value = member.user_id;
-                    option.textContent = member.username;
-                    select.appendChild(option);
+                    const listNode = document.createElement('li');
+                    const labelNode = document.createElement('label');
+                    labelNode.className = 'custom-checkbox';
+
+                    const inputNode = document.createElement('input');
+                    inputNode.type = 'checkbox';
+                    inputNode.value = member.user_id;
+
+                    const spanNode = document.createElement('span');
+                    spanNode.className = 'checkmark'
+                    spanNode.textContent = member.username;
+
+                    labelNode.appendChild(inputNode);
+                    labelNode.appendChild(spanNode);
+                    listNode.appendChild(labelNode);
+                    fList.appendChild(listNode);
                 });
             });
     }
@@ -281,7 +279,17 @@
         }
 
         function divideBill() {
-            const friends = Array.from(document.getElementById('bill-friend').selectedOptions).map(option => option.value);
+            var checkboxes = document.querySelectorAll('#bill-friend input[type="checkbox"]');
+            var checkedValues = [];
+
+            checkboxes.forEach(function(checkbox) {
+                if(checkbox.checked) {
+                    checkedValues.push(checkbox.value);
+                }
+            });
+            
+            //const friends = Array.from(document.getElementById('bill-friend').selectedOptions).map(option => option.value);
+            const friends = checkedValues;
             const description = document.getElementById('bill-description').value;
             const amount = document.getElementById('bill-amount').value;
             const dueDate = document.getElementById('bill-due-date').value;
@@ -304,6 +312,7 @@
             })
             .then(response => response.text())
             .then(responseText => {
+                console.log(checkedValues)
                 console.log('Response from divideBill.php:', responseText);
                 closeDivideBillsForm();
             });        
