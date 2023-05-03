@@ -5,6 +5,11 @@
     <title>Add Friends</title>
     <link rel="stylesheet" href="styles/addfriends.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Spartan' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <header>
@@ -19,7 +24,7 @@
             <input id="search-bar" type="search" placeholder="Search">
             <button type="button" class="icon-button">
                 <span class="material-icons">notifications</span>
-                <span class="icon-button__badge">2</span>
+                <span class="icon-button__badge"></span>
             </button>
             <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
@@ -36,7 +41,6 @@
     }
 
     $current_user_id = $_SESSION['user_id'];
-
     // If form is submitted, search for user
     if (isset($_POST['submit'])) {
         $search_term = mysqli_real_escape_string($db_connection, $_POST['search']);
@@ -46,18 +50,17 @@
         // If user found, display user's information and send friend request button
         if (mysqli_num_rows($result) > 0) {
             $user = mysqli_fetch_assoc($result);
-            $receiver_id = $user['user_id'];
-            $query = "INSERT INTO `Friend_Requests` (sender_id, receiver_id) VALUES ('$current_user_id', '$receiver_id')";
-            $result = mysqli_query($db_connection, $query);
-            if ($result) {
-                echo "<p id='search-status'>Friend request sent to " . $user['username'] . "!</p>";
-            } else {
-                echo "<p id='search-status'>Failed to send friend request.</p>";
-            }
+            echo "<div class='search-result'>
+                    <h3> Search Result: </h3>
+                    <p>" . $user['username'] . "</p>
+                    <form method='post'>
+                        <input type='hidden' name='receiver_id' value='" . $user['user_id'] . "'/>
+                        <button type='submit' name='send_request' value='Send Request'/>Send Friend Request</button>
+                    </form>
+                </div>";
         } else {
-            echo "<p id='user-not-found'>User not found.</p>";
+            echo "<p>No results found.</p>";
         }
-        
     }
 
     // If send friend request button is clicked, add request to Friend_Requests table
@@ -142,8 +145,9 @@
     
 <form class="form" method="post">
     <input type="text" class="login-input" name="search" placeholder="Search for friends" id="search-friend"/>
-    <input type="submit" value="Send Request" name="submit" id="submit-btn"/>
+    <input type="submit" value="Search" name="submit" id="submit-btn"/>
 </form>
+
     
 <!-- <button id="cancel-btn" type="button" value="Cancel" onclick="cancel()">Cancel</button>-->
 
@@ -181,7 +185,16 @@
                 navbar.style.visibility = 'visible';
                 logoutButton.style.visibility = "visible";
             }
-        });
+    });
+
+    // Toggle nav links when dropdown button is clicked
+    document.querySelector('.dropdown-btn').addEventListener('click', function() {
+        var navLinks = document.querySelectorAll('.nav-bar a, #search-bar, .icon-button, #log-out-button');
+
+    for (var i = 0; i < navLinks.length; i++) {
+        navLinks[i].classList.toggle('show');
+    }
+    });
 </script>
 
 </body>
