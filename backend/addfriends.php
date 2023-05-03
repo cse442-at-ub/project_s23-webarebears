@@ -5,28 +5,32 @@
     <title>Add Friends</title>
     <link rel="stylesheet" href="styles/addfriends.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Spartan' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<header>
-		<nav class="nav-left">
-			<a href="profile.php">
+    <header>
+        <nav class="nav-bar">
+            <a href="profile.php">
 				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
 			</a>
-			<a href="home.php" id="home" >Home</a>
-			<a id="tasksAndBalances" href="balances.php">Balances</a>
-			<a id="messages" href="messages.php">Messages</a>			
-		</nav>
-		<nav class="nav-right">
+            <a href="home.php" id="home" >Home</a>
+            <a id="tasksAndBalances" href="Balances.php">Balances</a>
+            <a id="messages" href="messages.php">Messages</a>			
+
             <input id="search-bar" type="search" placeholder="Search">
-			<button type="button" class="icon-button">
-				<span class="material-icons">notifications</span>
-				<span class="icon-button__badge">2</span>
-			</button>
+            <button type="button" class="icon-button">
+                <span class="material-icons">notifications</span>
+                <span class="icon-button__badge"></span>
+            </button>
             <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
             </form>
-		</nav>
-</header>
+        </nav>
+    </header>
 <?php
     require('server.php');
     session_start();
@@ -37,7 +41,6 @@
     }
 
     $current_user_id = $_SESSION['user_id'];
-
     // If form is submitted, search for user
     if (isset($_POST['submit'])) {
         $search_term = mysqli_real_escape_string($db_connection, $_POST['search']);
@@ -48,9 +51,7 @@
         if (mysqli_num_rows($result) > 0) {
             $user = mysqli_fetch_assoc($result);
             echo "<div class='search-result'>
-
                     <h3> Search Result: </h3>
-
                     <p>" . $user['username'] . "</p>
                     <form method='post'>
                         <input type='hidden' name='receiver_id' value='" . $user['user_id'] . "'/>
@@ -100,55 +101,100 @@
     }
 
     // Display the list of friend requests
-    echo "<div class='friend-requests'>";
+    echo "<div class='friend-requests-container'>";
     echo "<h3>Friend Requests</h3>";
+    echo "<div class='friend-requests'>";
     $query = "SELECT `User Accounts`.user_id, `User Accounts`.username FROM `Friend_Requests` INNER JOIN `User Accounts` ON `Friend_Requests`.sender_id = `User Accounts`.user_id WHERE `Friend_Requests`.receiver_id = '$current_user_id' AND `Friend_Requests`.status = 'pending'";
     $result = mysqli_query($db_connection, $query);
 
     while ($row = mysqli_fetch_assoc($result)) {
         $sender_id = $row['user_id'];
         $sender_username = $row['username'];
-        echo "<div>" . $sender_username . "
-                  <form method='post' class='accept-request-form'>
-                      <input type='hidden' name='sender_id' value='" . $sender_id . "'>
-                      <button type='submit' name='accept_request' value='Accept'/>Accept</button>
-                  </form>
-                  <form method='post' class='decline-request-form'>
-                      <input type='hidden' name='sender_id' value='" . $sender_id . "'>
-                      <button type='submit' name='decline_request' value='Decline'/>Decline</button>
-                  </form>
-              </div>";
+        echo "<div>
+                <p>" . $sender_username . "</p>
+                <form method='post' class='accept-request-form'>
+                    <input type='hidden' name='sender_id' value='" . $sender_id . "'>
+                    <button type='submit' name='accept_request' value='Accept'/>Accept</button>
+                </form>
+                <form method='post' class='decline-request-form'>
+                    <input type='hidden' name='sender_id' value='" . $sender_id . "'>
+                    <button type='submit' name='decline_request' value='Decline'/>Decline</button>
+                </form>
+            </div>";
     }
+    echo "</div>";
     echo "</div>";
 
     // Display the list of friends
+    echo "<div class='friends_list_container'>";
+    echo "<h3 id='friends-title'>Friends</h3>";
     echo "<div class='friends_list'>";
-    echo "<h3>Friends List</h3>";
     $query = "SELECT `User Accounts`.user_id, `User Accounts`.username FROM `friends` INNER JOIN `User Accounts` ON `friends`.friend_user_id = `User Accounts`.user_id WHERE `friends`.user_id = '$current_user_id'";
     $result = mysqli_query($db_connection, $query);
 
-    echo "<ul class='friends-list'>";
+    echo "<ul class='friends-list' style='padding-left: 20px; padding-right: 20px';>";
     while ($row = mysqli_fetch_assoc($result)) {
         $friend_user_id = $row['user_id'];
         $friend_username = $row['username'];
-        echo "<li>" . $friend_username . "</li>";
+        echo "<p>" . $friend_username . "</p>";
     }
     echo "</ul>";
     echo "</div>";
+    echo "</div>"
 ?>
     
 <form class="form" method="post">
-    <h3 class="login-title">Search Friends</h3>
     <input type="text" class="login-input" name="search" placeholder="Search for friends" id="search-friend"/>
     <input type="submit" value="Search" name="submit" id="submit-btn"/>
 </form>
+
     
-<button id="cancel-btn" type="button" value="Cancel" onclick="cancel()">Cancel</button>
+<!-- <button id="cancel-btn" type="button" value="Cancel" onclick="cancel()">Cancel</button>-->
 
 <script>
     function cancel() {
         window.location.href = "messages.php";
     }
+
+    const navbar = document.querySelector('.nav-bar');
+        const searchbar = document.querySelector('#search-bar');
+        const notifications = document.querySelector('.icon-button');
+        const logoutButton = document.querySelector('#log-out-button');
+
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop) {
+                navbar.style.top = '-70px';
+            } else {
+                navbar.style.top = '0';
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                searchbar.style.visibility = 'hidden';
+                notifications.style.visibility = 'hidden';
+                navbar.style.visibility = "hidden";
+                logoutButton.style.visibility = "hidden";
+            } else {
+                searchbar.style.visibility = 'visible';
+                notifications.style.visibility = 'visible';
+                navbar.style.visibility = 'visible';
+                logoutButton.style.visibility = "visible";
+            }
+    });
+
+    // Toggle nav links when dropdown button is clicked
+    document.querySelector('.dropdown-btn').addEventListener('click', function() {
+        var navLinks = document.querySelectorAll('.nav-bar a, #search-bar, .icon-button, #log-out-button');
+
+    for (var i = 0; i < navLinks.length; i++) {
+        navLinks[i].classList.toggle('show');
+    }
+    });
 </script>
 
 </body>
