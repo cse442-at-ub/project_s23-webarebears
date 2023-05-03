@@ -480,6 +480,9 @@ background-color: #343645;
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
+    color: #B0BEC5;
+    padding-left: 5%;
+    background-color: #343645;
 }
 
 #message-input::placeholder{
@@ -488,11 +491,13 @@ background-color: #343645;
 
 #message-send-btn{
     display: flex;
-    background-color: white;
+    color: #B0BEC5;
+    background-color: #343645;
     border: none;
     outline: none;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
+    padding-right: 5%;
 }
 
 #message-send-btn:hover{
@@ -500,7 +505,7 @@ background-color: #343645;
 }
 
 #message-send-btn:active{
-    background-color: #dddddd;
+    background-color: #343645;
 }
 
 ul {
