@@ -48,7 +48,11 @@
     <title>Home</title>
     <link rel="stylesheet" href="styles/balances_style.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Spartan' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body id="homepage">
@@ -192,11 +196,14 @@ function showDebtsOwedToYou(groupId, group_name) {
             <input id="search-bar" type="search" placeholder="Search">
             <button type="button" class="icon-button">
                 <span class="material-icons">notifications</span>
-                <span class="icon-button__badge">2</span>
+                <span class="icon-button__badge"></span>
             </button>
             <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
             </form>
+            <button class="dropdown-btn">
+                <span class="material-icons">menu</span>
+            </button>
         </nav>
     </header>
 
@@ -233,7 +240,7 @@ function showDebtsOwedToYou(groupId, group_name) {
                                 <div id="debt-<?= $debt_id ?>" class="debt">
                                 <p1 onclick="markDebtAsComplete(<?= $debt_id ?>, <?= $amount ?>)"><?= htmlspecialchars($assigned_username) ?> owes you for <?= htmlspecialchars($description) ?>
                                     <span style="float: right;" id="amount">$<?= htmlspecialchars($amount) ?></span>
-                                    <br><p2>Click to remove</p2>
+                                    <br><p2>Click to Complete</p2>
                                 </p1>
                                 </div>
                             <?php } }?>
@@ -275,7 +282,7 @@ function showDebtsOwedToYou(groupId, group_name) {
                             <div id="debt_you_owe-<?= $debt_id ?>" class="debt">
                             <p1 onclick="markDebtAsComplete(<?= $debt_id ?>, <?= $amount ?>)"> You owe <?= htmlspecialchars($assigned_username) ?> for <?= htmlspecialchars($description) ?>
                                 <span style="float: right;" id="amount">$<?= htmlspecialchars($amount) ?></span>
-                                <br><p2>Click to remove</p2>
+                                <br><p2>Pending Debt...</p2>
                             </p1>
                         </div>
                     <?php } } ?>
@@ -326,8 +333,16 @@ function showDebtsOwedToYou(groupId, group_name) {
             logoutButton.style.visibility = "visible";
         }
     });
-</script>
 
+    // Toggle nav links when dropdown button is clicked
+    document.querySelector('.dropdown-btn').addEventListener('click', function() {
+        var navLinks = document.querySelectorAll('.nav-bar a, #search-bar, .icon-button, #log-out-button');
+
+    for (var i = 0; i < navLinks.length; i++) {
+        navLinks[i].classList.toggle('show');
+    }
+    });
+</script>
 
 </body>
 </html>

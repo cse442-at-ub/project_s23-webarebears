@@ -21,6 +21,12 @@
     <title>Home</title>
     <link rel="stylesheet" href="styles/home_style.css"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Spartan' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body id="homepage">
@@ -36,28 +42,31 @@
             <input id="search-bar" type="search" placeholder="Search">
             <button type="button" class="icon-button">
                 <span class="material-icons">notifications</span>
-                <span class="icon-button__badge">2</span>
+                <span class="icon-button__badge"></span>
             </button>
             <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
             </form>
+            <button class="dropdown-btn">
+                <span class="material-icons">menu</span>
+            </button>
         </nav>
     </header>
 
 
 	<main id="grid2">
-        <recent>
-            <u style="color: white; font-family: sans-serif; font-weight: 450; font-size: larger; margin-left: 20px">Recent</u>
-            <div id="recent">Recent</div>
-			
-        </recent>
-        <div class="your_task">
-            <h3 style="color: white; font-size: larger; font-weight: 400;">Your Tasks:</h3>
-            <p style="color: white;"> Select Tasks that you have finished!</p>
-            <div id="tasks">Your Tasks: 
-				<p id="tasks-direction"> Select Tasks that you have finished!</p>
-			</div>
-            <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>
+        <div class="recent">
+            <p1>Recent</p1>
+            <recent id="recent"></recent>
+        </div>
+        <div class="your_task_container">
+            <div class="your_task">
+                <h3 style="font-family: 'Spartan';font-style: normal;font-weight: 900;font-size: 20px;">Your Tasks:
+                    <span style="font-family: 'Spartan';font-style: normal;font-weight: 900;font-size: 15px;line-height: 18px;padding-left: 15%;"> Select Tasks that you have finished!</span>
+                </h3>
+
+                <div id="tasks"></div>
+                <button id="complete-tasks-btn" onclick="completeTasks()" style="text-align: center;">Complete</button>
         </div>
        
 	</main>
@@ -77,7 +86,7 @@
                     recentMessage.classList.add('recent-message');
                     recentMessagesContainer.appendChild(recentMessage);
 
-                    const groupName = document.createElement('h4');
+                    const groupName = document.createElement('p');
                     groupName.textContent = 'Group: ' + message.group_name;
                     recentMessage.appendChild(groupName);
 
@@ -108,10 +117,9 @@
                         taskItem.classList.add('task'); // Add this line to apply the task class
                         tasksContainer.appendChild(taskItem);
 
-                        const taskTitle = document.createElement('h4');
+                        const taskTitle = document.createElement('p');
                         taskTitle.textContent = task.description;
                         taskItem.appendChild(taskTitle);
-
                         const checkBox = document.createElement('input');
                         checkBox.type = 'checkbox';
                         checkBox.setAttribute('data-task-id', task.task_id);
@@ -195,6 +203,15 @@
                 logoutButton.style.visibility = "visible";
             }
         });
+
+    // Toggle nav links when dropdown button is clicked
+    document.querySelector('.dropdown-btn').addEventListener('click', function() {
+        var navLinks = document.querySelectorAll('.nav-bar a, #search-bar, .icon-button, #log-out-button');
+
+    for (var i = 0; i < navLinks.length; i++) {
+        navLinks[i].classList.toggle('show');
+    }
+    });
     </script>
 </body>
 </html>
