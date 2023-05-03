@@ -17,6 +17,8 @@
     $result = mysqli_query($db_connection, $query);
     $user = mysqli_fetch_assoc($result);
     $user_id = $user['user_id'];
+    $_SESSION['user_id'] = $user_id;
+
 
     $query = "SELECT Groups.group_id, Groups.group_name FROM `Group_Members` INNER JOIN `Groups` ON Group_Members.group_id = Groups.group_id WHERE Group_Members.user_id='$user_id'";
     $result = mysqli_query($db_connection, $query);
@@ -30,9 +32,12 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav class="nav-left">
-        <a href="profile.php">
+    <header style="display: flex;
+justify-content: space-between;
+align-items: center;
+">
+        <nav class="nav-bar">
+            <a href="profile.php">
 				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
 			</a>
                 <a href="home.php" id="home" >Home</a>
@@ -49,8 +54,6 @@
                     <input type="submit" name="logout" value="Logout">
                 </form>
             </nav>
-
-
     </header>
 
     <div class="main-wrapper">
@@ -68,15 +71,15 @@
                 while ($row = mysqli_fetch_assoc($result)) {
                     $group_id = $row['group_id'];
                     $group_name = $row['group_name'];
-                    echo "<p><button id='myGroup' onclick='openChat($group_id)'>$group_name</button></p>";
+                    echo "<p><button id='myGroup' onclick='openChat($group_id); closeTaskForm(); closeDivideBillsForm()'>$group_name</button></p>";
                     $iteration++;
                 }
             ?>
         </myGroup>
     
     <div class = "container">
-        <button id="set-task-button" onclick="openTaskForm()">Set Task</button>
-        <button id="divide-bills-button" onclick="openDivideBillsForm()">Divide Bills</button>
+        <button id="set-task-button" onclick="openTaskForm(); closeDivideBillsForm()">Set Task</button>
+        <button id="divide-bills-button" onclick="openDivideBillsForm(); closeTaskForm()">Divide Bills</button>
         <div id="chat-box" class="chat-box">
             <div id="chat-history" class="chat-history"></div>
             <form id="message-form" class="message-form" onsubmit="return sendMessage()">
@@ -90,7 +93,8 @@
     <h2>Set Task</h2>
     <form id="create-task-form" onsubmit="return createTask()">
         <label for="task-friend">Choose a friend:</label>
-        <select id="task-friend" name="friend"></select><br><br>
+        <ul id="task-friend"></ul>
+
         
         <label for="task-description" id="task-description-text">Task Description:</label>
         <textarea id="task-description" name="description" rows="4" cols="50" required></textarea><br><br>
@@ -99,7 +103,7 @@
         <input id="task-due-date" type="date" name="due_date" required><br><br>
 
         <input type="submit" value="Create Task" id="create-task">
-
+        <br>
         <button id="task-cancel" onclick="closeTaskForm()">Cancel</button>
     </form>
     </div>
@@ -108,7 +112,7 @@
         <h2>Divide Bills</h2>
         <form id="create-bill-form" onsubmit="return divideBill()">
             <label for="bill-friend">Choose friends:</label>
-            <select id="bill-friend" name="friends[]" multiple></select><br><br>
+            <ul id="bill-friend"></ul>
             
             <label for="bill-description" id="bill-description-text">Bill Description:</label>
             <textarea id="bill-description" name="description" rows="4" cols="50" required></textarea><br><br>
@@ -120,6 +124,7 @@
             <input id="bill-due-date" type="date" name="due_date" required><br><br>
 
             <input type="submit" value="Divide Bill" id="divide-bill">
+            <br>
 
             <button id="bill-cancel" onclick="closeDivideBillsForm()">Cancel</button>
         </form>
@@ -129,7 +134,6 @@
     </div>
 
     <script>
-
         let currentGroupId = null;
         let chatHistoryTimeout = null; // Add this line
 
@@ -205,20 +209,6 @@
             document.getElementById('task-form').style.display = 'none';
         }
 
-        function fetchGroupMembers(groupId) {
-            fetch(`fetchGroupMembers.php?group_id=${groupId}`)
-                .then(response => response.json())
-                .then(members => {
-                    const select = document.getElementById('task-friend');
-                    select.innerHTML = '';
-                    members.forEach(member => {
-                        const option = document.createElement('option');
-                        option.value = member.user_id;
-                        option.textContent = member.username;
-                        select.appendChild(option);
-                    });
-                });
-        }
 
         function createTask() {
             const friend = document.getElementById('task-friend').value;
@@ -254,13 +244,26 @@
         fetch(`fetchGroupMembers.php?group_id=${groupId}`)
             .then(response => response.json())
             .then(members => {
-                const select = document.getElementById(selectId);
-                select.innerHTML = '';
+                const fList = document.getElementById(selectId);
+                fList.innerHTML = '';
+                
                 members.forEach(member => {
-                    const option = document.createElement('option');
-                    option.value = member.user_id;
-                    option.textContent = member.username;
-                    select.appendChild(option);
+                    const listNode = document.createElement('li');
+                    const labelNode = document.createElement('label');
+                    labelNode.className = 'custom-checkbox';
+
+                    const inputNode = document.createElement('input');
+                    inputNode.type = 'checkbox';
+                    inputNode.value = member.user_id;
+
+                    const spanNode = document.createElement('span');
+                    spanNode.className = 'checkmark'
+                    spanNode.textContent = member.username;
+
+                    labelNode.appendChild(inputNode);
+                    labelNode.appendChild(spanNode);
+                    listNode.appendChild(labelNode);
+                    fList.appendChild(listNode);
                 });
             });
     }
@@ -279,7 +282,17 @@
         }
 
         function divideBill() {
-            const friends = Array.from(document.getElementById('bill-friend').selectedOptions).map(option => option.value);
+            var checkboxes = document.querySelectorAll('#bill-friend input[type="checkbox"]');
+            var checkedValues = [];
+
+            checkboxes.forEach(function(checkbox) {
+                if(checkbox.checked) {
+                    checkedValues.push(checkbox.value);
+                }
+            });
+            
+            //const friends = Array.from(document.getElementById('bill-friend').selectedOptions).map(option => option.value);
+            const friends = checkedValues;
             const description = document.getElementById('bill-description').value;
             const amount = document.getElementById('bill-amount').value;
             const dueDate = document.getElementById('bill-due-date').value;
@@ -302,11 +315,46 @@
             })
             .then(response => response.text())
             .then(responseText => {
+                console.log(checkedValues)
                 console.log('Response from divideBill.php:', responseText);
                 closeDivideBillsForm();
             });        
         return false;
     }
+
+
+    const navbar = document.querySelector('.nav-bar');
+const searchbar = document.querySelector('#search-bar');
+const notifications = document.querySelector('.icon-button');
+const logoutButton = document.querySelector('#log-out-button');
+
+let lastScrollTop = 0;
+
+window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > lastScrollTop) {
+        navbar.style.top = '-70px';
+    } else {
+        navbar.style.top = '0';
+    }
+    lastScrollTop = scrollTop;
+});
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 50) {
+        searchbar.style.visibility = 'hidden';
+        notifications.style.visibility = 'hidden';
+        navbar.style.visibility = "hidden";
+        logoutButton.style.visibility = "hidden";
+    } else {
+        searchbar.style.visibility = 'visible';
+        notifications.style.visibility = 'visible';
+        navbar.style.visibility = 'visible';
+        logoutButton.style.visibility = "visible";
+    }
+});
+
+
 
 
     </script>

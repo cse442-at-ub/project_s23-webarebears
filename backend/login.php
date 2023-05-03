@@ -44,6 +44,7 @@
                     
                     // Store data in session variables
                     $_SESSION['username'] = $username;
+                    $_SESSION['user_id'] = $id; // Store user_id in session
                     
                     // Redirect to user dashboard page
                     header("Location: home.php");
