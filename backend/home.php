@@ -46,7 +46,6 @@
 
 <body id="homepage">
     <header>
-
         <nav class="nav-left">
             <a href="profile.php">
                 <img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
@@ -61,7 +60,7 @@
                 <span class="material-icons">notifications</span>
                 <span class="icon-button__badge" id="notification-count"><?php echo $pending_friend_requests + $pending_debts + $pending_tasks; ?></span>
             </button>
-            <div id="notification-container" style="display: none;"></div>
+            <div class="notification-container" id="notification-container">
 
 
             <form method="post" action="" id='log-out-button'>
@@ -71,7 +70,6 @@
 
         
     </header>
-
 
     <main id="grid2">
         <recent>
@@ -89,63 +87,63 @@
             <p></p>
             <button id="complete-tasks-btn" onclick="completeTasks()">Complete</button>      
         </tasks>
-
-       
     </main>
 
     <script>
-document.getElementById('notification-button').addEventListener('click', () => {
-    const notificationContainer = document.getElementById('notification-container');
-    if (notificationContainer.style.display === 'block') {
-        notificationContainer.style.display = 'none';
-        return;
-    }
-    notificationContainer.innerHTML = '';
 
-    Promise.all([
-        fetch('fetchFriendRequests.php').then(response => response.json()),
-        fetch('fetchMyTasks.php').then(response => response.json()),
-        fetch('fetchMyDebts.php').then(response => response.json())
-    ])
-    .then(([friendRequests, tasks, debts]) => {
-        if (friendRequests.length === 0 && tasks.length === 0 && debts.length === 0) {
-            notificationContainer.innerHTML = '<p>You have no notifications.</p>';
-        } else {
-            if (friendRequests.length > 0) {
-                const friendRequestContainer = document.createElement('div');
-                friendRequestContainer.innerHTML = '<h4>Friend Requests</h4>';
-                notificationContainer.appendChild(friendRequestContainer);
-
-                friendRequests.forEach(request => {
-                    friendRequestContainer.innerHTML += `<div>Friend Request From: <span>${request.sender_username}</span> </div>`;
-                });
+        document.getElementById('notification-button').addEventListener('click', () => {
+            const notificationContainer = document.getElementById('notification-container');
+            if (notificationContainer.style.display === 'block') {
+                notificationContainer.style.display = 'none';
+                return;
             }
-            if (tasks.length > 0) {
-                const taskContainer = document.createElement('div');
-                taskContainer.innerHTML = '<h4>Pending Tasks</h4>';
-                notificationContainer.appendChild(taskContainer);
+            notificationContainer.innerHTML = '';
 
-                tasks.forEach(task => {
-                    taskContainer.innerHTML += `<div>${task.description} - Due: ${task.due_date}</div>`;
-                });
-            }
-            if (debts.length > 0) {
-                const debtContainer = document.createElement('div');
-                debtContainer.innerHTML = '<h4>Pending Debts</h4>';
-                notificationContainer.appendChild(debtContainer);
+            Promise.all([
+                fetch('fetchFriendRequests.php').then(response => response.json()),
+                fetch('fetchMyTasks.php').then(response => response.json()),
+                fetch('fetchMyDebts.php').then(response => response.json())
+            ])
+            .then(([friendRequests, tasks, debts]) => {
+                if (friendRequests.length === 0 && tasks.length === 0 && debts.length === 0) {
+                    notificationContainer.innerHTML = '<p>You have no notifications.</p>';
+                } else {
+                    if (friendRequests.length > 0) {
+                        const friendRequestContainer = document.createElement('div');
+                        friendRequestContainer.className = "notification-section"
+                        friendRequestContainer.innerHTML = '<h4 class="notification-section__title">Friend Requests</h4>';
+                        
+                        friendRequests.forEach(request => {
+                            friendRequestContainer.innerHTML += `<div class="notification">Friend Request From: <span>${request.sender_username}</span> </div>`;
+                        });
 
-                debts.forEach(debt => {
-                    debtContainer.innerHTML += `<div>${debt.description} - Amount: ${debt.amount} - Due: ${debt.due_date}</div>`;
-                });
-            }
-        }
-        notificationContainer.style.display = 'block';
-    });
-});
+                        notificationContainer.appendChild(friendRequestContainer);
+                    }
+                    if (tasks.length > 0) {
+                        const taskContainer = document.createElement('div');
+                        taskContainer.className = "notification-section"
+                        taskContainer.innerHTML = '<h4 class="notification-section__title">Pending Tasks</h4>';
 
+                        tasks.forEach(task => {
+                            taskContainer.innerHTML += `<div class="notification">${task.description} - Due: ${task.due_date}</div>`;
+                        });
+                        notificationContainer.appendChild(taskContainer);
 
+                    }
+                    if (debts.length > 0) {
+                        const debtContainer = document.createElement('div');
+                        debtContainer.className = "notification-section"
+                        debtContainer.innerHTML = '<h4 class="notification-section__title">Pending Debts</h4>';
+                        notificationContainer.appendChild(debtContainer);
 
-
+                        debts.forEach(debt => {
+                            debtContainer.innerHTML += `<div class="notification">${debt.description} - Amount: ${debt.amount} - Due: ${debt.due_date}</div>`;
+                        });
+                    }
+                }
+                notificationContainer.style.display = 'block';
+            });
+        });
 
         function fetchRecentMessages() {
             fetch('fetchRecentMessages.php')
