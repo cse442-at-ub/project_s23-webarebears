@@ -10,8 +10,31 @@
         header("Location: login.php");
         exit();
     }
-
     require('server.php');
+
+    //*************************Notification Button Function*****************************//
+    $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
+    $query = "SELECT user_id FROM `User Accounts` WHERE username='$username'";
+    $result = mysqli_query($db_connection, $query);
+    $user = mysqli_fetch_assoc($result);
+    $user_id = $user['user_id'];
+
+    $friend_requests_query = "SELECT COUNT(*) as friend_requests_count FROM `Friend_Requests` WHERE receiver_id = '$user_id' AND status = 'pending'";
+    $friend_requests_result = mysqli_query($db_connection, $friend_requests_query);
+    $friend_requests_row = mysqli_fetch_assoc($friend_requests_result);
+    $pending_friend_requests = $friend_requests_row['friend_requests_count'];
+
+    $pending_tasks_query = "SELECT COUNT(*) as pending_tasks_count FROM `Tasks` WHERE assigned_to = '$user_id' AND status = 'pending'";
+    $pending_tasks_result = mysqli_query($db_connection, $pending_tasks_query);
+    $pending_tasks_row = mysqli_fetch_assoc($pending_tasks_result);
+    $pending_tasks = $pending_tasks_row['pending_tasks_count'];
+
+    $pending_debts_query = "SELECT COUNT(*) as pending_debts_count FROM `Users_Debts` WHERE assigned_to = '$user_id' AND status = 'pending'";
+    $pending_debts_result = mysqli_query($db_connection, $pending_debts_query);
+    $pending_debts_row = mysqli_fetch_assoc($pending_debts_result);
+    $pending_debts = $pending_debts_row['pending_debts_count'];
+    //*************************Notification Button Function*****************************//
+
     $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
     $query = "SELECT user_id FROM `User Accounts` WHERE username='$username'";
     $result = mysqli_query($db_connection, $query);
@@ -47,19 +70,20 @@
             <a id="messages" href="messages.php">Messages</a>			
 
             <input id="search-bar" type="search" placeholder="Search">
-            <button type="button" class="icon-button">
+            <button type="button" class="icon-button" id="notification-button">
                 <span class="material-icons">notifications</span>
-                <span class="icon-button__badge"></span>
+                <span class="icon-button__badge" id="notification-count"><?php echo $pending_friend_requests + $pending_debts + $pending_tasks; ?></span>
             </button>
+            <div id="notification-container" style="display: none;"></div>
+            <!--
             <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
             </form>
+            -->
             <button class="dropdown-btn">
                 <span class="material-icons">menu</span>
             </button>
         </nav>
-
-
     </header>
 
     <main>
@@ -86,8 +110,8 @@
 
         <div class="container2">
             <div class="task-and-bills">
-                <button id="set-task-button" onclick="openTaskForm(); closeDivideBillsForm()">Set Task</button>
-                <button id="divide-bills-button" onclick="openDivideBillsForm(); closeTaskForm()">Divide Bills</button>
+                <button id="set-task-button" onclick="openTaskForm()">Set Task</button>
+                <button id="divide-bills-button" onclick="openDivideBillsForm()">Divide Bills</button>
             </div>
             <div id="chat-box" class="chat-box">
                 <div id="message-box">
@@ -103,7 +127,7 @@
                     <h2>Set Task</h2>
                     <form id="create-task-form" onsubmit="return createTask()">
                         <label for="task-friend">Choose a friend:</label>
-                        <select id="task-friend" name="friend"></select><br>
+                        <select id="task-friend" name="friends[]" multiple></select><br>
                         
                         <label for="task-description" id="task-description-text">Task Description:</label>
                         <textarea id="task-description" name="description" rows="4" cols="50" required></textarea><br>
@@ -121,20 +145,20 @@
                     <h2>Divide Bills</h2>
                     <form id="create-bill-form" onsubmit="return divideBill()">
                         <label for="bill-friend">Choose friends:</label>
-                        <select id="bill-friend" name="friends[]" multiple></select><br><br>
+                        <select id="bill-friend" name="friends[]" multiple></select><br>
                         
                         <label for="bill-description" id="bill-description-text">Bill Description:</label>
-                        <textarea id="bill-description" name="description" rows="4" cols="50" required></textarea><br><br>
+                        <textarea id="bill-description" name="description" rows="4" cols="50" required></textarea><br>
 
                         <label for="bill-amount" id="bill-amount-text">Total Amount:</label>
                         <input id="bill-amount" type="number" name="amount" step="0.01" min="0.01" required><br><br>
 
                         <label for="bill-due-date" id="due-data-text">Due Date:</label>
-                        <input id="bill-due-date" type="date" name="due_date" required><br><br>
-
-                        <input type="submit" value="Divide Bill" id="divide-bill">
-
-                        <button id="bill-cancel" onclick="closeDivideBillsForm()">Cancel</button>
+                        <input id="bill-due-date" type="date" name="due_date" required><br>
+                        <div id="bills-buttons">
+                            <input type="submit" value="Divide Bill" id="divide-bill">
+                            <button id="bills-cancel" onclick="closeDivideBillsForm()">Cancel</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -210,29 +234,30 @@
                 alert('Please select a group chat before setting a task.');
                 return;
             }
-            document.getElementById('task-form').style.display = 'block';
-            document.getElementById('message-box').style.display = 'none';
+
+            const messageBox = document.getElementById('message-box');
+            messageBox.style.display = 'none';
+
+            const divideBillsForm = document.getElementById('divide-bills-form');
+            if (divideBillsForm.style.display === 'block') {
+                divideBillsForm.style.display = 'none';
+            }
+
+            const taskForm = document.getElementById('task-form');
+            taskForm.style.display = 'block';
+
             fetchGroupMembers(currentGroupId);
         }
 
+        
         function closeTaskForm() {
-            document.getElementById('task-form').style.display = 'none';
-            document.getElementById('message-box').style.display = 'block';
-        }
+            const taskForm = document.getElementById('task-form');
+            taskForm.style.display = 'none';
 
-        function fetchGroupMembers(groupId) {
-            fetch(`fetchGroupMembers.php?group_id=${groupId}`)
-                .then(response => response.json())
-                .then(members => {
-                    const select = document.getElementById('task-friend');
-                    select.innerHTML = '';
-                    members.forEach(member => {
-                        const option = document.createElement('option');
-                        option.value = member.user_id;
-                        option.textContent = member.username;
-                        select.appendChild(option);
-                    });
-                });
+            const messageBox = document.getElementById('message-box');
+            if (messageBox.style.display !== 'block') {
+                messageBox.style.display = 'block';
+            }
         }
 
         function createTask() {
@@ -265,32 +290,51 @@
         }
 
 
-    function fetchGroupMembers(groupId, selectId = 'task-friend') {
-        fetch(`fetchGroupMembers.php?group_id=${groupId}`)
-            .then(response => response.json())
-            .then(members => {
-                const select = document.getElementById(selectId);
-                select.innerHTML = '';
-                members.forEach(member => {
-                    const option = document.createElement('option');
-                    option.value = member.user_id;
-                    option.textContent = member.username;
-                    select.appendChild(option);
+        function fetchGroupMembers(groupId, selectId = 'task-friend') {
+            fetch(`fetchGroupMembers.php?group_id=${groupId}`)
+                .then(response => response.json())
+                .then(members => {
+                    const select = document.getElementById(selectId);
+                    select.innerHTML = '';
+                    members.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member.user_id;
+                        option.textContent = member.username;
+                        select.appendChild(option);
+                    });
                 });
-            });
-    }
+        }
 
-    function openDivideBillsForm() {
+        function openDivideBillsForm() {
             if (currentGroupId === null) {
                 alert('Please select a group chat before dividing a bill.');
                 return;
             }
-            document.getElementById('divide-bills-form').style.display = 'block';
+
+            const messageBox = document.getElementById('message-box');
+            messageBox.style.display = 'none';
+
+            const taskForm = document.getElementById('task-form');
+            if (taskForm.style.display === 'block') {
+                taskForm.style.display = 'none';
+            }
+
+            const divideBillsForm = document.getElementById('divide-bills-form');
+            divideBillsForm.style.display = 'block';
+
             fetchGroupMembers(currentGroupId, 'bill-friend');
         }
 
+
+
         function closeDivideBillsForm() {
-            document.getElementById('divide-bills-form').style.display = 'none';
+            const divideBillsForm = document.getElementById('divide-bills-form');
+            divideBillsForm.style.display = 'none';
+
+            const messageBox = document.getElementById('message-box');
+            if (messageBox.style.display !== 'block') {
+                messageBox.style.display = 'block';
+            }
         }
 
         function divideBill() {
@@ -364,6 +408,62 @@
         navLinks[i].classList.toggle('show');
     }
     });
+    //*************************Notification Button Function*****************************//
+    document.getElementById('notification-button').addEventListener('click', () => {
+    const notificationContainer = document.getElementById('notification-container');
+    if (notificationContainer.style.display === 'block') {
+        notificationContainer.style.display = 'none';
+        return;
+    }
+
+    notificationContainer.innerHTML = '';
+
+    Promise.all([
+        fetch('fetchFriendRequests.php').then(response => response.json()),
+        fetch('fetchMyTasks.php').then(response => response.json()),
+        fetch('fetchMyDebts.php').then(response => response.json())
+    ])
+    .then(([friendRequests, tasks, debts]) => {
+        if (friendRequests.length === 0 && tasks.length === 0 && debts.length === 0) {
+            notificationContainer.innerHTML = '<p>You have no notifications.</p>';
+        } else {
+            if (friendRequests.length > 0) {
+                const friendRequestContainer = document.createElement('div');
+                friendRequestContainer.className = "notification-section"
+                friendRequestContainer.innerHTML = '<h4 class="notification-section__title">Friend Requests</h4>';
+
+                friendRequests.forEach(request => {
+                    friendRequestContainer.innerHTML += `<div class="notification">Friend Request From: <span>${request.sender_username}</span> </div>`;
+                });
+                
+                notificationContainer.appendChild(friendRequestContainer);
+            }
+            if (tasks.length > 0) {
+                const taskContainer = document.createElement('div');
+                taskContainer.className = "notification-section"
+                taskContainer.innerHTML = '<h4 class="notification-section__title">Pending Tasks</h4>';
+
+                tasks.forEach(task => {
+                    taskContainer.innerHTML += `<div class="notification">${task.description} - Due: ${task.due_date}</div>`;
+                });
+                notificationContainer.appendChild(taskContainer);
+
+            }
+            if (debts.length > 0) {
+                const debtContainer = document.createElement('div');
+                debtContainer.className = "notification-section"
+                debtContainer.innerHTML = '<h4 class="notification-section__title">Pending Debts</h4>';
+                notificationContainer.appendChild(debtContainer);
+
+                debts.forEach(debt => {
+                    debtContainer.innerHTML += `<div class="notification">${debt.description} - Amount: ${debt.amount} - Due: ${debt.due_date}</div>`;
+                });
+            }
+        }
+        notificationContainer.style.display = 'block';
+    });
+});
+//*************************Notification Button Function*****************************//
 
 
 
