@@ -18,10 +18,10 @@
 		</nav>
 		<nav class="nav-right">
             <input id="search-bar" type="search" placeholder="Search">
-			<button type="button" class="icon-button">
-				<span class="material-icons">notifications</span>
-				<span class="icon-button__badge">2</span>
-			</button>
+            <button type="button" class="icon-button">
+                <span class="material-icons">notifications</span>
+                <span class="icon-button__badge">2</span>
+            </button>
             <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
             </form>
@@ -47,16 +47,14 @@
         // If user found, display user's information and send friend request button
         if (mysqli_num_rows($result) > 0) {
             $user = mysqli_fetch_assoc($result);
-            echo "<div class='search-result'>
-
-                    <h3> Search Result: </h3>
-
-                    <p>" . $user['username'] . "</p>
-                    <form method='post'>
-                        <input type='hidden' name='receiver_id' value='" . $user['user_id'] . "'/>
-                        <button type='submit' name='send_request' value='Send Request'/>Send Friend Request</button>
-                    </form>
-                </div>";
+            $receiver_id = $user['user_id'];
+            $query = "INSERT INTO `Friend_Requests` (sender_id, receiver_id) VALUES ('$current_user_id', '$receiver_id')";
+            $result = mysqli_query($db_connection, $query);
+            if ($result) {
+                echo "<p id='search-status'>Friend request sent to " . $user['username'] . "!</p>";
+            } else {
+                echo "<p id='search-status'>Failed to send friend request.</p>";
+            }
         } else {
             echo "<p id='user-not-found'>User not found.</p>";
         }
@@ -180,16 +178,7 @@
                 navbar.style.visibility = 'visible';
                 logoutButton.style.visibility = "visible";
             }
-    });
-
-    // Toggle nav links when dropdown button is clicked
-    document.querySelector('.dropdown-btn').addEventListener('click', function() {
-        var navLinks = document.querySelectorAll('.nav-bar a, #search-bar, .icon-button, #log-out-button');
-
-    for (var i = 0; i < navLinks.length; i++) {
-        navLinks[i].classList.toggle('show');
-    }
-    });
+        });
 </script>
 
 </body>
