@@ -3,7 +3,7 @@ require('server.php');
 
 if (isset($_GET['group_id'])) {
     $group_id = $_GET['group_id'];
-
+    
     $query_group_name = "SELECT group_name FROM `Groups` WHERE group_id = '$group_id'";
     $result_group_name = mysqli_query($db_connection, $query_group_name);
 
@@ -25,7 +25,7 @@ if (isset($_GET['group_id'])) {
             $username = $row['username'];
             $message_content = $row['message_content'];
             $timestamp = $row['timestamp'];
-            echo "<p><strong>$username ($timestamp):</strong> $message_content</p>";
+            echo "<p ><strong>$username:</strong></p> <p id='message'>$message_content</p>";
         }
     } else {
         echo "Query execution failed\n";
