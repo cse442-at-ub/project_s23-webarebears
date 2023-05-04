@@ -30,14 +30,12 @@
     <title>My Messages</title>
     <link rel="stylesheet" href="styles/messages_style.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito&display=swap" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=Spartan' rel='stylesheet'>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <header>
+    <header style="display: flex;
+justify-content: space-between;
+align-items: center;
+">
         <nav class="nav-bar">
             <a href="profile.php">
 				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
@@ -49,97 +47,90 @@
             <input id="search-bar" type="search" placeholder="Search">
             <button type="button" class="icon-button">
                 <span class="material-icons">notifications</span>
-                <span class="icon-button__badge"></span>
+                <span class="icon-button__badge">2</span>
             </button>
             <form method="post" action="" id='log-out-button'>
                 <input type="submit" name="logout" value="Logout">
             </form>
-            <button class="dropdown-btn">
-                <span class="material-icons">menu</span>
-            </button>
         </nav>
 
 
     </header>
 
+    <div class="main-wrapper">
     <main>
         <!-- Main content goes here -->
-        <div class="container1">
-            <div id="options">
-                <button id="addFriends" onclick="window.location.href='addfriends.php'" >Add Friends</button>
-                <button id="createGroups" onclick="window.location.href='creategroup.php'" >Create Group</button>
-            </div>
-            
-            
-            <div class="group_list">
-                <?php
-                    $iteration = 0;
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $group_id = $row['group_id'];
-                        $group_name = $row['group_name'];
-                        echo "<p><button id='myGroup' onclick='openChat($group_id); closeTaskForm(); closeDivideBillsForm()'>$group_name</button></p>";
-                        $iteration++;
-                    }
-                ?>
-            </div>
+        <div id="options">
+            <button id="addFriends" onclick="window.location.href='addfriends.php'" >Add Friends</button>
+            <button id="createGroups" onclick="window.location.href='creategroup.php'" >Create Group</button>
         </div>
 
-        <div class="container2">
-            <div class="task-and-bills">
-                <button id="set-task-button" onclick="openTaskForm(); closeDivideBillsForm()">Set Task</button>
-                <button id="divide-bills-button" onclick="openDivideBillsForm(); closeTaskForm()">Divide Bills</button>
-            </div>
-            <div id="chat-box" class="chat-box">
-                <div id="message-box">
-                    <div id="chat-history" class="chat-history"></div>
-                    <form id="message-form" class="message-form" onsubmit="return sendMessage()">
-                        <input id="message-input" type="text" name="message" placeholder="Type your message...">
-                        <input id="message-send-btn" type="submit" value="Send">
-                    </form>
-                </div>
-
-            
-                <div id="task-form" style="display: none;">
-                    <h2>Set Task</h2>
-                    <form id="create-task-form" onsubmit="return createTask()">
-                        <label for="task-friend">Choose a friend:</label>
-                        <select id="task-friend" name="friend"></select><br>
-                        
-                        <label for="task-description" id="task-description-text">Task Description:</label>
-                        <textarea id="task-description" name="description" rows="4" cols="50" required></textarea><br>
-
-                        <label for="task-due-date" id="due-data-text">Due Date:</label>
-                        <input id="task-due-date" type="date" name="due_date" required><br>
-                        <div id="task-buttons">
-                            <input type="submit" value="Create Task" id="create-task">
-                            <button id="task-cancel" onclick="closeTaskForm()">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div id="divide-bills-form" style="display: none;">
-                    <h2>Divide Bills</h2>
-                    <form id="create-bill-form" onsubmit="return divideBill()">
-                        <label for="bill-friend">Choose friends:</label>
-                        <select id="bill-friend" name="friends[]" multiple></select><br><br>
-                        
-                        <label for="bill-description" id="bill-description-text">Bill Description:</label>
-                        <textarea id="bill-description" name="description" rows="4" cols="50" required></textarea><br><br>
-
-                        <label for="bill-amount" id="bill-amount-text">Total Amount:</label>
-                        <input id="bill-amount" type="number" name="amount" step="0.01" min="0.01" required><br><br>
-
-                        <label for="bill-due-date" id="due-data-text">Due Date:</label>
-                        <input id="bill-due-date" type="date" name="due_date" required><br><br>
-
-                        <input type="submit" value="Divide Bill" id="divide-bill">
-
-                        <button id="bill-cancel" onclick="closeDivideBillsForm()">Cancel</button>
-                    </form>
-                </div>
-            </div>
+        <h id="myGroup-text">My Groups:</h>
+        <myGroup>
+            <?php
+                $iteration = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $group_id = $row['group_id'];
+                    $group_name = $row['group_name'];
+                    echo "<p><button id='myGroup' onclick='openChat($group_id); closeTaskForm(); closeDivideBillsForm()'>$group_name</button></p>";
+                    $iteration++;
+                }
+            ?>
+        </myGroup>
+    
+    <div class = "container">
+        <button id="set-task-button" onclick="openTaskForm(); closeDivideBillsForm()">Set Task</button>
+        <button id="divide-bills-button" onclick="openDivideBillsForm(); closeTaskForm()">Divide Bills</button>
+        <div id="chat-box" class="chat-box">
+            <div id="chat-history" class="chat-history"></div>
+            <form id="message-form" class="message-form" onsubmit="return sendMessage()">
+                <input id="message-input" type="text" name="message" placeholder="Type your message...">
+                <input id="message-send-btn" type="submit" value="Send">
+            </form>
         </div>
+    </div>
+
+    <div id="task-form" style="display: none;">
+    <h2>Set Task</h2>
+    <form id="create-task-form" onsubmit="return createTask()">
+        <label for="task-friend">Choose a friend:</label>
+        <select id="task-friend" name="friend"></select><br><br>
+        
+        <label for="task-description" id="task-description-text">Task Description:</label>
+        <textarea id="task-description" name="description" rows="4" cols="50" required></textarea><br><br>
+
+        <label for="task-due-date" id="due-data-text">Due Date:</label>
+        <input id="task-due-date" type="date" name="due_date" required><br><br>
+
+        <input type="submit" value="Create Task" id="create-task">
+
+        <button id="task-cancel" onclick="closeTaskForm()">Cancel</button>
+    </form>
+    </div>
+
+    <div id="divide-bills-form" style="display: none;">
+        <h2>Divide Bills</h2>
+        <form id="create-bill-form" onsubmit="return divideBill()">
+            <label for="bill-friend">Choose friends:</label>
+            <select id="bill-friend" name="friends[]" multiple></select><br><br>
+            
+            <label for="bill-description" id="bill-description-text">Bill Description:</label>
+            <textarea id="bill-description" name="description" rows="4" cols="50" required></textarea><br><br>
+
+            <label for="bill-amount" id="bill-amount-text">Total Amount:</label>
+            <input id="bill-amount" type="number" name="amount" step="0.01" min="0.01" required><br><br>
+
+            <label for="bill-due-date" id="due-data-text">Due Date:</label>
+            <input id="bill-due-date" type="date" name="due_date" required><br><br>
+
+            <input type="submit" value="Divide Bill" id="divide-bill">
+
+            <button id="bill-cancel" onclick="closeDivideBillsForm()">Cancel</button>
+        </form>
+    </div>
+
     </main>
+    </div>
 
     <script>
 
@@ -211,13 +202,11 @@
                 return;
             }
             document.getElementById('task-form').style.display = 'block';
-            document.getElementById('message-box').style.display = 'none';
             fetchGroupMembers(currentGroupId);
         }
 
         function closeTaskForm() {
             document.getElementById('task-form').style.display = 'none';
-            document.getElementById('message-box').style.display = 'block';
         }
 
         function fetchGroupMembers(groupId) {
@@ -325,45 +314,36 @@
 
 
     const navbar = document.querySelector('.nav-bar');
-        const searchbar = document.querySelector('#search-bar');
-        const notifications = document.querySelector('.icon-button');
-        const logoutButton = document.querySelector('#log-out-button');
+const searchbar = document.querySelector('#search-bar');
+const notifications = document.querySelector('.icon-button');
+const logoutButton = document.querySelector('#log-out-button');
 
-        let lastScrollTop = 0;
+let lastScrollTop = 0;
 
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop) {
-                navbar.style.top = '-70px';
-            } else {
-                navbar.style.top = '0';
-            }
-            lastScrollTop = scrollTop;
-        });
-
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 50) {
-                searchbar.style.visibility = 'hidden';
-                notifications.style.visibility = 'hidden';
-                navbar.style.visibility = "hidden";
-                logoutButton.style.visibility = "hidden";
-            } else {
-                searchbar.style.visibility = 'visible';
-                notifications.style.visibility = 'visible';
-                navbar.style.visibility = 'visible';
-                logoutButton.style.visibility = "visible";
-            }
-        });
-
-    
-    // Toggle nav links when dropdown button is clicked
-    document.querySelector('.dropdown-btn').addEventListener('click', function() {
-        var navLinks = document.querySelectorAll('.nav-bar a, #search-bar, .icon-button, #log-out-button');
-
-    for (var i = 0; i < navLinks.length; i++) {
-        navLinks[i].classList.toggle('show');
+window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > lastScrollTop) {
+        navbar.style.top = '-70px';
+    } else {
+        navbar.style.top = '0';
     }
-    });
+    lastScrollTop = scrollTop;
+});
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 50) {
+        searchbar.style.visibility = 'hidden';
+        notifications.style.visibility = 'hidden';
+        navbar.style.visibility = "hidden";
+        logoutButton.style.visibility = "hidden";
+    } else {
+        searchbar.style.visibility = 'visible';
+        notifications.style.visibility = 'visible';
+        navbar.style.visibility = 'visible';
+        logoutButton.style.visibility = "visible";
+    }
+});
+
 
 
 
