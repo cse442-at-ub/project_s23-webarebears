@@ -123,8 +123,16 @@ align-items: center;
     <div id="divide-bills-form" style="display: none;">
         <h2>Divide Bills</h2>
         <form id="create-bill-form" onsubmit="return divideBill()">
+        <label for="split-type">Split Type:</label>
+        <input type="radio" id="even-split" name="split-type" value="even" checked>
+        <label for="even-split">Even</label>
+        <input type="radio" id="uneven-split" name="split-type" value="uneven">
+        <label for="uneven-split">Uneven</label><br><br>
+
             <label for="bill-friend">Choose friends:</label>
             <select id="bill-friend" name="friends[]" multiple></select><br><br>
+            <div id="uneven-split-section" style="display: none;"></div>
+
             
             <label for="bill-description" id="bill-description-text">Bill Description:</label>
             <textarea id="bill-description" name="description" rows="4" cols="50" required></textarea><br><br>
@@ -285,48 +293,125 @@ align-items: center;
             });
     }
 
-    function openDivideBillsForm() {
-            if (currentGroupId === null) {
-                alert('Please select a group chat before dividing a bill.');
-                return;
-            }
-            document.getElementById('divide-bills-form').style.display = 'block';
-            fetchGroupMembers(currentGroupId, 'bill-friend');
+        function openDivideBillsForm() {
+        if (currentGroupId === null) {
+            alert('Please select a group chat before dividing a bill.');
+            return;
         }
+        document.getElementById('divide-bills-form').style.display = 'block';
+        fetchGroupMembers(currentGroupId, 'bill-friend');
+        const evenSplit = document.getElementById('even-split');
+        evenSplit.addEventListener('change', toggleUnevenSplitSection);
+        const unevenSplit = document.getElementById('uneven-split');
+        unevenSplit.addEventListener('change', toggleUnevenSplitSection);
+    }
+
+    function toggleUnevenSplitSection() {
+        const unevenSplitSection = document.getElementById('uneven-split-section');
+        if (document.getElementById('uneven-split').checked) {
+            updateFriendAmounts();
+            unevenSplitSection.style.display = 'block';
+        } else {
+            unevenSplitSection.style.display = 'none';
+        }
+}
+
+function updateFriendAmounts() {
+    const unevenSplitSection = document.getElementById('uneven-split-section');
+    unevenSplitSection.innerHTML = '';
+
+    const friendsList = document.getElementById('bill-friend');
+    for (const option of friendsList.selectedOptions) {
+        const friendId = option.value;
+        const friendName = option.textContent;
+
+        const label = document.createElement('label');
+        label.textContent = `${friendName}: `;
+        label.htmlFor = `uneven-amount-${friendId}`;
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.id = `uneven-amount-${friendId}`;
+        input.name = `uneven-amount-${friendId}`;
+        input.step = '0.01';
+        input.min = '0.01';
+
+        const lineBreak = document.createElement('br');
+
+        unevenSplitSection.appendChild(label);
+        unevenSplitSection.appendChild(input);
+        unevenSplitSection.appendChild(lineBreak);
+    }
+}
+
+
 
         function closeDivideBillsForm() {
             document.getElementById('divide-bills-form').style.display = 'none';
         }
 
         function divideBill() {
-            const friends = Array.from(document.getElementById('bill-friend').selectedOptions).map(option => option.value);
-            const description = document.getElementById('bill-description').value;
-            const amount = document.getElementById('bill-amount').value;
-            const dueDate = document.getElementById('bill-due-date').value;
+        const friends = Array.from(document.getElementById('bill-friend').selectedOptions).map(option => option.value);
+        const description = document.getElementById('bill-description').value;
+        const amount = document.getElementById('bill-amount').value;
+        const dueDate = document.getElementById('bill-due-date').value;
 
-            if (friends.length === 0 || !description || !amount || !dueDate) {
-                alert('Please fill in all fields.');
-                return false;
+        if (friends.length === 0 || !description || !amount || !dueDate) {
+            alert('Please fill in all fields.');
+            return false;
+        }
+
+        const unevenSplit = document.getElementById('uneven-split').checked;
+        let unevenSplitData = null;
+        if (unevenSplit) {
+            unevenSplitData = {};
+            let totalAmount = 0;
+
+            const friendsList = document.getElementById('bill-friend');
+            for (const option of friendsList.selectedOptions) {
+                const friendId = option.value;
+                const friendAmount = parseFloat(document.getElementById(`uneven-amount-${friendId}`).value);
+
+                if (isNaN(friendAmount) || friendAmount <= 0) {
+                    alert('Please enter a valid amount for each selected friend.');
+                    return false;
+                }
+
+                unevenSplitData[friendId] = friendAmount;
+                totalAmount += friendAmount;
             }
 
-            const formData = new FormData();
-            formData.append('group_id', currentGroupId);
-            formData.append('friends', JSON.stringify(friends));
-            formData.append('description', description);
-            formData.append('amount', amount);
-            formData.append('due_date', dueDate);
+            if (Math.abs(totalAmount - amount) > 0.01) {
+                alert('The total amount for the uneven split does not match the total bill amount.');
+                return false;
+}
 
-            fetch('divideBill.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(responseText => {
-                console.log('Response from divideBill.php:', responseText);
-                closeDivideBillsForm();
-            });        
+        }
+
+        const formData = new FormData();
+        formData.append('group_id', currentGroupId);
+        formData.append('friends', JSON.stringify(friends));
+        formData.append('description', description);
+        formData.append('amount', amount);
+        formData.append('due_date', dueDate);
+        formData.append('uneven_split', unevenSplit);
+
+        if (unevenSplitData) {
+            formData.append('uneven_split_data', JSON.stringify(unevenSplitData));
+        }
+
+        fetch('divideBill.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(responseText => {
+            console.log('Response from divideBill.php:', responseText);
+            closeDivideBillsForm();
+        });        
         return false;
     }
+
 
 
 const navbar = document.querySelector('.nav-bar');
@@ -357,6 +442,13 @@ window.addEventListener('scroll', () => {
         notifications.style.visibility = 'visible';
         navbar.style.visibility = 'visible';
         logoutButton.style.visibility = "visible";
+    }
+});
+
+
+document.getElementById('bill-friend').addEventListener('change', function() {
+    if (document.getElementById('uneven-split').checked) {
+        updateFriendAmounts();
     }
 });
 
