@@ -21,12 +21,24 @@ $friends = json_decode($_POST['friends']);
 $description = mysqli_real_escape_string($db_connection, $_POST['description']);
 $amount = floatval($_POST['amount']);
 $due_date = mysqli_real_escape_string($db_connection, $_POST['due_date']);
+$uneven_split = $_POST['uneven_split'] === 'true';
 
-$amount_per_friend = $amount / count($friends);
+if ($uneven_split) {
+    $uneven_split_data = json_decode($_POST['uneven_split_data'], true);
+} else {
+    $amount_per_friend = $amount / count($friends);
+}
 
 foreach ($friends as $friend_id) {
     $friend_id = intval($friend_id);
-    $query = "INSERT INTO `Users_Debts` (group_id, assigner, assigned_to, description, amount, due_date, status) VALUES ('$group_id', '$sender_id', '$friend_id', '$description', '$amount_per_friend', '$due_date', 'pending')";
+
+    if ($uneven_split) {
+        $friend_amount = $uneven_split_data[$friend_id];
+    } else {
+        $friend_amount = $amount_per_friend;
+    }
+
+    $query = "INSERT INTO `Users_Debts` (group_id, assigner, assigned_to, description, amount, due_date, status) VALUES ('$group_id', '$sender_id', '$friend_id', '$description', '$friend_amount', '$due_date', 'pending')";
     if (!mysqli_query($db_connection, $query)) {
         echo "Error: Unable to insert data into User_Debts table. Error details: " . mysqli_error($db_connection);
         exit();
