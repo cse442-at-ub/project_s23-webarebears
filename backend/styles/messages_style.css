@@ -1,5 +1,7 @@
 body {
     background: #181A20;
+ }
+ header {
     overflow: scroll; /* create scroll bar if content overflows */
     word-wrap: break-word; /* break long words into multiple lines */
     font-family: 'Nunito', Arial, sans-serif; /* Changed from Arial, sans-serif to 'Nunito', Arial, sans-serif */
@@ -127,8 +129,7 @@ body {
     outline: none;
     border-radius: 50%;
   }
-  
-  .icon-button:hover {
+   .icon-button:hover {
     cursor: pointer;
     background: #97A3AB;
     color: #343645;
@@ -137,8 +138,7 @@ body {
   .icon-button:active {
     background: #97A3AB;
   }
-  
-  .icon-button__badge {
+   .icon-button__badge {
     position: absolute;
     top: 11px;
     right: 11px;
@@ -565,14 +565,16 @@ li {
     background-color: transparent;
     border-radius: 5px;
     font-size: 15px;
-    font-weight: 500px;
-}
-
-#task-cancel:hover{
+    margin-right: 0;
+ }
+ 
+ 
+ #task-cancel:hover{
     background-image: linear-gradient(rgb(0 0 0/40%) 0 0)
-}
-
-label, h2, p {
+ }
+ 
+ 
+ label, h2, p {
     color: white;
 }
 
@@ -613,9 +615,12 @@ label, h2, p {
     color: white;
     font-size: 15px;
     font-weight: 500px;
-}
+ }
 
-#create-task:hover{
+
+ 
+ 
+ #create-task:hover{
     background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
     cursor: pointer;
 }

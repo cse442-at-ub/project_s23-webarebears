@@ -142,7 +142,6 @@
     </main>
 
     <script>
-
         let currentGroupId = null;
         let chatHistoryTimeout = null; // Add this line
 
@@ -220,20 +219,6 @@
             document.getElementById('message-box').style.display = 'block';
         }
 
-        function fetchGroupMembers(groupId) {
-            fetch(`fetchGroupMembers.php?group_id=${groupId}`)
-                .then(response => response.json())
-                .then(members => {
-                    const select = document.getElementById('task-friend');
-                    select.innerHTML = '';
-                    members.forEach(member => {
-                        const option = document.createElement('option');
-                        option.value = member.user_id;
-                        option.textContent = member.username;
-                        select.appendChild(option);
-                    });
-                });
-        }
 
         function createTask() {
             const friend = document.getElementById('task-friend').value;
@@ -269,13 +254,26 @@
         fetch(`fetchGroupMembers.php?group_id=${groupId}`)
             .then(response => response.json())
             .then(members => {
-                const select = document.getElementById(selectId);
-                select.innerHTML = '';
+                const fList = document.getElementById(selectId);
+                fList.innerHTML = '';
+                
                 members.forEach(member => {
-                    const option = document.createElement('option');
-                    option.value = member.user_id;
-                    option.textContent = member.username;
-                    select.appendChild(option);
+                    const listNode = document.createElement('li');
+                    const labelNode = document.createElement('label');
+                    labelNode.className = 'custom-checkbox';
+
+                    const inputNode = document.createElement('input');
+                    inputNode.type = 'checkbox';
+                    inputNode.value = member.user_id;
+
+                    const spanNode = document.createElement('span');
+                    spanNode.className = 'checkmark'
+                    spanNode.textContent = member.username;
+
+                    labelNode.appendChild(inputNode);
+                    labelNode.appendChild(spanNode);
+                    listNode.appendChild(labelNode);
+                    fList.appendChild(listNode);
                 });
             });
     }
@@ -294,7 +292,17 @@
         }
 
         function divideBill() {
-            const friends = Array.from(document.getElementById('bill-friend').selectedOptions).map(option => option.value);
+            var checkboxes = document.querySelectorAll('#bill-friend input[type="checkbox"]');
+            var checkedValues = [];
+
+            checkboxes.forEach(function(checkbox) {
+                if(checkbox.checked) {
+                    checkedValues.push(checkbox.value);
+                }
+            });
+            
+            //const friends = Array.from(document.getElementById('bill-friend').selectedOptions).map(option => option.value);
+            const friends = checkedValues;
             const description = document.getElementById('bill-description').value;
             const amount = document.getElementById('bill-amount').value;
             const dueDate = document.getElementById('bill-due-date').value;
@@ -317,6 +325,7 @@
             })
             .then(response => response.text())
             .then(responseText => {
+                console.log(checkedValues)
                 console.log('Response from divideBill.php:', responseText);
                 closeDivideBillsForm();
             });        
