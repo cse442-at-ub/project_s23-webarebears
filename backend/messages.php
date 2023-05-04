@@ -58,6 +58,7 @@
     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Spartan' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 </head>
 <body>
     <header>
@@ -110,10 +111,12 @@
 
         <div class="container2">
             <div class="task-and-bills">
-                <button id="set-task-button" onclick="openTaskForm()">Set Task</button>
-                <button id="divide-bills-button" onclick="openDivideBillsForm()">Divide Bills</button>
+                <button id="set-task-button" onclick="openTaskForm()"><i class="fas fa-tasks"></i></button>
+                <button id="divide-bills-button" onclick="openDivideBillsForm()"><i class="fa-solid fa-comments-dollar"></i></button>
+                <button id="settings-button" onclick="openSettingsForm()" style="display: none;"><i class="fa-solid fa-gear"></i></button>
             </div>
             <div id="chat-box" class="chat-box">
+                <h2 id="group-chat-name"></h2>
                 <div id="message-box">
                     <div id="chat-history" class="chat-history"></div>
                     <form id="message-form" class="message-form" onsubmit="return sendMessage()">
@@ -122,7 +125,17 @@
                     </form>
                 </div>
 
-            
+                <div id="settings-form" style="display: none;">
+                    <h2>Group Settings</h2>
+                    <h3>Group Members:</h3>
+                    <ul id="settings-group-members"></ul>
+                    <div id="setting-buttons">
+                        <button id="leave-group" onclick="leaveGroup()">Leave Group</button>
+                        <button id="settings-cancel" onclick="closeSettingsForm()">Cancel</button>
+                    </div>
+                </div>
+
+
                 <div id="task-form" style="display: none;">
                     <h2>Set Task</h2>
                     <form id="create-task-form" onsubmit="return createTask()">
@@ -171,7 +184,7 @@
         let chatHistoryTimeout = null; // Add this line
 
         function openChat(groupId) {
-            if (chatHistoryTimeout) { // Add this block
+            if (chatHistoryTimeout) {
                 clearTimeout(chatHistoryTimeout);
             }
             currentGroupId = groupId;
@@ -179,6 +192,9 @@
             fetchChatHistory(groupId);
             document.getElementById('set-task-button').style.display = 'block';
             document.getElementById('divide-bills-button').style.display = 'block';
+            document.getElementById('settings-button').style.display = 'block'; 
+            const groupName = document.querySelector(`button[id='myGroup'][onclick='openChat(${groupId}); closeTaskForm(); closeDivideBillsForm(); closeSettingsForm()']`).textContent;
+            document.getElementById('group-chat-name').innerText = 'Group: ' + groupName;
         }
 
         function fetchChatHistory(groupId, skipTimeout) {
@@ -241,6 +257,10 @@
             const divideBillsForm = document.getElementById('divide-bills-form');
             if (divideBillsForm.style.display === 'block') {
                 divideBillsForm.style.display = 'none';
+            }
+            const settingForm = document.getElementById('settings-form');
+            if (settingForm.style.display === 'block') {
+                settingForm.style.display = 'none';
             }
 
             const taskForm = document.getElementById('task-form');
@@ -319,6 +339,11 @@
                 taskForm.style.display = 'none';
             }
 
+            const settingForm = document.getElementById('settings-form');
+            if (settingForm.style.display === 'block') {
+                settingForm.style.display = 'none';
+            }
+
             const divideBillsForm = document.getElementById('divide-bills-form');
             divideBillsForm.style.display = 'block';
 
@@ -368,7 +393,7 @@
     }
 
 
-    const navbar = document.querySelector('.nav-bar');
+        const navbar = document.querySelector('.nav-bar');
         const searchbar = document.querySelector('#search-bar');
         const notifications = document.querySelector('.icon-button');
         const logoutButton = document.querySelector('#log-out-button');
@@ -465,9 +490,96 @@
 });
 //*************************Notification Button Function*****************************//
 
+//*************************Group Setting Function*****************************//
+function openSettingsForm() {
+    if (currentGroupId === null) {
+        alert('Please select a group chat before viewing settings.');
+        return;
+    }
+    const messageBox = document.getElementById('message-box');
+    messageBox.style.display = 'none';
 
+    const taskForm = document.getElementById('task-form');
+    if (taskForm.style.display === 'block') {
+        taskForm.style.display = 'none';
+    }
+
+    const divideBillsForm = document.getElementById('divide-bills-form');
+    if (divideBillsForm.style.display === 'block') {
+        divideBillsForm.style.display = 'none';
+    }
+    document.getElementById('settings-form').style.display = 'block';
+    fetchGroupMembersSettings(currentGroupId, 'settings-group-members', true);
+}
+
+function closeSettingsForm() {
+    document.getElementById('settings-form').style.display = 'none';
+
+    const messageBox = document.getElementById('message-box');
+            if (messageBox.style.display !== 'block') {
+                messageBox.style.display = 'block';
+            }
+}
+
+function fetchGroupMembersSettings(groupId, selectId = 'task-friend', readOnly = false) {
+    fetch(`fetchGroupMembers.php?group_id=${groupId}`)
+        .then(response => response.json())
+        .then(members => {
+            const fList = document.getElementById(selectId);
+            fList.innerHTML = '';
+
+            // Add yourself to the roster
+            const currentUser = {
+                username: "<?php echo $_SESSION['username']; ?>",
+                user_id: "<?php echo $_SESSION['user_id']; ?>"
+            };
+            members.push(currentUser);
+
+            members.forEach(member => {
+                const listNode = document.createElement('li');
+                listNode.textContent = member.username;
+                if (!readOnly) {
+                    const labelNode = document.createElement('label');
+                    labelNode.className = 'custom-checkbox';
+
+                    const inputNode = document.createElement('input');
+                    inputNode.type = 'checkbox';
+                    inputNode.value = member.user_id;
+
+                    const spanNode = document.createElement('span');
+                    spanNode.className = 'checkmark'
+
+                    labelNode.appendChild(inputNode);
+                    labelNode.appendChild(spanNode);
+                    listNode.appendChild(labelNode);
+                }
+                fList.appendChild(listNode);
+            });
+        });
+}
+
+
+function leaveGroup() {
+    if (!confirm("Are you sure you want to leave this group?")) {
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('group_id', currentGroupId);
+
+    fetch('leaveGroup.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+        console.log('Response from leaveGroup.php:', responseText);
+        closeSettingsForm();
+        location.reload();
+    });
+}
+//*************************Group Setting Function*****************************//
 
     </script>
-
 </body>
 </html>

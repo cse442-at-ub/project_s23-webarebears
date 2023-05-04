@@ -451,12 +451,16 @@ button:hover {
     font-size: 1.125rem;
     line-height: 4vh;
     text-align: center;
+    color: #B0BEC5;
 }
 
-
+#message{
+  color: #B0BEC5;
+}
 #myGroup:focus{
     background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
-    font-weight:bolder
+    font-weight:bolder;
+    color: white;
 }
 
 
@@ -467,22 +471,25 @@ button:hover {
     flex-direction: column;
     justify-content: space-between;
     width: 80%;
-    height: 90%;
+    height: 60vh;
     display: none;
     background-color: #242042;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.483);
     z-index: 10;
-    border-radius: 20px;
-    padding: 5%;
+    padding: 3%;
     box-sizing: border-box;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 .chat-history {
-    height: 90%;
+    height: 80%;
     overflow-y:hidden;
     font-family: 'Nunito';
     font-style: normal;
     font-size: 15px;
     line-height: 20px;
+    padding: 4%;
+    box-sizing: border-box;
 }
 .chat-history:hover {
     overflow-y: auto; /* Show scrollbar on hover */
@@ -562,44 +569,62 @@ li {
 }
 
 .task-and-bills{
-    width: 100%;
-    height: 10%;
-    display: flex;
-    justify-content: space-between;
-    box-sizing: border-box;
-    padding-left: 10%;
-    padding-right: 10%;
-    margin-bottom: 1rem;
+  position: relative;
+  margin-left: 10%;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background-color: #242042;
+  box-sizing: border-box;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.3);
 }
 #set-task-button{
-    float: left;
-    display: none;
-    height: 40px;
-    border-radius: 20px;
-    width: 40%;
-    background-color: #242042;
-    margin-right: 65px;
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
+  display: none;
+  height: 40px;
+  border-radius: 20px;
+  width: 40%;
+  background-color: #242042;
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 5%;
+  box-sizing: border-box;
 }
 
 #divide-bills-button{
-    float: right;
-    display: none;
-    height: 40px;
-    border-radius: 20px;
-    width: 40%;
-    background-color: #242042;
-    font-family: 'Nunito';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
+  display: none;
+  height: 40px;
+  border-radius: 20px;
+  width: 40%;
+  background-color: #242042;
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 5%;
+  box-sizing: border-box;
+}
+
+#settings-button{
+  display: none;
+  height: 40px;
+  border-radius: 20px;
+  width: 40%;
+  background-color: #242042;
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 5%;
+  box-sizing: border-box;
 }
 
 #task-buttons{
-  margin-top: 20%;
+  margin-top: 10%;
   justify-content: space-between;
 }
 #task-cancel{
@@ -713,6 +738,52 @@ label, h2, p {
   justify-content: space-between;
 }
 #bills-cancel{
+  float: right;
+  display: inline-block;
+  width: 6.25rem;
+  height: 1.875rem;
+  background-color: transparent;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 500px;
+}
+
+#bills-cancel:hover{
+  background-image: linear-gradient(rgb(0 0 0/40%) 0 0)
+}
+
+#settings-form{
+  color: white;
+}
+
+#settings-group-members{
+  padding: 5%;
+  border-radius: 5px;
+  color:#1F222A;
+  background-color: #B0BEC5;
+  overflow: auto;
+}
+
+#settings-group-members li:hover{
+  background-image: linear-gradient(rgba(0, 0, 0, 0.073) 0 0)
+}
+#settings-buttons{
+  justify-content: space-between;
+}
+#leave-group{
+  align-items: center;
+  width: 6.25rem;
+  height: 1.875rem;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  background-color: #652A5F;
+  color: white;
+  font-size: 15px;
+  font-weight: 500px;
+}
+
+#settings-cancel{
   float: right;
   display: inline-block;
   width: 6.25rem;

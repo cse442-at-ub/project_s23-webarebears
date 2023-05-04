@@ -411,6 +411,7 @@ main div{
     width: 40%;
     display: block;
     align-self: flex-start;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.308);
 }
 
 .debt_owed_to_you label{
@@ -551,6 +552,7 @@ main div{
     border-radius: 20px;
     width: 40%;
     margin-left: 5%;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.308);
 }
 
 .debt_you_owe label{

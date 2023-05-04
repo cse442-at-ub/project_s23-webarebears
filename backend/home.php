@@ -94,6 +94,7 @@
                 </h3>
 
                 <div id="tasks"></div>
+                <div id="space"></div>
                 <button id="complete-tasks-btn" onclick="completeTasks()" style="text-align: center;">Complete</button>
         </div>
        
