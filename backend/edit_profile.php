@@ -1,10 +1,4 @@
 <?php
-    session_start();
-
-    if (!isset($_SESSION['username'])) {
-        header("Location: login.php");
-        exit();
-    }
 
     require('server.php');
 
@@ -33,7 +27,7 @@
 <head>
     <meta charset="utf-8">
     <title>Edit Profile</title>
-    <link rel="stylesheet" href="styles/home_style.css"/>
+    <link rel="stylesheet" href="styles/profiletab.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
@@ -44,16 +38,14 @@
     <?php endif; ?>
 
     <form method="post" action="">
-        <label for="new_username">New Username:</label>
-        <input type="text" name="new_username" id="new_username" value="<?php echo htmlspecialchars($username); ?>">
+        <p>Change Username and Password</p>
+        <input type="text" name="new_username" id="new_username" placeholder="New Username">
         <br>
-        <label for="new_password">New Password:</label>
-        <input type="password" name="new_password" id="new_password">
+        <input type="password" name="new_password" id="new_password" placeholder="New Password">
         <br>
-        <input type="submit" name="submit" value="Save Changes" onclick="return confirm('Are you sure you want to update your username and/or password?');">
+        <button type="submit" name="submit" value="Save Changes" onclick="return confirm('Are you sure you want to update your username and/or password?');">Save Changes</button>
 
-        <a href="profile.php" class="back-button">Back to Profile</a>
-
+        <!--<a href="profile.php" class="back-button">Back to Profile</a>-->
     <style>
         .back-button {
             display: inline-block;

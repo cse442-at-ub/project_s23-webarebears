@@ -1,11 +1,4 @@
 <?php
-    session_start();
-
-    if (!isset($_SESSION['username'])) {
-        header("Location: login.php");
-        exit();
-    }
-
     require('server.php');
 
     $username = $_SESSION['username'];
@@ -31,7 +24,6 @@
 <head>
     <meta charset="utf-8">
     <title>Settings</title>
-    <link rel="stylesheet" href="styles/home_style.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
@@ -40,14 +32,15 @@
     <?php if ($message): ?>
         <p><?php echo $message; ?></p>
     <?php endif; ?>
-
+    
+    <p>Change Password</p>
     <form method="post" action="">
-        <label for="new_password">New Password:</label>
-        <input type="password" name="new_password" id="new_password">
+        
+        <input type="password" name="new_password" id="new_password" placeholder="New Password"></input>
         <br>
-        <input type="submit" name="submit" value="Change Password" onclick="return confirm('Are you sure you want to update your password?');">
+        <button type="submit" name="submit" value="Change Password" onclick="return confirm('Are you sure you want to update your password?');">Change Password</button>
 
-        <a href="profile.php" class="back-button">Back to Profile</a>
+        <!--<a href="profile.php" class="back-button">Back to Profile</a>-->
 
     <style>
         .back-button {
