@@ -112,7 +112,7 @@
 
         <div class="list-container">
             <ul>
-              <li><i class="fas fa-check-circle"></i> <a href="completed_debts.php">Completed Debts</a></li>
+              <li onclick="showCompletedDebts()"><i class="fas fa-check-circle"></i> <a>Completed Debts</a></li>
               <li onclick="showCompletedTasks()"><i class="fas fa-tasks"></i> <a>Completed Tasks</a></li>
               <li onclick="showPendingTasks()"><i class="fas fa-clock"></i> <a>Pending Tasks</a></li>
               <li onclick="showPendingDebts()"><i class="fas fa-money-bill-wave"></i> <a>Pending Debts</a></li>
@@ -139,6 +139,12 @@
         <div id="settings-container" style="display: none;">
           <?php
               include('settings.php');
+          ?>
+        </div>
+
+        <div id="completed-debts-container" style="display: none;">
+          <?php
+              include('completed_debts.php');
           ?>
         </div>
 
@@ -181,6 +187,10 @@
       });
 
       function showEditForm() {
+        var formContainer = document.getElementById("completed-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("completed-tasks-container");
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";
@@ -238,6 +248,10 @@
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";
         }
+        var formContainer = document.getElementById("completed-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("settings-container");
         if (formContainer.style.display === "none") {
             formContainer.style.display = "block";
@@ -246,7 +260,48 @@
         }
       }
 
+      function showCompletedDebts(){
+        var formContainer = document.getElementById("completed-tasks-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("settings-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("edit-form-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-task-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("about-us-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("terms-and-conditions-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("completed-debts-container");
+        if (formContainer.style.display === "none") {
+            formContainer.style.display = "block";
+        } else {
+            formContainer.style.display = "none";
+        }
+      }
+
       function showCompletedTasks(){
+        var formContainer = document.getElementById("completed-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("settings-container");
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";
@@ -280,6 +335,10 @@
       }
 
       function showPendingTasks(){
+        var formContainer = document.getElementById("completed-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("settings-container");
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";
@@ -313,6 +372,10 @@
       }
 
       function showPendingDebts(){
+        var formContainer = document.getElementById("completed-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("settings-container");
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";
@@ -346,6 +409,10 @@
       }
 
       function showAboutUs(){
+        var formContainer = document.getElementById("completed-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("settings-container");
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";
@@ -379,6 +446,10 @@
       }
 
       function showTermsAndConditions(){
+        var formContainer = document.getElementById("completed-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("settings-container");
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";

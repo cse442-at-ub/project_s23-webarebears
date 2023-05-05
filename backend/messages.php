@@ -102,7 +102,7 @@
                     while ($row = mysqli_fetch_assoc($result)) {
                         $group_id = $row['group_id'];
                         $group_name = $row['group_name'];
-                        echo "<p><button id='myGroup' onclick='openChat($group_id); closeTaskForm(); closeDivideBillsForm()'>$group_name</button></p>";
+                        echo "<p><button id='myGroup' onclick='openChat($group_id,\"$group_name\"); closeTaskForm(); closeDivideBillsForm()'>$group_name</button></p>";
                         $iteration++;
                     }
                 ?>
@@ -116,7 +116,7 @@
                 <button id="settings-button" onclick="openSettingsForm()" style="display: none;"><i class="fa-solid fa-gear"></i></button>
             </div>
             <div id="chat-box" class="chat-box">
-                <h2 id="group-chat-name"></h2>
+                <h2 id="group-chat-name"><?php echo $group_name; ?></h2>
                 <div id="message-box">
                     <div id="chat-history" class="chat-history"></div>
                     <form id="message-form" class="message-form" onsubmit="return sendMessage()">
@@ -192,7 +192,8 @@
         let currentGroupId = null;
         let chatHistoryTimeout = null; // Add this line
 
-        function openChat(groupId) {
+        function openChat(groupId, group_name) {
+            document.getElementById("group-chat-name").textContent = group_name;
             if (chatHistoryTimeout) {
                 clearTimeout(chatHistoryTimeout);
             }
