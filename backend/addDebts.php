@@ -26,8 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['username'])) {
     $assigned_to_username = mysqli_fetch_assoc($assigned_to_result)['username'];
 
     $description = "User {$creator_username} assigned a debt to user {$assigned_to_username}: '{$description}' with amount {$amount} and due date {$due_date}.";
-
-    $query = "INSERT INTO User_Debts (group_id, assigned_to, description, amount, due_date, status) VALUES (?, ?, ?, ?, ?, ?)";
+    
+    $query = "INSERT INTO Users_Debts (group_id, assigned_to, description, amount, due_date, status) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($db_connection, $query);
     mysqli_stmt_bind_param($stmt, "iisdss", $group_id, $assigned_to, $description, $amount, $due_date, $status);
 

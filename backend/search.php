@@ -17,7 +17,7 @@
     $searchQuery = mysqli_real_escape_string($db_connection, $searchQuery);
 
     $query = "
-        (SELECT description as result, 'User_debts' as type FROM `User_debts` WHERE description LIKE '%$searchQuery%')
+        (SELECT description as result, 'Users_debts' as type FROM `Users_debts` WHERE description LIKE '%$searchQuery%')
         UNION
         (SELECT description as result, 'Tasks' as type FROM `Tasks` WHERE description LIKE '%$searchQuery%')
         UNION

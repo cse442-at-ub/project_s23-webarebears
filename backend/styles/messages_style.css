@@ -800,6 +800,11 @@ label, h2, p {
 #bills-cancel:hover{
   background-image: linear-gradient(rgb(0 0 0/40%) 0 0)
 }
+
+#group-chat-name{
+  text-align: center;
+  font-size: medium;
+}
 @media screen and (max-width: 900px) {
     #options {
         display: flex;
