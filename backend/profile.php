@@ -114,10 +114,10 @@
             <ul>
               <li><i class="fas fa-check-circle"></i> <a href="completed_debts.php">Completed Debts</a></li>
               <li onclick="showCompletedTasks()"><i class="fas fa-tasks"></i> <a>Completed Tasks</a></li>
-              <li><i class="fas fa-clock"></i> <a href="pending_tasks.php">Pending Tasks</a></li>
-              <li><i class="fas fa-money-bill-wave"></i> <a href="pending_debts.php">Pending Debts</a></li>
-              <li><i class="fas fa-info-circle"></i> <a href="about_us.php">About Us</a></li>
-              <li><i class="fas fa-file-alt"></i> <a href="terms_and_conditions.php">Terms and Conditions</a></li>
+              <li onclick="showPendingTasks()"><i class="fas fa-clock"></i> <a>Pending Tasks</a></li>
+              <li onclick="showPendingDebts()"><i class="fas fa-money-bill-wave"></i> <a>Pending Debts</a></li>
+              <li onclick="showAboutUs()"><i class="fas fa-info-circle"></i> <a>About Us</a></li>
+              <li onclick="showTermsAndConditions()"><i class="fas fa-file-alt"></i> <a>Terms and Conditions</a></li>
               <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
             </ul>
         </div>
@@ -132,22 +132,41 @@
         <!-- Add your content on the right side of the screen here -->
         <div id="edit-form-container" style="display: none;">
           <?php
-              // Include the edit profile form from edit_profile.php
               include('edit_profile.php');
           ?>
         </div>
 
         <div id="settings-container" style="display: none;">
           <?php
-              // Include the edit profile form from edit_profile.php
               include('settings.php');
           ?>
         </div>
 
         <div id="completed-tasks-container" style="display: block;">
           <?php
-              // Include the edit profile form from edit_profile.php
               include('completed_tasks.php');
+          ?>
+        </div>
+
+        <div id="pending-task-container" style="display: none;">
+          <?php
+              include('pending_tasks.php');
+          ?>
+        </div>
+
+        <div id="pending-debts-container" style="display: none;">
+          <?php
+              include('pending_debts.php');
+          ?>
+        </div>
+        <div id="about-us-container" style="display: none;">
+          <?php
+              include('about_us.php');
+          ?>
+        </div>
+        <div id="terms-and-conditions-container" style="display: none;">
+          <?php
+              include('terms_and_conditions.php');
           ?>
         </div>
       </div>
@@ -170,7 +189,22 @@
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";
         }
-
+        var formContainer = document.getElementById("pending-task-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("about-us-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("terms-and-conditions-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("edit-form-container");
         if (formContainer.style.display === "none") {
             formContainer.style.display = "block";
@@ -188,7 +222,22 @@
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";
         }
-
+        var formContainer = document.getElementById("pending-task-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("about-us-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("terms-and-conditions-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("settings-container");
         if (formContainer.style.display === "none") {
             formContainer.style.display = "block";
@@ -206,7 +255,155 @@
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";
         }
+        var formContainer = document.getElementById("pending-task-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("about-us-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("terms-and-conditions-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
         var formContainer = document.getElementById("completed-tasks-container");
+        if (formContainer.style.display === "none") {
+            formContainer.style.display = "block";
+        } else {
+            formContainer.style.display = "none";
+        }
+      }
+
+      function showPendingTasks(){
+        var formContainer = document.getElementById("settings-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("edit-form-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("completed-tasks-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("about-us-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("terms-and-conditions-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-task-container");
+        if (formContainer.style.display === "none") {
+            formContainer.style.display = "block";
+        } else {
+            formContainer.style.display = "none";
+        }
+      }
+
+      function showPendingDebts(){
+        var formContainer = document.getElementById("settings-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("edit-form-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("completed-tasks-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-task-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("about-us-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("terms-and-conditions-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-debts-container");
+        if (formContainer.style.display === "none") {
+            formContainer.style.display = "block";
+        } else {
+            formContainer.style.display = "none";
+        }
+      }
+
+      function showAboutUs(){
+        var formContainer = document.getElementById("settings-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("edit-form-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("completed-tasks-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-task-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("terms-and-conditions-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("about-us-container");
+        if (formContainer.style.display === "none") {
+            formContainer.style.display = "block";
+        } else {
+            formContainer.style.display = "none";
+        }
+      }
+
+      function showTermsAndConditions(){
+        var formContainer = document.getElementById("settings-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("edit-form-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("completed-tasks-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-task-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("pending-debts-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("about-us-container");
+        if (formContainer.style.display === "block") {
+            formContainer.style.display = "none";
+        }
+        var formContainer = document.getElementById("terms-and-conditions-container");
         if (formContainer.style.display === "none") {
             formContainer.style.display = "block";
         } else {

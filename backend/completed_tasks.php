@@ -37,7 +37,7 @@
         <h2>Completed Tasks</h2>
         <ul class="completed-tasks">
             <?php foreach ($completed_tasks as $task): ?>
-                <div class="task">
+                <div>
                     <h4 style="overflow-wrap: break-word;"><?php echo htmlspecialchars($task['description']); ?></h4>
                     <span> - Completed on: <?php echo htmlspecialchars($task['due_date']); ?></span>
                 </div>

@@ -480,6 +480,7 @@ button:hover {
     box-sizing: border-box;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    overflow: scroll;
 }
 .chat-history {
     height: 80%;
@@ -689,7 +690,9 @@ label, h2, p {
     background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
     cursor: pointer;
 }
+#divide-bills-form{
 
+}
 #divide-bills-form h2{
   font-size: 1.5rem;
   margin-bottom: 5%;
@@ -797,13 +800,29 @@ label, h2, p {
 #bills-cancel:hover{
   background-image: linear-gradient(rgb(0 0 0/40%) 0 0)
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 900px) {
     #options {
         display: flex;
         flex-direction: column;
     }
     .container1{
         padding: 0;
+    }
+
+    #myGroup{
+      font-size: small;
+    }
+    .chat-box{
+      font-size: small;
+    }
+    #task-form h2{
+      font-size: medium;
+    }
+    #divide-bills-form h2{
+      font-size: medium;
+    }
+    #settings-form h2{
+      font-size: medium;
     }
     
 }
