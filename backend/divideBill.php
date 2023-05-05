@@ -40,11 +40,11 @@ foreach ($friends as $friend_id) {
 
     $query = "INSERT INTO `Users_Debts` (group_id, assigner, assigned_to, description, amount, due_date, status) VALUES ('$group_id', '$sender_id', '$friend_id', '$description', '$friend_amount', '$due_date', 'pending')";
     if (!mysqli_query($db_connection, $query)) {
-        echo "Error: Unable to insert data into User_Debts table. Error details: " . mysqli_error($db_connection);
+        echo "Error: Unable to insert data into Users_Debts table. Error details: " . mysqli_error($db_connection);
         exit();
     }
 }
 
-echo "Success: Bill divided and inserted into User_Debts table.";
+echo "Success: Bill divided and inserted into Users_Debts table.";
 
 ?>
