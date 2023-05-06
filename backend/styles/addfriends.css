@@ -563,6 +563,7 @@ button:hover{
 .search-box label{
     font-size: larger;
 }
+
 /*
 #cancel-btn{
     position: absolute;
@@ -581,11 +582,12 @@ button:hover{
   margin-left:auto;
   margin-right:auto;
   width: 60%;
-  height: 50%;
+  height: 65vh;
   border-radius: 20px;
 }
 
 .friend-request{
+  margin-bottom:20px;
   min-width: 260px;
   padding: 2%;
   width: 100%;

@@ -903,6 +903,7 @@ label, h2, p {
 }
 
 #group-chat-name{
+  margin-block-start:5px;
   text-align: center;
   font-size: medium;
 }
