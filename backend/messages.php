@@ -64,7 +64,7 @@
     <header>
         <nav class="nav-bar">
             <a href="profile.php">
-				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
+            <img id="profile-pic" src="fetchProfilePicture.php" alt="Profile Icon">
 			</a>
             <a href="home.php" id="home" >Home</a>
             <a id="tasksAndBalances" href="balances.php">Balances</a>
