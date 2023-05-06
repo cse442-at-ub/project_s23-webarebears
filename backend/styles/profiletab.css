@@ -932,3 +932,26 @@ main {
     font-size: small;
   }
 }
+
+#profile-pic-container {
+  position: relative;
+}
+
+#profile-pic:hover + #profile-pic-hover,
+#profile-pic-hover:hover {
+  display: block;
+}
+
+#profile-pic-hover {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  line-height: 50px;
+  color: white;
+  cursor: pointer;
+}

@@ -82,7 +82,12 @@
         <div class="top-profile">
 
           <div class="profile-header">
-              <img id="logo" class="profile-picture" src="images/profile-temp.png" alt="Logo">
+
+                <div id="profile-pic-container">
+            <img id="profile-pic" src="fetchProfilePicture.php" alt="Profile Icon">
+            <div id="profile-pic-hover" onclick="document.getElementById('file-input').click()">Change Profile Picture</div></div>
+            <input type="file" id="file-input" accept="image/*" style="display: none;">
+
             <h2 class="profile-name"><?php echo htmlspecialchars($_SESSION['username']); ?></h2>
           </div>
 
@@ -181,6 +186,43 @@
     </main>
 
     <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Script is running');
+
+        document.getElementById('profile-pic').addEventListener('click', () => {
+            console.log('Profile picture clicked');
+            document.getElementById('file-input').click();
+        });
+
+        document.getElementById('file-input').addEventListener('change', (event) => {
+            console.log('File input changed');
+            const file = event.target.files[0];
+            if (!file) {
+                console.log('No File');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('profile_pic', file);
+
+            fetch('uploadProfilePicture.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json()) // Convert the response to JSON directly
+            .then(result => {
+                if (result.success) {
+                    document.getElementById('profile-pic').src = 'fetchProfilePicture.php?' + new Date().getTime();
+                } else {
+                    console.error('Error uploading profile picture.:', result.error, 'Details:', result.details);
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading profile picture:', error);
+            });
+
+        });
+    });
+
 
       document.getElementById("close-profile-tab").addEventListener("click", function() {
         window.location.href = "home.php";
@@ -547,6 +589,8 @@
         });
     });
     //*************************Notification Button Function*****************************//
+
+
 
     </script>
   </body>
