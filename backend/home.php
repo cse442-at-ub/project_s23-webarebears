@@ -41,7 +41,7 @@
     <meta charset="utf-8">
     <title>Home</title>
     <link rel="stylesheet" href="styles/home_style.css"/>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito&display=swap" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
@@ -54,13 +54,14 @@
 <header>
         <nav class="nav-bar">
             <a href="profile.php">
-				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
-			</a>
+                <img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
+            </a>
             <a href="home.php" id="home" >Home</a>
             <a id="tasksAndBalances" href="balances.php">Balances</a>
-            <a id="messages" href="messages.php">Messages</a>			
+            <a id="messages" href="messages.php">Messages</a>           
 
             <input id="search-bar" type="search" placeholder="Search">
+                <div id="search-results"></div>
             <button type="button" class="icon-button" id="notification-button">
                 <span class="material-icons">notifications</span>
                 <span class="icon-button__badge" id="notification-count"><?php echo $pending_friend_requests + $pending_debts + $pending_tasks; ?></span>
@@ -82,7 +83,7 @@
     </header>
 
 
-	<main id="grid2">
+    <main id="grid2">
         <div class="recent">
             <p1>Recent</p1>
             <recent id="recent"></recent>
@@ -291,14 +292,43 @@
             }
         });
 
-    // Toggle nav links when dropdown button is clicked
-    document.querySelector('.dropdown-btn').addEventListener('click', function() {
-        var navLinks = document.querySelectorAll('.nav-bar a, #search-bar, .icon-button, #log-out-button');
 
-    for (var i = 0; i < navLinks.length; i++) {
-        navLinks[i].classList.toggle('show');
-    }
-    });
+        const searchBar = document.getElementById('search-bar');
+        const searchResultsContainer = document.createElement('div');
+        searchResultsContainer.classList.add('search-results');
+        searchBar.insertAdjacentElement('afterend', searchResultsContainer);
+
+        searchBar.addEventListener('input', (event) => {
+            const query = event.target.value;
+
+            if (query.trim() === '') {
+                searchResultsContainer.innerHTML = '';
+                return;
+            }
+
+            fetch(`search.php?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error searching:', data.error);
+                        return;
+                    }
+
+                    searchResultsContainer.innerHTML = '';
+
+                    data.results.forEach(result => {
+                        const resultItem = document.createElement('div');
+                        resultItem.textContent = `${result.type}: ${result.result}`;
+                        searchResultsContainer.appendChild(resultItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error searching:', error);
+                });
+        });
+
+
+
     </script>
 </body>
 </html>

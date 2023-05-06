@@ -15,14 +15,23 @@
     }
 
     $searchQuery = mysqli_real_escape_string($db_connection, $searchQuery);
+    $current_user = mysqli_real_escape_string($db_connection, $_SESSION['username']);
 
     $query = "
-        (SELECT description as result, 'Users_debts' as type FROM `Users_debts` WHERE description LIKE '%$searchQuery%')
-        UNION
-        (SELECT description as result, 'Tasks' as type FROM `Tasks` WHERE description LIKE '%$searchQuery%')
-        UNION
-        (SELECT username as result, 'User Accounts' as type FROM `User Accounts` WHERE username LIKE '%$searchQuery%')
-    ";
+    SELECT username as result, 'User Accounts' as type
+    FROM `User Accounts`
+    WHERE username LIKE '%$searchQuery%'
+    AND user_id NOT IN (
+        SELECT friend_user_id
+        FROM `friends`
+        WHERE user_id = (
+            SELECT user_id
+            FROM `User Accounts`
+            WHERE username = '$current_user'
+        )
+    )
+";
+
 
     $result = mysqli_query($db_connection, $query);
 
