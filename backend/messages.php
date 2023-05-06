@@ -110,7 +110,7 @@
                     while ($row = mysqli_fetch_assoc($result)) {
                         $group_id = $row['group_id'];
                         $group_name = $row['group_name'];
-                        echo "<p><button id='myGroup' onclick='openChat($group_id,\"$group_name\"); closeTaskForm(); closeDivideBillsForm()'>$group_name</button></p>";
+                        echo "<p><button id='myGroup' onclick='openChat($group_id,\"$group_name\"); closeTaskForm(); closeDivideBillsForm(); closeAddFriendsToGroupForm()'>$group_name</button></p>";
                         $iteration++;
                     }
                 ?>
@@ -135,6 +135,7 @@
 
                 <div id="settings-form" style="display: none;">
                     <h2>Group Settings</h2>
+                    <button id="add-friends-to-group-button" onclick="openAddFriendsToGroupForm();">Add Friends</button>
                     <h3>Group Members:</h3>
                     <ul id="settings-group-members"></ul>
                     <div id="setting-buttons">
@@ -142,6 +143,20 @@
                         <button id="settings-cancel" onclick="closeSettingsForm()">Cancel</button>
                     </div>
                 </div>
+
+                <div id="add-friends-to-group-form" style="display: none;">
+                    <h2>Add Friends to Group</h2>
+                    <form id="add-friends-to-group" onsubmit="handleAddFriendSubmit();">
+                        <label for="group-friends">Choose friends:</label>
+                        <ul id="group-friends"></ul>
+
+                        <input type="submit" value="Add Friends" id="add-friends-submit">
+                        <br>
+
+                        <button id="add-friends-cancel" onclick="closeAddFriendsToGroupForm()">Cancel</button>
+                    </form>
+                </div>
+
 
 
                 <div id="task-form" style="display: none;">
@@ -451,6 +466,12 @@
         }
 }
 
+    function handleAddFriendSubmit(){
+        const addFriendsResult = addFriendsToGroup();
+        closeSettingsForm();
+        return addFriendsResult;
+    }
+
     function updateFriendAmounts() {
         const unevenSplitSection = document.getElementById('uneven-split-section');
         unevenSplitSection.innerHTML = '';
@@ -746,6 +767,86 @@ function leaveGroup() {
     });
 }
 //*************************Group Setting Function*****************************//
+
+
+
+function openAddFriendsToGroupForm() {
+    if (currentGroupId === null) {
+        alert('Please select a group chat before adding friends.');
+        return;
+    }
+    document.getElementById('add-friends-to-group-form').style.display = 'block';
+    fetchFriendsNotInGroup(currentGroupId);
+}
+
+function closeAddFriendsToGroupForm() {
+    document.getElementById('add-friends-to-group-form').style.display = 'none';
+}
+
+function fetchFriendsNotInGroup(groupId) {
+    fetch(`fetchFriendsNotInGroup.php?group_id=${groupId}`)
+        .then(response => response.json())
+        .then(friends => {
+            const fList = document.getElementById('group-friends');
+            fList.innerHTML = '';
+
+            friends.forEach(friend => {
+                const listNode = document.createElement('li');
+                const labelNode = document.createElement('label');
+                labelNode.className = 'custom-checkbox';
+
+                const inputNode = document.createElement('input');
+                inputNode.type = 'checkbox';
+                inputNode.value = friend.user_id;
+
+                const spanNode = document.createElement('span');
+                spanNode.className = 'checkmark'
+                spanNode.textContent = friend.username;
+
+                labelNode.appendChild(inputNode);
+                labelNode.appendChild(spanNode);
+                listNode.appendChild(labelNode);
+                fList.appendChild(listNode);
+            });
+        });
+}
+
+function addFriendsToGroup() {
+    var checkboxes = document.querySelectorAll('#group-friends input[type="checkbox"]');
+    var checkedValues = [];
+
+    checkboxes.forEach(function(checkbox) {
+        if(checkbox.checked) {
+            checkedValues.push(checkbox.value);
+        }
+    });
+
+    const friends = checkedValues;
+
+    if (friends.length === 0) {
+        return false;
+    }
+
+    const formData = new FormData();
+    formData.append('group_id', currentGroupId);
+    formData.append('friends', JSON.stringify(friends));
+
+    fetch('addFriendsToGroup.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+        console.log('Response from addFriendsToGroup.php:', responseText);
+        closeAddFriendsToGroupForm();
+    });
+
+    return false;
+}
+
+
+
+
 
     </script>
 </body>
