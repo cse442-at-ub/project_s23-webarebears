@@ -102,7 +102,6 @@
    require('server.php');
 
    $current_user_id = $_SESSION['user_id'];
-
    // If form is submitted, search for user
    if (isset($_POST['submit'])) {
        $search_term = mysqli_real_escape_string($db_connection, $_POST['search']);
@@ -206,11 +205,11 @@
             <div class='button-container'>
                 <form method='post' class='accept-request-form'>
                     <input type='hidden' name='sender_id' value='" . $sender_id . "'>
-                    <button type='submit' name='accept_request' value='Accept'>Accept</button>
+                    <button type='submit' class='request_button' name='accept_request' value='Accept'>Accept</button>
                 </form>
                 <form method='post' class='decline-request-form'>
                     <input type='hidden' name='sender_id' value='" . $sender_id . "'>
-                    <button type='submit' name='decline_request' value='Decline'>Decline</button>
+                    <button type='submit' class='request_button' name='decline_request' value='Decline'>Decline</button>
                 </form>
             </div>
         </div>";
