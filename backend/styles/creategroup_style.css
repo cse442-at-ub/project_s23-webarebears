@@ -554,3 +554,45 @@ main{
 #cancel-btn{
     color: white;
 }
+.color-picker-container {
+    position: relative;
+    display: inline-block;
+}
+
+.color-picker-label {
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.color-picker-options {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 160px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.color-picker-options .color-option {
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 4px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #333;
+    line-height: 20px;
+    border: 1px solid #442A65;
+    border-radius: 4px; /* Add this property to round out the corners */
+}
+
+.color-picker-options .color-option:hover {
+    border-color: #333;
+}

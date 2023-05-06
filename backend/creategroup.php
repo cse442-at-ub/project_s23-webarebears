@@ -91,6 +91,22 @@
             <h2>Create a Group</h2>
             <label for="groupname">Group Name:</label>
             <input type="text" id="groupname" name="groupname">
+
+            <div style="display: flex;align-items: center;">
+                <p style="padding-right:10px;">Group Color:</p>
+                <div class="color-picker-container">
+                    <div class="color-picker-label" onclick="toggleColorPicker()" id="selected-color" style="width: 20px; height: 20px; background-color: #1F222A; border: 1px solid #ccc; display: inline-block;"></div>
+                    <div class="color-picker-options" id="color-picker-options">
+                        <div class="color-option" style="background-color: #1F222A;" onclick="setColor('#1F222A')">#</div>
+                        <div class="color-option" style="background-color: #616cdb;" onclick="setColor('#616cdb')">#</div>
+                        <div class="color-option" style="background-color: #f94a6e;" onclick="setColor('#f94a6e')">#</div>
+                        <div class="color-option" style="background-color: #6d2fe3;" onclick="setColor('#6d2fe3')">#</div>
+                    </div>
+                </div>
+            </div>
+
+
+
             <p>Members:</p>
 
             <select multiple size="6" style="width: 300px;" name="selected_friends[]" multiple>
@@ -127,6 +143,15 @@
 </main>
 
 <script>
+        function toggleColorPicker() {
+            document.getElementById("color-picker-options").style.display = "block";
+        }
+
+        function setColor(color) {
+            document.getElementById("selected-color").style.backgroundColor = color;
+            document.getElementById("color-picker-options").style.display = "none";
+        }
+    
     function cancel() {
         alert("Group creation has been canceled.");
         window.location.href = "messages.php";
