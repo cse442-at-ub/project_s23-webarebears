@@ -561,6 +561,7 @@ main{
 
 .color-picker-label {
     cursor: pointer;
+    border-radius: 2px;
 }
 
 .color-picker-options {
