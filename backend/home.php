@@ -59,9 +59,16 @@
             <a href="home.php" id="home" >Home</a>
             <a id="tasksAndBalances" href="balances.php">Balances</a>
             <a id="messages" href="messages.php">Messages</a>           
+            <form class="form" method="post">
+            <div class="search-container">
+                <input type="text" class="login-input" name="search" placeholder="Search for friends" id="search-friend"/>
+                <button type="submit" name="submit" id="submit-btn">
+                <i class="fas fa-search"></i>
+                </button>
+            </div>
+            </form>
 
-            <input id="search-bar" type="search" placeholder="Search">
-                <div id="search-results"></div>
+            <!--<input id="search-bar" type="search" placeholder="Search">-->
             <button type="button" class="icon-button" id="notification-button">
                 <span class="material-icons">notifications</span>
                 <span class="icon-button__badge" id="notification-count"><?php echo $pending_friend_requests + $pending_debts + $pending_tasks; ?></span>
@@ -79,9 +86,72 @@
     </header>
 
 
-        
-    </header>
+<?php
+    require('server.php');
 
+    $current_user_id = $_SESSION['user_id'];
+
+    // If form is submitted, search for user
+    if (isset($_POST['submit'])) {
+        $search_term = mysqli_real_escape_string($db_connection, $_POST['search']);
+        $query = "SELECT * FROM `User Accounts` WHERE username='$search_term'";
+        $result = mysqli_query($db_connection, $query);
+
+        // If user found, display user's information and send friend request button
+        if (mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
+            echo "<div class='search-result'>
+                    <h3> Search Result: </h3>
+                    <div>
+                        <p>" . $user['username'] . "</p>
+                        <form method='post'>
+                            <input type='hidden' name='receiver_id' value='" . $user['user_id'] . "'/>
+                            <button type='submit' name='send_request' value='Send Request'>Send Friend Request</button>
+                        </form>
+                    </div>
+                </div>";
+                echo '<script>
+                const searchResultsContainer = document.querySelector(".search-result");
+
+                document.addEventListener("click", (event) => {
+                    const target = event.target;
+    
+                    // Check if the clicked element is outside the search result div
+                    if (!searchResultsContainer.contains(target)) {
+                        searchResultsContainer.style.display = "none";
+                    }
+                });
+                </script>';
+        } else {
+            echo "<div class='search-result'>
+                        <h3>No results found.</h3>
+                    </div>";
+            echo '<script>
+            const searchResultsContainer = document.querySelector(".search-result");
+
+            document.addEventListener("click", (event) => {
+                const target = event.target;
+
+                // Check if the clicked element is outside the search result div
+                if (!searchResultsContainer.contains(target)) {
+                    searchResultsContainer.style.display = "none";
+                }
+            });
+            </script>';
+        }
+    }
+
+    // If send friend request button is clicked, add request to Friend_Requests table
+    if (isset($_POST['send_request'])) {
+        $receiver_id = mysqli_real_escape_string($db_connection, $_POST['receiver_id']);
+
+        $query = "INSERT INTO `Friend_Requests` (sender_id, receiver_id, status) VALUES ('$current_user_id', '$receiver_id', 'pending')";
+        mysqli_query($db_connection, $query);
+
+        echo "<p>Friend request sent.</p>";
+        
+    }
+?>
 
     <main id="grid2">
         <div class="recent">
@@ -102,6 +172,7 @@
     </main>
 
     <script>
+        
         //*************************Notification Button Function*****************************//
             document.getElementById('notification-button').addEventListener('click', () => {
             const notificationContainer = document.getElementById('notification-container');
@@ -291,43 +362,6 @@
                 logoutButton.style.visibility = "visible";
             }
         });
-
-
-        const searchBar = document.getElementById('search-bar');
-        const searchResultsContainer = document.createElement('div');
-        searchResultsContainer.classList.add('search-results');
-        searchBar.insertAdjacentElement('afterend', searchResultsContainer);
-
-        searchBar.addEventListener('input', (event) => {
-            const query = event.target.value;
-
-            if (query.trim() === '') {
-                searchResultsContainer.innerHTML = '';
-                return;
-            }
-
-            fetch(`search.php?q=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error('Error searching:', data.error);
-                        return;
-                    }
-
-                    searchResultsContainer.innerHTML = '';
-
-                    data.results.forEach(result => {
-                        const resultItem = document.createElement('div');
-                        resultItem.textContent = `${result.type}: ${result.result}`;
-                        searchResultsContainer.appendChild(resultItem);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error searching:', error);
-                });
-        });
-
-
 
     </script>
 </body>
