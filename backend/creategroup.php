@@ -95,17 +95,15 @@
             <div style="display: flex;align-items: center;">
                 <p style="padding-right:10px;">Group Color:</p>
                 <div class="color-picker-container">
-                    <div class="color-picker-label" onclick="toggleColorPicker()" id="selected-color" style="width: 20px; height: 20px; background-color: #1F222A; border: 1px solid #ccc; display: inline-block;"></div>
+                    <div class="color-picker-label" onclick="toggleColorPicker()" id="selected-color" style="width: 20px; height: 20px; background-color: #3B2042; border: 1px solid #ccc; display: inline-block;"></div>
                     <div class="color-picker-options" id="color-picker-options">
-                        <div class="color-option" style="background-color: #1F222A;" onclick="setColor('#1F222A')">#</div>
-                        <div class="color-option" style="background-color: #616cdb;" onclick="setColor('#616cdb')">#</div>
-                        <div class="color-option" style="background-color: #f94a6e;" onclick="setColor('#f94a6e')">#</div>
+                        <div class="color-option" style="background-color: #3B2042;" onclick="setColor('#3B2042')">#</div>
                         <div class="color-option" style="background-color: #6d2fe3;" onclick="setColor('#6d2fe3')">#</div>
+                        <div class="color-option" style="background-color: #f94a6e;" onclick="setColor('#f94a6e')">#</div>
+                        <div class="color-option" style="background-color: #2A6550;" onclick="setColor('#2A6550')">#</div>
                     </div>
                 </div>
             </div>
-
-
 
             <p>Members:</p>
 
