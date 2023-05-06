@@ -172,7 +172,14 @@
     </main>
 
     <script>
-        
+        // Toggle nav links when dropdown button is clicked
+        document.querySelector('.dropdown-btn').addEventListener('click', function() {
+        var navLinks = document.querySelectorAll('.nav-bar a, #search-container, .icon-button, #log-out-button');
+
+        for (var i = 0; i < navLinks.length; i++) {
+            navLinks[i].classList.toggle('show');
+        }
+        });
         //*************************Notification Button Function*****************************//
             document.getElementById('notification-button').addEventListener('click', () => {
             const notificationContainer = document.getElementById('notification-container');

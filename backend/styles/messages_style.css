@@ -159,7 +159,7 @@ nav a, #search-bar, .icon-button , #log-out-button{
   font-family: 'Spartan';
   background-color: #343645;
   border-radius: 20px;
-  width: 23%;
+  width: 20rem;
   height: auto;
   position: absolute;
   color: white;
@@ -194,8 +194,8 @@ nav a, #search-bar, .icon-button , #log-out-button{
   background-color: #652A5F;
   border: none;
   color: white;
-  width: 10vw;
-  height: 4vh;
+  width:10rem;
+  height: 2rem;
   border-radius: 10px;
 }
 
