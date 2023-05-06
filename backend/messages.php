@@ -43,7 +43,7 @@
     $_SESSION['user_id'] = $user_id;
 
 
-    $query = "SELECT Groups.group_id, Groups.group_name FROM `Group_Members` INNER JOIN `Groups` ON Group_Members.group_id = Groups.group_id WHERE Group_Members.user_id='$user_id'";
+    $query = "SELECT Groups.group_id, Groups.group_name,Groups.group_color FROM `Group_Members` INNER JOIN `Groups` ON Group_Members.group_id = Groups.group_id WHERE Group_Members.user_id='$user_id'";
     $result = mysqli_query($db_connection, $query);
 ?>
 <!DOCTYPE html>
@@ -110,15 +110,24 @@
                     while ($row = mysqli_fetch_assoc($result)) {
                         $group_id = $row['group_id'];
                         $group_name = $row['group_name'];
-                        echo "<p><button id='myGroup' onclick='openChat($group_id,\"$group_name\"); closeTaskForm(); closeDivideBillsForm(); closeAddFriendsToGroupForm()'>$group_name</button></p>";
-                        $iteration++;
+                        $group_color = $row['group_color'];
+                        if($group_color != null){
+                            echo "<p><button style='background-color:$group_color' id='myGroup' onclick='openChat($group_id,\"$group_name\",\"$group_color\"); closeTaskForm(); closeDivideBillsForm(); closeAddFriendsToGroupForm()'>$group_name</button></p>";
+                            $iteration++;
+                            
+                        }   
+                        else{
+                            echo "<p><button id='myGroup' onclick='openChat($group_id,\"$group_name\",\"$group_color\"); closeTaskForm(); closeDivideBillsForm(); closeAddFriendsToGroupForm()'>$group_name</button></p>";
+                            $iteration++;
+                        }
+                        
                     }
                 ?>
             </div>
         </div>
 
         <div class="container2">
-            <div class="task-and-bills">
+            <div class="task-and-bills" id="group-buttons-container">
                 <button id="set-task-button" onclick="openTaskForm()"><i class="fas fa-tasks"></i></button>
                 <button id="divide-bills-button" onclick="openDivideBillsForm()"><i class="fa-solid fa-comments-dollar"></i></button>
                 <button id="settings-button" onclick="openSettingsForm()" style="display: none;"><i class="fa-solid fa-gear"></i></button>
@@ -276,7 +285,7 @@
         let currentGroupId = null;
         let chatHistoryTimeout = null; // Add this line
 
-        function openChat(groupId, group_name) {
+        function openChat(groupId, group_name,group_color) {
             document.getElementById("group-chat-name").textContent = group_name;
             if (chatHistoryTimeout) {
                 clearTimeout(chatHistoryTimeout);
@@ -289,10 +298,21 @@
             
             document.getElementById('set-task-button').style.display = 'block';
             document.getElementById('divide-bills-button').style.display = 'block';
-            document.getElementById('settings-button').style.display = 'block'; 
+            document.getElementById('settings-button').style.display = 'block';
+
+            if(group_color != null){
+            document.getElementById('set-task-button').style.backgroundColor = group_color;
+            document.getElementById('divide-bills-button').style.backgroundColor = group_color;
+            document.getElementById('settings-button').style.backgroundColor = group_color;
+            document.getElementById('group-buttons-container').style.backgroundColor = group_color;
+            document.getElementById('chat-box').style.backgroundColor = group_color;
+            }
+
 
             currentGroupId = groupId;
+            
             document.getElementById('chat-box').style.display = 'block';
+            
             fetchChatHistory(groupId);
             
             

@@ -94,6 +94,7 @@
 
             <div style="display: flex;align-items: center;">
                 <p style="padding-right:10px;">Group Color:</p>
+                <input type="hidden" id="groupcolor" name="groupcolor">
                 <div class="color-picker-container">
                     <div class="color-picker-label" onclick="toggleColorPicker()" id="selected-color" style="width: 20px; height: 20px; background-color: #3B2042; border: 1px solid #ccc; display: inline-block;"></div>
                     <div class="color-picker-options" id="color-picker-options">
@@ -234,6 +235,13 @@
         notificationContainer.style.display = 'block';
     });
 });
+
+function setColor(color) {
+    document.getElementById("selected-color").style.backgroundColor = color;
+    document.getElementById("groupcolor").value = color;
+    document.getElementById("color-picker-options").style.display = "none";
+}
+
 //*************************Notification Button Function*****************************//
 </script>
 
@@ -300,7 +308,8 @@ if (isset($_POST['send_request'])) {
 }
 if (isset($_POST['create_group']) && !empty($_POST['groupname']) && !empty($_POST['selected_friends'])) {
     $group_name = mysqli_real_escape_string($db_connection, $_POST['groupname']);
-    $query = "INSERT INTO `Groups` (group_name) VALUES ('$group_name')";
+    $group_color = mysqli_real_escape_string($db_connection, $_POST['groupcolor']);
+    $query = "INSERT INTO `Groups` (group_name, group_color) VALUES ('$group_name', '$group_color')";
     mysqli_query($db_connection, $query);
     $group_id = mysqli_insert_id($db_connection);
 
@@ -318,6 +327,7 @@ if (isset($_POST['create_group']) && !empty($_POST['groupname']) && !empty($_POS
 
     echo "<script>alert(\"Group '" . $group_name . "' has been created.\"); window.location.href = 'messages.php';</script>";
 }
+
 ?>
 
 </body>
