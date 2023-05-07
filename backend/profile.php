@@ -34,6 +34,17 @@
       $pending_debts_result = mysqli_query($db_connection, $pending_debts_query);
       $pending_debts_row = mysqli_fetch_assoc($pending_debts_result);
       $pending_debts = $pending_debts_row['pending_debts_count'];
+
+      $query_total_dept = "SELECT SUM(amount) as total_dept FROM `Users_Debts` WHERE assigned_to='$user_id' AND status='pending'";
+      $result_total_dept = mysqli_query($db_connection, $query_total_dept);
+      $total_dept = mysqli_fetch_assoc($result_total_dept)['total_dept'];
+      $total_dept = $total_dept ? $total_dept : 0;
+
+      $query_friends_count = "SELECT COUNT(*) as total_friends FROM friends WHERE user_id = '$user_id'";
+      $result_friends_count = mysqli_query($db_connection, $query_friends_count);
+      $row_friends_count = mysqli_fetch_assoc($result_friends_count);
+      $total_friends = $row_friends_count['total_friends'];
+      
       //*************************Notification Button Function*****************************//
 ?>
 
@@ -93,7 +104,7 @@
 
           <div class="profile-stats">
             <div class="stat-container left-stat">
-              <span class="stat-number">0</span>
+            <span class="stat-number"><?php echo $total_friends; ?></span>
 
               <br>
 
@@ -101,9 +112,9 @@
             </div>
             <div class="middle-line"></div>
             <div class="stat-container right-stat">
-              <span class="stat-number">$0</span>
-              <br>
-              <span class="stat-label">Balance</span>
+            <span class="stat-number">$<?php echo $total_dept; ?></span>
+                <br>
+                <span class="stat-label">Balance</span>
             </div>
           </div>
 
@@ -374,9 +385,9 @@
         } else {
             formContainer.style.display = "none";
         }
-      }
+    }
 
-      function showPendingTasks(){
+    function showPendingTasks(){
         var formContainer = document.getElementById("completed-debts-container");
         if (formContainer.style.display === "block") {
             formContainer.style.display = "none";

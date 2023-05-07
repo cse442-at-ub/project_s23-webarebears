@@ -5,10 +5,10 @@
     $username = $_SESSION['username'];
     $message = '';
 
-    if (isset($_POST['submit'])) {
+    if (isset($_POST['submit1'])) {
         $currentUsername = mysqli_real_escape_string($db_connection, $username);
-        $newUsername = mysqli_real_escape_string($db_connection, $_POST['new_username']);
-        $newPassword = mysqli_real_escape_string($db_connection, $_POST['new_password']);
+        $newUsername = mysqli_real_escape_string($db_connection, $_POST['new_username123']);
+        $newPassword = mysqli_real_escape_string($db_connection, $_POST['ddddd']);
 
         $query = "UPDATE `User Accounts` SET username = '$newUsername', password = '$newPassword' WHERE username = '$currentUsername'";
         $result = mysqli_query($db_connection, $query);
@@ -39,11 +39,11 @@
 
     <form method="post" action="">
         <p>Change Username and Password</p>
-        <input type="text" name="new_username" id="new_username" placeholder="New Username">
+        <input type="text" name="new_username123" id="new_username123" placeholder="New Username">
         <br>
-        <input type="password" name="new_password" id="new_password" placeholder="New Password">
+        <input type="password" name="ddddd" id="ddddd" placeholder="New Password">
         <br>
-        <button type="submit" name="submit" value="Save Changes" onclick="return confirm('Are you sure you want to update your username and/or password?');">Save Changes</button>
+        <button type="submit1" name="submit1" value="Save Changes" onclick="return confirm('Are you sure you want to update your username and/or password?');">Save Changes</button>
 
         <!--<a href="profile.php" class="back-button">Back to Profile</a>-->
     <style>

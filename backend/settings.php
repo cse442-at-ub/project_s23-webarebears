@@ -1,18 +1,24 @@
 <?php
     require('server.php');
 
-    $username = $_SESSION['username'];
+    $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
+    $query1 = "SELECT user_id FROM `User Accounts` WHERE username='$username'";
+    $result = mysqli_query($db_connection, $query1);
+    $user = mysqli_fetch_assoc($result);
+    $user_id = $user['user_id'];
+
     $message = '';
 
     if (isset($_POST['submit'])) {
         $currentUsername = mysqli_real_escape_string($db_connection, $username);
         $newPassword = mysqli_real_escape_string($db_connection, $_POST['new_password']);
+        $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        
+        $query = "UPDATE `User Accounts` SET password='$hashedNewPassword' WHERE user_id='$user_id'";
+        mysqli_query($db_connection, $query);
 
-        $query = "UPDATE `User Accounts` SET password = '$newPassword' WHERE username = '$currentUsername'";
-        $result = mysqli_query($db_connection, $query);
-
-        if ($result) {
-            $message = 'Your password has been updated successfully.';
+        if ($result2) {
+            $message = 'Your password has been updated successfully. ' . $currentUsername;
         } else {
             $message = 'An error occurred while updating your password.';
         }
