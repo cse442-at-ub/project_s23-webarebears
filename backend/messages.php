@@ -43,7 +43,7 @@
     $_SESSION['user_id'] = $user_id;
 
 
-    $query = "SELECT Groups.group_id, Groups.group_name FROM `Group_Members` INNER JOIN `Groups` ON Group_Members.group_id = Groups.group_id WHERE Group_Members.user_id='$user_id'";
+    $query = "SELECT Groups.group_id, Groups.group_name,Groups.group_color FROM `Group_Members` INNER JOIN `Groups` ON Group_Members.group_id = Groups.group_id WHERE Group_Members.user_id='$user_id'";
     $result = mysqli_query($db_connection, $query);
 ?>
 <!DOCTYPE html>
@@ -64,13 +64,21 @@
     <header>
         <nav class="nav-bar">
             <a href="profile.php">
-				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
+            <img id="profile-pic" src="fetchProfilePicture.php" alt="Profile Icon">
 			</a>
             <a href="home.php" id="home" >Home</a>
-            <a id="tasksAndBalances" href="Balances.php">Balances</a>
+            <a id="tasksAndBalances" href="balances.php">Balances</a>
             <a id="messages" href="messages.php">Messages</a>			
+            <form class="form" method="post">
+            <div class="search-container">
+                <input type="text" class="login-input" name="search" placeholder="Search for friends" id="search-friend"/>
+                <button type="submit" name="submit" id="submit-btn">
+                <i class="fas fa-search"></i>
+                </button>
+            </div>
+            </form>
 
-            <input id="search-bar" type="search" placeholder="Search">
+            <!--<input id="search-bar" type="search" placeholder="Search">-->
             <button type="button" class="icon-button" id="notification-button">
                 <span class="material-icons">notifications</span>
                 <span class="icon-button__badge" id="notification-count"><?php echo $pending_friend_requests + $pending_debts + $pending_tasks; ?></span>
@@ -102,21 +110,30 @@
                     while ($row = mysqli_fetch_assoc($result)) {
                         $group_id = $row['group_id'];
                         $group_name = $row['group_name'];
-                        echo "<p><button id='myGroup' onclick='openChat($group_id); closeTaskForm(); closeDivideBillsForm()'>$group_name</button></p>";
-                        $iteration++;
+                        $group_color = $row['group_color'];
+                        if($group_color != null){
+                            echo "<p><button style='background-color:$group_color' id='myGroup' onclick='openChat($group_id,\"$group_name\",\"$group_color\"); closeTaskForm(); closeDivideBillsForm(); closeAddFriendsToGroupForm()'>$group_name</button></p>";
+                            $iteration++;
+                            
+                        }   
+                        else{
+                            echo "<p><button id='myGroup' onclick='openChat($group_id,\"$group_name\",\"$group_color\"); closeTaskForm(); closeDivideBillsForm(); closeAddFriendsToGroupForm()'>$group_name</button></p>";
+                            $iteration++;
+                        }
+                        
                     }
                 ?>
             </div>
         </div>
 
         <div class="container2">
-            <div class="task-and-bills">
+            <div class="task-and-bills" id="group-buttons-container">
                 <button id="set-task-button" onclick="openTaskForm()"><i class="fas fa-tasks"></i></button>
                 <button id="divide-bills-button" onclick="openDivideBillsForm()"><i class="fa-solid fa-comments-dollar"></i></button>
                 <button id="settings-button" onclick="openSettingsForm()" style="display: none;"><i class="fa-solid fa-gear"></i></button>
             </div>
             <div id="chat-box" class="chat-box">
-                <h2 id="group-chat-name"></h2>
+                <h2 id="group-chat-name"><?php echo $group_name; ?></h2>
                 <div id="message-box">
                     <div id="chat-history" class="chat-history"></div>
                     <form id="message-form" class="message-form" onsubmit="return sendMessage()">
@@ -127,6 +144,7 @@
 
                 <div id="settings-form" style="display: none;">
                     <h2>Group Settings</h2>
+                    <button id="add-friends-to-group-button" onclick="openAddFriendsToGroupForm();">Add Friends</button>
                     <h3>Group Members:</h3>
                     <ul id="settings-group-members"></ul>
                     <div id="setting-buttons">
@@ -134,6 +152,20 @@
                         <button id="settings-cancel" onclick="closeSettingsForm()">Cancel</button>
                     </div>
                 </div>
+
+                <div id="add-friends-to-group-form" style="display: none;">
+                    <h2>Add Friends to Group</h2>
+                    <form id="add-friends-to-group" onsubmit="handleAddFriendSubmit();">
+                        <label for="group-friends">Choose friends:</label>
+                        <ul id="group-friends"></ul>
+
+                        <input type="submit" value="Add Friends" id="add-friends-submit">
+                        <br>
+
+                        <button id="add-friends-cancel" onclick="closeAddFriendsToGroupForm()">Cancel</button>
+                    </form>
+                </div>
+
 
 
                 <div id="task-form" style="display: none;">
@@ -185,14 +217,76 @@
                 </div>
             </div>
         </div>
-    </main>
+        <?php
+    // If form is submitted, search for user
+    if (isset($_POST['submit'])) {
+        $search_term = mysqli_real_escape_string($db_connection, $_POST['search']);
+        $query = "SELECT * FROM `User Accounts` WHERE username='$search_term'";
+        $result = mysqli_query($db_connection, $query);
 
+        // If user found, display user's information and send friend request button
+        if (mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
+            echo "<div class='search-result'>
+                    <h3> Search Result: </h3>
+                    <div>
+                        <p>" . $user['username'] . "</p>
+                        <form method='post'>
+                            <input type='hidden' name='receiver_id' value='" . $user['user_id'] . "'/>
+                            <button type='submit' name='send_request' value='Send Request'>Send Friend Request</button>
+                        </form>
+                    </div>
+                </div>";
+                echo '<script>
+                const searchResultsContainer = document.querySelector(".search-result");
+
+                document.addEventListener("click", (event) => {
+                    const target = event.target;
+    
+                    // Check if the clicked element is outside the search result div
+                    if (!searchResultsContainer.contains(target)) {
+                        searchResultsContainer.style.display = "none";
+                    }
+                });
+                </script>';
+        } else {
+            echo "<div class='search-result'>
+                        <h3>No results found.</h3>
+                    </div>";
+            echo '<script>
+            const searchResultsContainer = document.querySelector(".search-result");
+
+            document.addEventListener("click", (event) => {
+                const target = event.target;
+
+                // Check if the clicked element is outside the search result div
+                if (!searchResultsContainer.contains(target)) {
+                    searchResultsContainer.style.display = "none";
+                }
+            });
+            </script>';
+        }
+    }
+
+    // If send friend request button is clicked, add request to Friend_Requests table
+    if (isset($_POST['send_request'])) {
+        $receiver_id = mysqli_real_escape_string($db_connection, $_POST['receiver_id']);
+
+        $query = "INSERT INTO `Friend_Requests` (sender_id, receiver_id, status) VALUES ('$current_user_id', '$receiver_id', 'pending')";
+        mysqli_query($db_connection, $query);
+
+        echo "<p>Friend request sent.</p>";
+        
+    }
+?>
+    
     <script>
 
         let currentGroupId = null;
         let chatHistoryTimeout = null; // Add this line
 
-        function openChat(groupId) {
+        function openChat(groupId, group_name,group_color) {
+            document.getElementById("group-chat-name").textContent = group_name;
             if (chatHistoryTimeout) {
                 clearTimeout(chatHistoryTimeout);
             }
@@ -204,10 +298,21 @@
             
             document.getElementById('set-task-button').style.display = 'block';
             document.getElementById('divide-bills-button').style.display = 'block';
-            document.getElementById('settings-button').style.display = 'block'; 
+            document.getElementById('settings-button').style.display = 'block';
+
+            if(group_color != null){
+            document.getElementById('set-task-button').style.backgroundColor = group_color;
+            document.getElementById('divide-bills-button').style.backgroundColor = group_color;
+            document.getElementById('settings-button').style.backgroundColor = group_color;
+            document.getElementById('group-buttons-container').style.backgroundColor = group_color;
+            document.getElementById('chat-box').style.backgroundColor = group_color;
+            }
+
 
             currentGroupId = groupId;
+            
             document.getElementById('chat-box').style.display = 'block';
+            
             fetchChatHistory(groupId);
             
             
@@ -380,6 +485,12 @@
             unevenSplitSection.style.display = 'none';
         }
 }
+
+    function handleAddFriendSubmit(){
+        const addFriendsResult = addFriendsToGroup();
+        closeSettingsForm();
+        return addFriendsResult;
+    }
 
     function updateFriendAmounts() {
         const unevenSplitSection = document.getElementById('uneven-split-section');
@@ -676,6 +787,86 @@ function leaveGroup() {
     });
 }
 //*************************Group Setting Function*****************************//
+
+
+
+function openAddFriendsToGroupForm() {
+    if (currentGroupId === null) {
+        alert('Please select a group chat before adding friends.');
+        return;
+    }
+    document.getElementById('add-friends-to-group-form').style.display = 'block';
+    fetchFriendsNotInGroup(currentGroupId);
+}
+
+function closeAddFriendsToGroupForm() {
+    document.getElementById('add-friends-to-group-form').style.display = 'none';
+}
+
+function fetchFriendsNotInGroup(groupId) {
+    fetch(`fetchFriendsNotInGroup.php?group_id=${groupId}`)
+        .then(response => response.json())
+        .then(friends => {
+            const fList = document.getElementById('group-friends');
+            fList.innerHTML = '';
+
+            friends.forEach(friend => {
+                const listNode = document.createElement('li');
+                const labelNode = document.createElement('label');
+                labelNode.className = 'custom-checkbox';
+
+                const inputNode = document.createElement('input');
+                inputNode.type = 'checkbox';
+                inputNode.value = friend.user_id;
+
+                const spanNode = document.createElement('span');
+                spanNode.className = 'checkmark'
+                spanNode.textContent = friend.username;
+
+                labelNode.appendChild(inputNode);
+                labelNode.appendChild(spanNode);
+                listNode.appendChild(labelNode);
+                fList.appendChild(listNode);
+            });
+        });
+}
+
+function addFriendsToGroup() {
+    var checkboxes = document.querySelectorAll('#group-friends input[type="checkbox"]');
+    var checkedValues = [];
+
+    checkboxes.forEach(function(checkbox) {
+        if(checkbox.checked) {
+            checkedValues.push(checkbox.value);
+        }
+    });
+
+    const friends = checkedValues;
+
+    if (friends.length === 0) {
+        return false;
+    }
+
+    const formData = new FormData();
+    formData.append('group_id', currentGroupId);
+    formData.append('friends', JSON.stringify(friends));
+
+    fetch('addFriendsToGroup.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(responseText => {
+        console.log('Response from addFriendsToGroup.php:', responseText);
+        closeAddFriendsToGroupForm();
+    });
+
+    return false;
+}
+
+
+
+
 
     </script>
 </body>

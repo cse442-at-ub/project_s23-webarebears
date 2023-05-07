@@ -41,7 +41,7 @@
     <meta charset="utf-8">
     <title>Home</title>
     <link rel="stylesheet" href="styles/home_style.css"/>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito&display=swap" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
@@ -54,13 +54,21 @@
 <header>
         <nav class="nav-bar">
             <a href="profile.php">
-				<img id="profile-pic" src="images/profile-temp.png" alt="Profile Icon">
-			</a>
+            <img id="profile-pic" src="fetchProfilePicture.php" alt="Profile Icon">
+            </a>
             <a href="home.php" id="home" >Home</a>
-            <a id="tasksAndBalances" href="Balances.php">Balances</a>
-            <a id="messages" href="messages.php">Messages</a>			
+            <a id="tasksAndBalances" href="balances.php">Balances</a>
+            <a id="messages" href="messages.php">Messages</a>           
+            <form class="form" method="post">
+            <div class="search-container">
+                <input type="text" class="login-input" name="search" placeholder="Search for friends" id="search-friend"/>
+                <button type="submit" name="submit" id="submit-btn">
+                <i class="fas fa-search"></i>
+                </button>
+            </div>
+            </form>
 
-            <input id="search-bar" type="search" placeholder="Search">
+            <!--<input id="search-bar" type="search" placeholder="Search">-->
             <button type="button" class="icon-button" id="notification-button">
                 <span class="material-icons">notifications</span>
                 <span class="icon-button__badge" id="notification-count"><?php echo $pending_friend_requests + $pending_debts + $pending_tasks; ?></span>
@@ -78,11 +86,74 @@
     </header>
 
 
+<?php
+    require('server.php');
+
+    $current_user_id = $_SESSION['user_id'];
+
+    // If form is submitted, search for user
+    if (isset($_POST['submit'])) {
+        $search_term = mysqli_real_escape_string($db_connection, $_POST['search']);
+        $query = "SELECT * FROM `User Accounts` WHERE username='$search_term'";
+        $result = mysqli_query($db_connection, $query);
+
+        // If user found, display user's information and send friend request button
+        if (mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
+            echo "<div class='search-result'>
+                    <h3> Search Result: </h3>
+                    <div>
+                        <p>" . $user['username'] . "</p>
+                        <form method='post'>
+                            <input type='hidden' name='receiver_id' value='" . $user['user_id'] . "'/>
+                            <button type='submit' name='send_request' value='Send Request'>Send Friend Request</button>
+                        </form>
+                    </div>
+                </div>";
+                echo '<script>
+                const searchResultsContainer = document.querySelector(".search-result");
+
+                document.addEventListener("click", (event) => {
+                    const target = event.target;
+    
+                    // Check if the clicked element is outside the search result div
+                    if (!searchResultsContainer.contains(target)) {
+                        searchResultsContainer.style.display = "none";
+                    }
+                });
+                </script>';
+        } else {
+            echo "<div class='search-result'>
+                        <h3>No results found.</h3>
+                    </div>";
+            echo '<script>
+            const searchResultsContainer = document.querySelector(".search-result");
+
+            document.addEventListener("click", (event) => {
+                const target = event.target;
+
+                // Check if the clicked element is outside the search result div
+                if (!searchResultsContainer.contains(target)) {
+                    searchResultsContainer.style.display = "none";
+                }
+            });
+            </script>';
+        }
+    }
+
+    // If send friend request button is clicked, add request to Friend_Requests table
+    if (isset($_POST['send_request'])) {
+        $receiver_id = mysqli_real_escape_string($db_connection, $_POST['receiver_id']);
+
+        $query = "INSERT INTO `Friend_Requests` (sender_id, receiver_id, status) VALUES ('$current_user_id', '$receiver_id', 'pending')";
+        mysqli_query($db_connection, $query);
+
+        echo "<p>Friend request sent.</p>";
         
-    </header>
+    }
+?>
 
-
-	<main id="grid2">
+    <main id="grid2">
         <div class="recent">
             <p1>Recent</p1>
             <recent id="recent"></recent>
@@ -101,6 +172,14 @@
     </main>
 
     <script>
+        // Toggle nav links when dropdown button is clicked
+        document.querySelector('.dropdown-btn').addEventListener('click', function() {
+        var navLinks = document.querySelectorAll('.nav-bar a, #search-container, .icon-button, #log-out-button');
+
+        for (var i = 0; i < navLinks.length; i++) {
+            navLinks[i].classList.toggle('show');
+        }
+        });
         //*************************Notification Button Function*****************************//
             document.getElementById('notification-button').addEventListener('click', () => {
             const notificationContainer = document.getElementById('notification-container');
@@ -291,14 +370,6 @@
             }
         });
 
-    // Toggle nav links when dropdown button is clicked
-    document.querySelector('.dropdown-btn').addEventListener('click', function() {
-        var navLinks = document.querySelectorAll('.nav-bar a, #search-bar, .icon-button, #log-out-button');
-
-    for (var i = 0; i < navLinks.length; i++) {
-        navLinks[i].classList.toggle('show');
-    }
-    });
     </script>
 </body>
 </html>

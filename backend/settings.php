@@ -1,25 +1,24 @@
 <?php
-    session_start();
-
-    if (!isset($_SESSION['username'])) {
-        header("Location: login.php");
-        exit();
-    }
-
     require('server.php');
 
-    $username = $_SESSION['username'];
+    $username = mysqli_real_escape_string($db_connection, $_SESSION['username']);
+    $query1 = "SELECT user_id FROM `User Accounts` WHERE username='$username'";
+    $result = mysqli_query($db_connection, $query1);
+    $user = mysqli_fetch_assoc($result);
+    $user_id = $user['user_id'];
+
     $message = '';
 
     if (isset($_POST['submit'])) {
         $currentUsername = mysqli_real_escape_string($db_connection, $username);
         $newPassword = mysqli_real_escape_string($db_connection, $_POST['new_password']);
+        $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        
+        $query = "UPDATE `User Accounts` SET password='$hashedNewPassword' WHERE user_id='$user_id'";
+        mysqli_query($db_connection, $query);
 
-        $query = "UPDATE `User Accounts` SET password = '$newPassword' WHERE username = '$currentUsername'";
-        $result = mysqli_query($db_connection, $query);
-
-        if ($result) {
-            $message = 'Your password has been updated successfully.';
+        if ($result2) {
+            $message = 'Your password has been updated successfully. ' . $currentUsername;
         } else {
             $message = 'An error occurred while updating your password.';
         }
@@ -31,7 +30,6 @@
 <head>
     <meta charset="utf-8">
     <title>Settings</title>
-    <link rel="stylesheet" href="styles/home_style.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
@@ -40,14 +38,15 @@
     <?php if ($message): ?>
         <p><?php echo $message; ?></p>
     <?php endif; ?>
-
+    
+    <p>Change Password</p>
     <form method="post" action="">
-        <label for="new_password">New Password:</label>
-        <input type="password" name="new_password" id="new_password">
+        
+        <input type="password" name="new_password" id="new_password" placeholder="New Password"></input>
         <br>
-        <input type="submit" name="submit" value="Change Password" onclick="return confirm('Are you sure you want to update your password?');">
+        <button type="submit" name="submit" value="Change Password" onclick="return confirm('Are you sure you want to update your password?');">Change Password</button>
 
-        <a href="profile.php" class="back-button">Back to Profile</a>
+        <!--<a href="profile.php" class="back-button">Back to Profile</a>-->
 
     <style>
         .back-button {

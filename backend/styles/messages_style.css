@@ -40,6 +40,7 @@ header {
 }
 
 #messages {
+
   margin-right: 5vw;
   color: white;
   font-size: 1.563rem;
@@ -100,6 +101,106 @@ nav a, #search-bar, .icon-button , #log-out-button{
   color: #B0BEC5;
   font-weight: 500;
   font-family: 'Spartan';
+}
+.search-container {
+  position: relative;
+  display: flex;
+}
+#search-friend{
+  padding-right: 40px;
+  font-family: 'Inter';
+  border: none;
+  outline: none;
+  width: 13vw;
+  height: 2vh;
+  padding: 9px 40px 9px 20px;
+  color: #B0BEC5;
+  background-color: #343645;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  border-right: none;
+}
+#search-friend::placeholder {
+  color: #B0BEC5;
+  font-weight: 500;
+  font-family: 'Spartan';
+}
+.fa-search {
+  font-weight: lighter;
+}
+
+.form{
+  margin-right: 5vw;
+  margin-left: 13vw;
+}
+
+#submit-btn{
+  color: #B0BEC5;
+  font-weight: 500;
+  font-family: 'Spartan';
+  width: 3vw; /* Adjust the width of the button as needed */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #343645;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+#submit-btn:hover{
+  cursor: pointer;
+}
+
+.search-result{
+  position: absolute;
+  top: 15vh;
+  right: 15%;
+  font-family: 'Spartan';
+  background-color: #343645;
+  border-radius: 20px;
+  width: 20rem;
+  height: auto;
+  position: absolute;
+  color: white;
+  box-sizing: border-box;
+  padding:1.5%;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.308);
+  z-index: 99;
+}
+
+.search-result h3{
+  font-size: smaller;
+  font-weight: 100;
+}
+
+.search-result div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2%;
+
+}
+.search-result div:hover{
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+}
+.search-result p {
+  margin: 0;
+}
+
+.search-result button {
+  background-color: #652A5F;
+  border: none;
+  color: white;
+  width:10rem;
+  height: 2rem;
+  border-radius: 10px;
+}
+
+.search-result button:hover {
+  cursor: pointer;
 }
 
 footer {
@@ -480,6 +581,7 @@ button:hover {
     box-sizing: border-box;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    overflow: scroll;
 }
 .chat-history {
     height: 80%;
@@ -689,7 +791,9 @@ label, h2, p {
     background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
     cursor: pointer;
 }
+#divide-bills-form{
 
+}
 #divide-bills-form h2{
   font-size: 1.5rem;
   margin-bottom: 5%;
@@ -797,13 +901,35 @@ label, h2, p {
 #bills-cancel:hover{
   background-image: linear-gradient(rgb(0 0 0/40%) 0 0)
 }
-@media screen and (max-width: 600px) {
+
+#group-chat-name{
+  margin-block-start:5px;
+  text-align: center;
+  font-size: medium;
+}
+@media screen and (max-width: 900px) {
     #options {
         display: flex;
         flex-direction: column;
     }
     .container1{
         padding: 0;
+    }
+
+    #myGroup{
+      font-size: small;
+    }
+    .chat-box{
+      font-size: small;
+    }
+    #task-form h2{
+      font-size: medium;
+    }
+    #divide-bills-form h2{
+      font-size: medium;
+    }
+    #settings-form h2{
+      font-size: medium;
     }
     
 }

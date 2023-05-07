@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Picker</title>
+    <style>
+        .color-picker-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .color-picker-label {
+            cursor: pointer;
+        }
+
+        .color-picker-options {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .color-picker-options .color-option {
+            color: white;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 4px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .color-picker-options .color-option:hover {
+            border-color: #333;
+        }
+    </style>
+    <script>
+        function toggleColorPicker() {
+            document.getElementById("color-picker-options").style.display = "block";
+        }
+
+        function setColor(color) {
+            document.getElementById("selected-color").style.backgroundColor = color;
+            document.getElementById("color-picker-options").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+    <div class="color-picker-container">
+        <div class="color-picker-label" onclick="toggleColorPicker()" id="selected-color" style="width: 20px; height: 20px; background-color: #1F222A; border: 1px solid #ccc; display: inline-block;"></div>
+        <div class="color-picker-options" id="color-picker-options">
+            <div class="color-option" style="background-color: #1F222A;" onclick="setColor('#1F222A')">#</div>
+            <div class="color-option" style="background-color: #616cdb;" onclick="setColor('#616cdb')">#</div>
+            <div class="color-option" style="background-color: #f94a6e;" onclick="setColor('#f94a6e')">#</div>
+            <div class="color-option" style="background-color: #6d2fe3;" onclick="setColor('#6d2fe3')">#</div>
+        </div>
+    </div>
+</body>
+</html>
